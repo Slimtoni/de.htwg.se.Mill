@@ -2,14 +2,8 @@ import de.htwg.se.Mill.model.{Field, FieldStatus}
 import de.htwg.se.Mill.model.FieldStatus.Empty
 
 import scala.collection.mutable
+import de.htwg.se.Mill.model._
 
-case class Cell(x:Int, y:Int)
-
-val cell1 = Cell(4,5)
-cell1.x
-cell1.y
-
-import de.htwg.se.Mill.model.Gameboard
 
 val gameboard = new Gameboard[Field](4)
 val field1 = new Field(FieldStatus.Empty)
@@ -24,4 +18,4 @@ gameboard.addVertex(field2)
 gameboard.addEdge(field1,field2)
 gameboard.addEdge(field1,field2)
 
-val i = gameboard.getSize()
+val list = gameboard.vertList()

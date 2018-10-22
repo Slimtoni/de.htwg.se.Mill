@@ -1,22 +1,29 @@
 package de.htwg.se.Mill
 
-import de.htwg.se.Mill.model.Player
-import de.htwg.se.Mill.model.Edge
-import de.htwg.se.Mill.model.Graph
-import de.htwg.se.Mill.model.Field
-import de.htwg.se.Mill.model.FieldStatus
+import de.htwg.se.Mill.model._
 
 object Mill {
   def main(args: Array[String]): Unit = {
     val student = Player("Toni")
     println("Hello, " + student.name)
 
-    val edge = new Edge[Int](1, 2)
-    println(edge)
-    println(edge.src())
-    println("-------------------------------")
+    val gameboard = new Gameboard[Field](4)
+    val field1 = new Field(FieldStatus.Empty)
+    val field2 = new Field(FieldStatus.Black)
+    val field3 = new Field(FieldStatus.Empty)
+    val field4 = new Field(FieldStatus.Empty)
 
-    val blue = FieldStatus.Black
+    gameboard.addVertex(field1)
+    gameboard.addVertex(field1)
+    gameboard.addVertex(field2)
 
+    gameboard.addEdge(field1, field2)
+    gameboard.addEdge(field2, field3)
+    gameboard.addEdge(field1, field2)
+    val list = gameboard.vertList()
+    list.foreach(println)
+    val list2 = gameboard.nbourList()
+    list2.foreach(println)
+    print(list2.contains((field1, field2)))
   }
 }
