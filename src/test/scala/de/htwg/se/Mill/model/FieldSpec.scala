@@ -2,7 +2,7 @@ package de.htwg.se.Mill.model
 
 import org.scalatest.{Matchers, WordSpec}
 
-class EdgeSpec extends WordSpec with Matchers {
+class FieldSpec extends WordSpec with Matchers {
   "A Field" when { "new" should {
     val field = new Field(FieldStatus.Empty)
     "have a FieldStatus" in {

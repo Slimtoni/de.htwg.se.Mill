@@ -7,11 +7,9 @@ object FieldStatus extends Enumeration {
   val Empty, Black, White = Value
 }
 
-class Field(fieldID: Int, fieldStatus: FieldStatus) {
+class Field(fieldStatus: FieldStatus) {
 
   def getfieldStatus() = fieldStatus
-
-  def getfieldID() = fieldID
 
   override def toString: String = "Fieldstatus is: " + fieldStatus.toString
 }
