@@ -17,9 +17,11 @@ val field2 = new Field(FieldStatus.Empty)
 val field3 = new Field(FieldStatus.Empty)
 val field4 = new Field(FieldStatus.Empty)
 
-gameboard.addEdge(field1, field2)
-gameboard.addEdge(field2, field3)
-gameboard.addEdge(field3, field4)
-gameboard.addEdge(field4, field1)
-gameboard.addEdge(field4, field1)
-gameboard.addEdge(field1, field4)
+gameboard.addVertex(field1)
+gameboard.addVertex(field1)
+gameboard.addVertex(field2)
+
+gameboard.addEdge(field1,field2)
+gameboard.addEdge(field1,field2)
+
+val i = gameboard.getSize()

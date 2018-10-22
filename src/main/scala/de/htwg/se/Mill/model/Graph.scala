@@ -1,6 +1,6 @@
 package de.htwg.se.Mill.model
 
-abstract class Graph[V] {
+trait Graph[V] {
 
   def addVertex(v: V): Boolean
 
