@@ -7,7 +7,7 @@ object Mill {
     val student = Player("Toni")
     println("Hello, " + student.name)
 
-    val gameboard = new Gameboard[Field](4)
+    val gameboard = new Gameboard[Field]()
     val field1 = new Field(FieldStatus.Empty)
     val field2 = new Field(FieldStatus.Black)
     val field3 = new Field(FieldStatus.Empty)

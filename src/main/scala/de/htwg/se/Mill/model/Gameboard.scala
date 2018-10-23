@@ -7,9 +7,8 @@ import scala.collection.mutable
   * @param size is the size of the Gameboard
   * @tparam Field is the type ofgit the Graph-Attribute
   */
-class Gameboard[Field](size : Int) extends Graph[Field] {
+class Gameboard[Field] extends Graph[Field] {
 
-  def sz() : Int = size
   def vertList(): mutable.MutableList[Field] = vertexList
   def nbourList(): mutable.MutableList[(Field, Field)] = neigh
   // neighbour list of fields
@@ -34,7 +33,6 @@ class Gameboard[Field](size : Int) extends Graph[Field] {
       true
     }
   }
-
 
   override def containsVertex(v: Field): Boolean = vertexList.contains(v)
 
