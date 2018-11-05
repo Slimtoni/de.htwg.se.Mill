@@ -7,31 +7,24 @@ import scala.collection.mutable
   * @param size is the size of the Gameboard
   * @tparam Field is the type ofgit the Graph-Attribute
   */
-class Gameboard[Field] extends Graph[Field] {
+case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutable.MutableList[(Field, Field)])
+  extends Graph[Field] {
 
   def vertList(): mutable.MutableList[Field] = vertexList
   def nbourList(): mutable.MutableList[(Field, Field)] = neigh
-  // neighbour list of fields
-  val neigh = new mutable.MutableList[(Field, Field)]
-  val vertexList = new mutable.MutableList[Field]
 
-  override def addVertex(v: Field): Boolean = {
-    if (!vertexList.contains(v)) {
-      vertexList.+=(v)
-      true
-    } else false
+  override def addVertex(v: Field): Gameboard[Field] = {
+    if (!vertexList.contains(v)) vertexList.+=(v)
+    copy(vertexList, neigh)
   }
 
-  override def addEdge(v: Field, w: Field): Boolean = {
+  override def addEdge(v: Field, w: Field): Gameboard[Field] = {
     if (!containsVertex(v)) addVertex(v)
     if (!containsVertex(w)) addVertex(w)
-    if (containsEdge(v,w) || containsEdge(w,v)) {
+    if (!containsEdge(v,w) || !containsEdge(w,v)) {
       neigh.+=((v,w))
-      false
-    } else {
-      neigh.+=((v,w))
-      true
     }
+    copy(vertexList, neigh)
   }
 
   override def containsVertex(v: Field): Boolean = vertexList.contains(v)
