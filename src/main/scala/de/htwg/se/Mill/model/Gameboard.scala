@@ -43,3 +43,8 @@ class Gameboard[Field] extends Graph[Field] {
     neigh.contains((v, w)) || neigh.contains((w, v))
   }
 }
+/*
+object Gameboard {
+  private val _instance = new Gameboard[Field]
+  def instance(): Gameboard[Field] = _instance
+}*/

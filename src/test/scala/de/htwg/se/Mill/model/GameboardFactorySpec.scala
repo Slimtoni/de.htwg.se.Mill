@@ -10,7 +10,7 @@ class GameboardFactorySpec extends WordSpec with Matchers {
     }
     val gameboard = new Gameboard[Field]()
     "create a small Gameboard" in {
-      gameboardFactory.createGameboard(gameboardFactory.sz()) should be(gameboard)
+      gameboardFactory.createGameboard(gameboardFactory.sz()) shouldEqual (gameboard)
     }
   }
   }
