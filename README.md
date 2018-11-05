@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Slimtoni/de.htwg.se.Mill.svg?branch=master)](https://travis-ci.org/Slimtoni/de.htwg.se.Mill)
+
 Mill in Scala
 =========================
 
