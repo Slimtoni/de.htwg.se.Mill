@@ -1,9 +1,9 @@
 package de.htwg.se.Mill.model
 
-class Edge[V](source: V, target: V) {
+class Edge[V](source: V, target: V, direction: Boolean) {
 
-  def src() = source
-  def tar() = target
-
-  override def toString: String = "src:" + source.toString + " - tar:" + target.toString
+  override def toString: String = {
+    if (direction) "__"
+    else "|"
+  }
 }

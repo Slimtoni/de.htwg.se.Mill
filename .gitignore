@@ -1,4 +1,5 @@
 project/target/
 project/project/
 .idea/
+.directory
 target/

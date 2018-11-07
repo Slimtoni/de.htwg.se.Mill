@@ -5,18 +5,22 @@ import org.scalatest.{Matchers, WordSpec}
 import scala.collection.mutable
 
 class GameboardSpec extends WordSpec with Matchers {
-  "A Gameboard" when { "new" should {
-    val vertList = new mutable.MutableList[Field]
-    val neigh = new mutable.MutableList[(Field,Field)]
-    val gameboard = new Gameboard[Field](vertList, neigh)
-    val field = new Field(FieldStatus.Empty)
-    val field2 = new Field(FieldStatus.Black)
+  /*"A Gameboard" when {
+    "be created with empty Vertex- and Neighbourlist" should {
+      val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[(Field, Field)])
+      gameboard.addEdge(new Field(0, FieldStatus.Empty), new Field(1, FieldStatus.Empty),)
+      gameboard.addEdge(new Field(1, FieldStatus.Empty), new Field(2, FieldStatus.Empty))
+      gameboard.addEdge(new Field(2, FieldStatus.Empty), new Field(3, FieldStatus.Empty))
+      gameboard.addEdge(new Field(3, FieldStatus.Empty), new Field(0, FieldStatus.Empty))
+    "be empty" in {
+      gameboard.neigh should be equals(mutable.MutableList(("O","O"), ("O","O"), ("O","O"), ("O","O")))
+    }
+/*
     "add a Vertex" in {
       val vertListTest = new mutable.MutableList[Field]()
-      val gameboard_test = new Gameboard[Field](vertList)
-      gameboard.addVertex(field) should equal(gameboard_test)
+      val gameboard_test = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[(Field, Field)])
     }
-    /*
+
     "not add the same Vertex" in {
       gameboard.addVertex(field) should be(false)
     }
@@ -27,5 +31,6 @@ class GameboardSpec extends WordSpec with Matchers {
       gameboard.addEdge(field, field2) should be(false)
     }*/
   }
-  }
+  }*/
 }
+

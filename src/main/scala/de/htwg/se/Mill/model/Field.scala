@@ -7,9 +7,21 @@ object FieldStatus extends Enumeration {
   val Empty, Black, White = Value
 }
 
-class Field(fieldStatus: FieldStatus) {
+case class Field(id: Int, fieldStatus: FieldStatus) {
 
   def getfieldStatus() = fieldStatus
 
-  override def toString: String = "Fieldstatus is: " + fieldStatus.toString
+  def changeFieldStatus(fieldStatus: FieldStatus) : Field = copy(id, fieldStatus)
+
+  def equals(f: Field): AnyVal = {
+    if(f.id == this.id) true
+  }
+
+  override def toString: String = {
+    fieldStatus match {
+      case FieldStatus.Empty => "O"
+      case FieldStatus.Black => "B"
+      case FieldStatus.White => "W"
+    }
+  }
 }
