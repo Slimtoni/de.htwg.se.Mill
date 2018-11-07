@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/Slimtoni/de.htwg.se.Mill.svg?branch=master)](https://travis-ci.org/Slimtoni/de.htwg.se.Mill)
-
+[![Build Status](https://travis-ci.org/Slimtoni/de.htwg.se.Mill.svg?branch=Mill-2-FunctionalGraph)](https://travis-ci.org/Slimtoni/de.htwg.se.Mill)
 Mill in Scala
 =========================
 
