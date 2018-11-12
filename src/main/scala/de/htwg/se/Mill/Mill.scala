@@ -25,6 +25,7 @@ object Mill {
     print(gameboard)
     field0.changeFieldStatus(FieldStatus.Black)
     print(gameboard)
+
   }
 }
 

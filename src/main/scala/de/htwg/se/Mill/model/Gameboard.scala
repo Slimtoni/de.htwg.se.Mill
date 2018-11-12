@@ -1,7 +1,5 @@
 package de.htwg.se.Mill.model
 
-import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
-
 import scala.collection.mutable
 
 /**
@@ -9,34 +7,34 @@ import scala.collection.mutable
   * @param size is the size of the Gameboard
   * @tparam Field is the type ofgit the Graph-Attribute
   */
-case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutable.MutableList[Edge[Field]])
-  extends Graph[Field] {
+class Gameboard[Field] extends Graph[Field] {
 
-  //def this(size: Int) = this(new mutable.MutableList[Field], new mutable.MutableList[(Field, Field)]){}
   def vertList(): mutable.MutableList[Field] = vertexList
-  def nbourList(): mutable.MutableList[Edge[Field]] = neigh
+  def nbourList(): mutable.MutableList[(Field, Field)] = neigh
+  // neighbour list of fields
+  val neigh = new mutable.MutableList[(Field, Field)]
+  val vertexList = new mutable.MutableList[Field]
 
-  override def addVertex(v: Field): Gameboard[Field] = {
-    if (!vertexList.contains(v)) vertexList.+=(v)
-    copy(vertexList, neigh)
+  override def addVertex(v: Field): Boolean = {
+    if (!vertexList.contains(v)) {
+      vertexList.+=(v)
+      true
+    } else false
   }
 
-  override def addEdge(v: Field, w: Field, direc : EdgeDirection): Gameboard[Field] = {
+  override def addEdge(v: Field, w: Field): Boolean = {
     if (!containsVertex(v)) addVertex(v)
     if (!containsVertex(w)) addVertex(w)
-    if (!containsEdge(v,w) || !containsEdge(w,v)) {
-      val edge = new Edge[Field](v,w,direc)
-      neigh.+=(edge)
+    if (containsEdge(v,w) || containsEdge(w,v)) {
+      neigh.+=((v,w))
+      false
+    } else {
+      neigh.+=((v,w))
+      true
     }
-    copy(vertexList, neigh)
   }
 
-  override def containsVertex(v: Field): Boolean = {
-    for (i<-this.vertexList) {
-      if (v.equals(i)) return true
-    }
-    return false
-  }
+  override def containsVertex(v: Field): Boolean = vertexList.contains(v)
 
   override def containsEdge(v: Field, w: Field): Boolean = {
     if (!containsVertex(v) || !containsVertex(w)) {
@@ -44,7 +42,7 @@ case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutab
     }
     neigh.contains((v, w)) || neigh.contains((w, v))
   }
-
+  
   override def toString: String = {
     var gameboardString: String = ""
     val it = neigh.iterator
