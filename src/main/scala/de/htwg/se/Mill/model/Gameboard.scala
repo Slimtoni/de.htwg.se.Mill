@@ -49,7 +49,6 @@ case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutab
     var gameboardString: String = ""
     val it = neigh.iterator
     for (i <- it) {
-      //println(i._1)
       if (i.getDirection() == EdgeDirection.Horizontal) {
         gameboardString += i.getSource()
         gameboardString += i.toString
@@ -58,18 +57,8 @@ case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutab
       else {
         if (it.hasNext) gameboardString += i.toString + "\n"
         else gameboardString += "\n"
-
       }
     }
-    //it.foreach(i => gameboardString.+(i._1.toString + i.toString() + i._2.toString + "\n"))
-    /*for (i <- it) {
-      gameboardString.+(i._1.toString + i.toString() + i._2.toString + "\n")
-    }*/
     gameboardString
   }
 }
-/*
-object Gameboard {
-  private val _instance = new Gameboard[Field]
-  def instance(): Gameboard[Field] = _instance
-}*/

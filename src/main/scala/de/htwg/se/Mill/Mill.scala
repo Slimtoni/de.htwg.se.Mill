@@ -22,12 +22,9 @@ object Mill {
 
     field0.changeFieldStatus(FieldStatus.Black)
 
-    var gameboardString = gameboard.toString()
-    print(gameboardString)
+    print(gameboard)
     field0.changeFieldStatus(FieldStatus.Black)
-    print(gameboard.toString)
+    print(gameboard)
   }
 }
-//"O__O"
-//"|  |"
-//"B__W"
+
