@@ -1,9 +1,22 @@
 package de.htwg.se.Mill.model
 
-class Edge[V](source: V, target: V, direction: Boolean) {
+import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
+
+import scala.collection.mutable
+
+object EdgeDirection extends Enumeration {
+  type EdgeDirection = Value
+  val Horizontal, Vertical = Value
+}
+
+class Edge[V](source: V, target: V, direction: EdgeDirection) extends mutable.MutableList{
+
+  def getSource(): V = source
+  def getTarget() : V = target
+  def getDirection() = direction
 
   override def toString: String = {
-    if (direction) "__"
-    else "|"
+    if (direction == EdgeDirection.Horizontal) "__"
+    else "|  |"
   }
 }

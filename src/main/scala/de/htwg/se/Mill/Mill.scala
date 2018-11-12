@@ -1,7 +1,6 @@
 package de.htwg.se.Mill
-
-import de.htwg.se.Mill.model
-import de.htwg.se.Mill.model.{Field, FieldStatus, Gameboard, Player}
+import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
+import de.htwg.se.Mill.model._
 
 import scala.collection.mutable
 
@@ -9,16 +8,24 @@ object Mill {
   def main(args: Array[String]): Unit = {
     val student = Player("Toni")
     println("Hello, " + student.name)
+    var field0 = new Field(0, FieldStatus.Empty)
+    var field1 = new Field(1, FieldStatus.Empty)
+    var field2 = new Field(2, FieldStatus.Empty)
+    var field3 = new Field(3, FieldStatus.Empty)
+    var field4 = new Field(4, FieldStatus.Empty)
 
-    val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[(Field, Field, Boolean)])
-    gameboard.addEdge(new Field(0, FieldStatus.Empty), new Field(1, FieldStatus.Empty), true)
-    gameboard.addEdge(new Field(1, FieldStatus.Empty), new Field(2, FieldStatus.Empty), false)
-    gameboard.addEdge(new Field(2, FieldStatus.Empty), new Field(3, FieldStatus.Empty), true)
-    gameboard.addEdge(new Field(3, FieldStatus.Empty), new Field(0, FieldStatus.Empty), false)
+    val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[Edge[Field]])
+    gameboard.addEdge(field0, field1, EdgeDirection.Horizontal)
+    gameboard.addEdge(field1, field2, EdgeDirection.Vertical)
+    gameboard.addEdge(field2, field3, EdgeDirection.Horizontal)
+    gameboard.addEdge(field3, field0, EdgeDirection.Vertical)
 
-
+    field0.changeFieldStatus(FieldStatus.Black)
 
     var gameboardString = gameboard.toString()
+    print(gameboardString)
+    field0.changeFieldStatus(FieldStatus.Black)
+    print(gameboard.toString)
   }
 }
 //"O__O"

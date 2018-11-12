@@ -1,5 +1,6 @@
 package de.htwg.se.Mill.model
 
+import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
 import de.htwg.se.Mill.model.GameboardSize.GameboardSize
 
 import scala.collection.mutable
@@ -17,17 +18,17 @@ class GameboardFactory(size: GameboardSize) {
     size match {
       case GameboardSize.Small => {
         print("small")
-        val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[(Field, Field, Boolean)])
+        val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[Edge[Field]])
         gameboard
       };
       case GameboardSize.Medium => {
         print("medium")
-        val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[(Field, Field, Boolean)])
+        val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[Edge[Field]])
         gameboard
       };
       case GameboardSize.Large => {
         print("large")
-        val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[(Field, Field, Boolean)])
+        val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[Edge[Field]])
         gameboard
       };
     }

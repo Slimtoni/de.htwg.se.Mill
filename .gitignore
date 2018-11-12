@@ -3,3 +3,4 @@ project/project/
 .idea/
 .directory
 target/
+sbt
