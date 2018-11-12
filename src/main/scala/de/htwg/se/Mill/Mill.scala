@@ -26,6 +26,8 @@ object Mill {
     print(gameboardString)
     field0.changeFieldStatus(FieldStatus.Black)
     print(gameboard.toString)
+
+
   }
 }
 //"O__O"

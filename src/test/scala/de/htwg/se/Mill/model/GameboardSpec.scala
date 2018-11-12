@@ -5,32 +5,37 @@ import org.scalatest.{Matchers, WordSpec}
 import scala.collection.mutable
 
 class GameboardSpec extends WordSpec with Matchers {
-  /*"A Gameboard" when {
-    "be created with empty Vertex- and Neighbourlist" should {
-      val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[(Field, Field)])
-      gameboard.addEdge(new Field(0, FieldStatus.Empty), new Field(1, FieldStatus.Empty),)
-      gameboard.addEdge(new Field(1, FieldStatus.Empty), new Field(2, FieldStatus.Empty))
-      gameboard.addEdge(new Field(2, FieldStatus.Empty), new Field(3, FieldStatus.Empty))
-      gameboard.addEdge(new Field(3, FieldStatus.Empty), new Field(0, FieldStatus.Empty))
-    "be empty" in {
-      gameboard.neigh should be equals(mutable.MutableList(("O","O"), ("O","O"), ("O","O"), ("O","O")))
-    }
-/*
-    "add a Vertex" in {
-      val vertListTest = new mutable.MutableList[Field]()
-      val gameboard_test = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[(Field, Field)])
-    }
+  "A Gameboard" when {
+    "new" should {
+      val gameboard = new Gameboard[Field](new mutable.MutableList[Field], new mutable.MutableList[Edge[Field]])
+      val field = new Field(0, FieldStatus.Empty)
+      val field2 = new Field(0, FieldStatus.Empty)
+      val field3 = new Field(9, FieldStatus.Empty)
+      val thrown = the [IllegalArgumentException] thrownBy gameboard.containsEdge(field3, field2)
 
-    "not add the same Vertex" in {
-      gameboard.addVertex(field) should be(false)
+      "have a Vertex List" in {
+        gameboard.vertList() should be(mutable.MutableList())
+      }
+      "have a nachbar List" in {
+        gameboard.nbourList() should be(mutable.MutableList())
+      }
+      "add a vertex" in {
+        gameboard.addVertex(field) should equal(gameboard)
+      }
+      "add an edge" in {
+        gameboard.addEdge(field, field2, EdgeDirection.Vertical) should equal(gameboard)
+      }
+      "should not have 2 equal vertex" in {
+        gameboard.containsVertex(field2) should equal(true)
+      }
+      "should not have 2 equal edges" in {
+        gameboard.containsEdge(field, field2) should equal(false)
+      }
+
+
+
+
     }
-    "add an Edge" in {
-      gameboard.addEdge(field, field2) should be(true)
-    }
-    "not add the same Edge" in {
-      gameboard.addEdge(field, field2) should be(false)
-    }*/
   }
-  }*/
 }
 
