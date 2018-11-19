@@ -58,18 +58,8 @@ case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutab
       else {
         if (it.hasNext) gameboardString += i.toString + "\n"
         else gameboardString += "\n"
-
       }
     }
-    //it.foreach(i => gameboardString.+(i._1.toString + i.toString() + i._2.toString + "\n"))
-    /*for (i <- it) {
-      gameboardString.+(i._1.toString + i.toString() + i._2.toString + "\n")
-    }*/
     gameboardString
   }
 }
-/*
-object Gameboard {
-  private val _instance = new Gameboard[Field]
-  def instance(): Gameboard[Field] = _instance
-}*/
