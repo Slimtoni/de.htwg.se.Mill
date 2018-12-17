@@ -9,7 +9,7 @@ object EdgeDirection extends Enumeration {
   val Horizontal, Vertical = Value
 }
 
-class Edge[V](source: V, target: V, direction: EdgeDirection) extends mutable.MutableList{
+case class Edge[V](source: V, target: V, direction: EdgeDirection) extends mutable.MutableList{
 
   def getSource(): V = source
   def getTarget() : V = target

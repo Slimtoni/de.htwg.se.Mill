@@ -4,8 +4,9 @@ import de.htwg.se.Mill.controller.{Controller, FieldChanged}
 
 import scala.swing.Reactor
 
-class Tui(controller: Controller) extends Reactor {
+case class Tui(controller: Controller) extends Reactor {
   listenTo(controller)
+  println(controller.gameboardToString)
 
   def processInputLine(input: String): Unit = {
 
@@ -20,5 +21,4 @@ class Tui(controller: Controller) extends Reactor {
   reactions += {
     case event: FieldChanged => println(controller.gameboardToString)
   }
-
 }
