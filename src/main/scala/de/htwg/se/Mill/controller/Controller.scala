@@ -3,21 +3,22 @@ package de.htwg.se.Mill.controller
 import java.util.Observable
 
 import de.htwg.se.Mill.model.GameboardSize.GameboardSize
-import de.htwg.se.Mill.model.{GameboardFactory, GameboardSize}
+import de.htwg.se.Mill.model.{Field, Gameboard, GameboardFactory, GameboardSize}
 
-class Controller extends Observable {
-
-  def createGameboard(size: GameboardSize): Unit = {
+class Controller(var gameboard: Gameboard[Field]) extends Observable {
+  var gameboardFactory = new GameboardFactory
+  def createGameboard(size: String): Unit = {
     if (size.equals("Large")) {
-      val gameboard = new GameboardFactory().createGameboard(GameboardSize.Large)
-      notifyObservers()
+      gameboard = gameboardFactory.createGameboard(GameboardSize.Large)
     }
     else if (size.equals("Small")) {
       val gameboard = new GameboardFactory().createGameboard(GameboardSize.Small)
-      notifyObservers()
     }
+    notifyObservers
 
   }
+
+  def gameboardToString: String = gameboard.toString
 
 
 }
