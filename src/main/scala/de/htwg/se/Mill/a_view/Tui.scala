@@ -1,12 +1,12 @@
 package de.htwg.se.Mill.a_view
 
-import java.util.{Observable, Observer}
+import de.htwg.se.Mill.controller.{Controller, FieldChanged}
 
-import de.htwg.se.Mill.controller.Controller
+import scala.swing.Reactor
 
-class Tui(controller: Controller) extends Observer{
-
-  controller.addObserver(this)
+case class Tui(controller: Controller) extends Reactor {
+  listenTo(controller)
+  println(controller.gameboardToString)
 
   def processInputLine(input: String): Unit = {
 
@@ -18,5 +18,7 @@ class Tui(controller: Controller) extends Observer{
     }
   }
 
-  override def update(observable: Observable, o: Any): Unit = println(controller.gameboardToString)
+  reactions += {
+    case event: FieldChanged => println(controller.gameboardToString)
+  }
 }
