@@ -21,4 +21,5 @@ class Controller(var gameboard: Gameboard[Field]) extends Observable {
 
   def gameboardToString: String = gameboard.toString
 
+
 }
