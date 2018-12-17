@@ -1,4 +1,5 @@
 package de.htwg.se.Mill
+import de.htwg.se.Mill.controller.Controller
 import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
 import de.htwg.se.Mill.model._
 
@@ -6,6 +7,7 @@ import scala.collection.mutable
 
 object Mill {
   def main(args: Array[String]): Unit = {
+    val controller = new Controller(new )
     val student = Player("Toni")
     println("Hello, " + student.name)
     /*var field0 = Field(0, FieldStatus.Empty)
