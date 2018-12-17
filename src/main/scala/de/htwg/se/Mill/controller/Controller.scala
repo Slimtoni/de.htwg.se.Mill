@@ -3,7 +3,7 @@ package de.htwg.se.Mill.controller
 import java.util.Observable
 
 import de.htwg.se.Mill.model.GameboardSize.GameboardSize
-import de.htwg.se.Mill.model.{Field, Gameboard, GameboardFactory, GameboardSize}
+import de.htwg.se.Mill.model.{GameboardFactory, GameboardSize}
 
 class Controller extends Observable {
 
@@ -18,5 +18,6 @@ class Controller extends Observable {
     }
 
   }
+
 
 }
