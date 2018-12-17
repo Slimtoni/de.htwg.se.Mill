@@ -10,9 +10,11 @@ class Controller extends Observable {
   def createGameboard(size: GameboardSize): Unit = {
     if (size.equals("Large")) {
       val gameboard = new GameboardFactory().createGameboard(GameboardSize.Large)
+      notifyObservers()
     }
     else if (size.equals("Small")) {
       val gameboard = new GameboardFactory().createGameboard(GameboardSize.Small)
+      notifyObservers()
     }
 
   }
