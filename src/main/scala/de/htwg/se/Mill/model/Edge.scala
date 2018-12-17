@@ -14,9 +14,4 @@ class Edge[V](source: V, target: V, direction: EdgeDirection) extends mutable.Mu
   def getSource(): V = source
   def getTarget() : V = target
   def getDirection() = direction
-
-  override def toString: String = {
-    if (direction == EdgeDirection.Horizontal) "__"
-    else "|  |"
-  }
 }

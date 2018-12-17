@@ -9,8 +9,6 @@ object FieldStatus extends Enumeration {
 
 case class Field(id: Int, fieldStatus: FieldStatus) {
 
-  def getfieldStatus() = fieldStatus
-
   def changeFieldStatus(fieldStatus: FieldStatus) : Field = copy(id, fieldStatus)
 
   def equals(f: Field): AnyVal = {

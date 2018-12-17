@@ -3,6 +3,7 @@ package de.htwg.se.Mill.model
 import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
 
 import scala.collection.mutable
+import scala.language.postfixOps
 
 /**
   * class of the Gameboard
@@ -47,20 +48,63 @@ case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutab
 
   override def toString: String = {
     var gameboardString: String = ""
-    val it = neigh.iterator
+    var v = vertexList
+    if (vertexList.length == 8) {
+      gameboardString += v(0) + "__" + v(1) + "__" + v(2) + "\n"
+      gameboardString += "|     |\n"
+      gameboardString += v(3) + "     " + v(4) + "\n"
+      gameboardString += "|     |\n"
+      gameboardString += v(5) + "__" + v(6) + "__" + v(7) + "\n"
+    } else if (vertexList.length == 24) {
+      gameboardString += v(0) + "__________" + v(1) + "__________" + v(2) + "\n"
+      gameboardString += "|          |          |\n"
+      gameboardString += "|   " + v(3) + "______" + v(4) + "______" + v(5) + "   |\n"
+      gameboardString += "|   |      |      |   |\n"
+      gameboardString += "|   |   " + v(6) + "__" + v(7) + "__" + v(8) + "   |   |\n"
+      gameboardString += "|   |   |     |   |   |\n"
+      gameboardString += v(9) + "___" + v(10) + "___" + v(11) + "     " + v(12) + "___" + v(13) + "___" + v(14) + "\n"
+      gameboardString += "|   |   |     |   |   |\n"
+      gameboardString += "|   |   " + v(15) + "__" + v(16) + "__" + v(17) + "   |   |\n"
+      gameboardString += "|   |      |      |   |\n"
+      gameboardString += "|   " + v(18) + "______" + v(19) + "______" + v(20) + "   |\n"
+      gameboardString += "|          |          |\n"
+      gameboardString += v(21) + "__________" + v(22) + "__________" + v(23) + "\n"
+    }
+    /*val it = neigh.iterator
+    var prevEdgeHori = false
+    var vertcount = 0
     for (i <- it) {
       //println(i._1)
-      if (i.getDirection() == EdgeDirection.Horizontal) {
-        gameboardString += i.getSource()
-        gameboardString += i.toString
-        gameboardString += i.getTarget() + "\n"
-      }
-      else {
-        if (it.hasNext) gameboardString += i.toString + "\n"
-        else gameboardString += "\n"
+      if (neigh.length == 8) {
+        if (i.getDirection() == EdgeDirection.Horizontal) {
+          if (!prevEdgeHori) {
+            gameboardString += i.getSource()
+            gameboardString += "__"
+            gameboardString += i.getTarget()
+          } else {
+            gameboardString += "__"
+            gameboardString += i.getTarget() + "\n"
+            prevEdgeHori = true
+          }
 
+        }
+        else {
+          if (vertcount < 1) {
+            if (it.hasNext) {
+              gameboardString += "\n|      |" + "\n"
+              gameboardString += i.getSource() + "      " + i.getTarget() + "\n"
+            } else if (vertcount == 2) {
+              gameboardString += "\n|      |" + "\n"
+            }
+            else gameboardString += "\n"
+          }
+          prevEdgeHori = false
+          vertcount += 1
+
+        }
       }
-    }
+
+    }*/
     //it.foreach(i => gameboardString.+(i._1.toString + i.toString() + i._2.toString + "\n"))
     /*for (i <- it) {
       gameboardString.+(i._1.toString + i.toString() + i._2.toString + "\n")
