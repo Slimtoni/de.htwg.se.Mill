@@ -9,7 +9,7 @@ object Mill {
   var gameboardFactory = new GameboardFactory()
   val controller = new Controller(gameboardFactory.createGameboard(GameboardSize.Large))
   val tui = new Tui(controller)
-  controller.notifyObservers()
+
 
   def main(args: Array[String]): Unit = {
     var input: String = ""
