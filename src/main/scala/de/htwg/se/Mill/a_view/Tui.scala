@@ -3,7 +3,6 @@ package de.htwg.se.Mill.a_view
 import java.util.{Observable, Observer}
 
 import de.htwg.se.Mill.controller.Controller
-import de.htwg.se.Mill.model.{Field, Gameboard}
 
 class Tui(controller: Controller) extends Observer{
 
@@ -15,6 +14,7 @@ class Tui(controller: Controller) extends Observer{
 
     input match {
       case "n" => controller.createGameboard(size)
+      case _ => controller.gameboardToString
     }
   }
 

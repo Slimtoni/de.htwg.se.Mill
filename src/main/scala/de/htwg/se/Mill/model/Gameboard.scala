@@ -70,45 +70,6 @@ case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutab
       gameboardString += "|          |          |\n"
       gameboardString += v(21) + "__________" + v(22) + "__________" + v(23) + "\n"
     }
-    /*val it = neigh.iterator
-    var prevEdgeHori = false
-    var vertcount = 0
-    for (i <- it) {
-      //println(i._1)
-      if (neigh.length == 8) {
-        if (i.getDirection() == EdgeDirection.Horizontal) {
-          if (!prevEdgeHori) {
-            gameboardString += i.getSource()
-            gameboardString += "__"
-            gameboardString += i.getTarget()
-          } else {
-            gameboardString += "__"
-            gameboardString += i.getTarget() + "\n"
-            prevEdgeHori = true
-          }
-
-        }
-        else {
-          if (vertcount < 1) {
-            if (it.hasNext) {
-              gameboardString += "\n|      |" + "\n"
-              gameboardString += i.getSource() + "      " + i.getTarget() + "\n"
-            } else if (vertcount == 2) {
-              gameboardString += "\n|      |" + "\n"
-            }
-            else gameboardString += "\n"
-          }
-          prevEdgeHori = false
-          vertcount += 1
-
-        }
-      }
-
-    }*/
-    //it.foreach(i => gameboardString.+(i._1.toString + i.toString() + i._2.toString + "\n"))
-    /*for (i <- it) {
-      gameboardString.+(i._1.toString + i.toString() + i._2.toString + "\n")
-    }*/
     gameboardString
   }
 }
