@@ -7,8 +7,9 @@ import de.htwg.se.Mill.model.{Field, Gameboard}
 
 class Tui(controller: Controller) extends Observer{
 
+  controller.addObserver(this)
 
-  def processInputLine(input: String, gameboard: Gameboard[Field]) = {
+  def processInputLine(input: String): Unit = {
 
     val size = "Large"
 
