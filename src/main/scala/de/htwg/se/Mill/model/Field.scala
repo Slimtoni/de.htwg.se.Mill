@@ -7,7 +7,7 @@ object FieldStatus extends Enumeration {
   val Empty, Black, White = Value
 }
 
-case class Field(id: Int, fieldStatus: FieldStatus) {
+case class Field(var id: Int, var fieldStatus: FieldStatus) {
 
   def changeFieldStatus(fieldStatus: FieldStatus) : Field = copy(id, fieldStatus)
 

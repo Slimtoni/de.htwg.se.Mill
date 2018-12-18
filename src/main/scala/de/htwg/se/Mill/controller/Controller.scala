@@ -5,7 +5,7 @@ import scala.swing.Publisher
 
 import de.htwg.se.Mill.model.{Field, Gameboard, GameboardFactory, GameboardSize}
 
-class Controller(var gameboard: Gameboard[Field]) extends Publisher {
+class Controller(var gameboard: Gameboard) extends Publisher {
   var gameboardFactory = new GameboardFactory
 
   def gameboardToString: String = gameboard.toString
@@ -18,6 +18,11 @@ class Controller(var gameboard: Gameboard[Field]) extends Publisher {
       val gameboard = new GameboardFactory().createGameboard(GameboardSize.Small)
     }*/
     gameboard = gameboardFactory.createGameboard(GameboardSize.Large)
+    publish(new FieldChanged)
+  }
+
+  def changeFieldStatus(field: Int, fieldStatus: String): Unit = {
+    gameboard = gameboard.set(0,"")
     publish(new FieldChanged)
   }
 

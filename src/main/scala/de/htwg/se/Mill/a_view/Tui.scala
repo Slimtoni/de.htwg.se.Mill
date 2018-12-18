@@ -14,6 +14,7 @@ case class Tui(controller: Controller) extends Reactor {
 
     input match {
       case "n" => controller.createGameboard(size)
+      case "c" => controller.changeFieldStatus(0, "")
       case _ => controller.gameboardToString
     }
   }
