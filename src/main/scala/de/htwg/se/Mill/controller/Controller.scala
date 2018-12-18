@@ -22,7 +22,7 @@ class Controller(var gameboard: Gameboard) extends Publisher {
   }
 
   def changeFieldStatus(field: Int, fieldStatus: String): Unit = {
-    gameboard = gameboard.set(0,"")
+    gameboard = gameboard.set(0,"Black")
     publish(new FieldChanged)
   }
 

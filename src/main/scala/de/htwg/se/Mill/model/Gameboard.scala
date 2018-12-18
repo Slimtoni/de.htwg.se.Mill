@@ -1,7 +1,6 @@
 package de.htwg.se.Mill.model
 
 import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
-import de.htwg.se.Mill.model.Field._
 import scala.collection.mutable
 import scala.language.postfixOps
 
@@ -51,11 +50,11 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
     fieldtoChange match {
       case Some(f) => {
         fieldStatus match {
-          case "Black" => f.changeFieldStatus(FieldStatus.Black)
-          case "White" => f.changeFieldStatus(FieldStatus.White)
-          case "Empty" => f.changeFieldStatus(FieldStatus.Empty)
+          case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
+          case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
+          case "Empty" =>
+          case _ =>       vertexList(field) = f.changeFieldStatus(FieldStatus.Empty)
         }
-
       }
       case None => println("Field not found on this Gameboard!")
     }
