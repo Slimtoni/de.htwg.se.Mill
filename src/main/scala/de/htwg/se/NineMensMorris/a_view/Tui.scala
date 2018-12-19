@@ -1,32 +1,59 @@
 package de.htwg.se.NineMensMorris.a_view
 
-import de.htwg.se.NineMensMorris.controller.impl.{DefaultGameController, FieldChanged}
+import de.htwg.se.NineMensMorris.controller.impl.{CurrentPlayerChanged, DefaultGameController, FieldChanged, GamePhaseChanged}
+import de.htwg.se.NineMensMorris.model.{Player, PlayerGamePhase}
 
+import scala.io.StdIn.readLine
 import scala.swing.Reactor
 
 case class Tui(controller: DefaultGameController) extends Reactor {
   listenTo(controller)
+  controller.createGameboard()
+  var currentPlayer: Player = controller.playerOnTurn
   println(controller.gameboardToString)
-  println("Pls enter command: ")
+  println("Player: " + currentPlayer.name + " ------ Gamephase: " + currentPlayer.phase + " Man")
 
 
   def processInputLine(input: String): Unit = {
-
-    val size = "Large"
     input match {
       case "n" => controller.createGameboard()
-      case "c" => controller.changeFieldStatus(0, "")
+      case "s" => processGameInput()
       case _ => {
-        //println("Pls enter fieldID and FieldStatus (Black, White, Empty)")
-        var inputs =input.split(' ')
-        //println(inputs(0))
-        //println(inputs(1))
-        controller.changeFieldStatus(inputs(0).toInt, inputs(1))
+        //var inputs =input.split(' ')
+        //controller.changeFieldStatus(inputs(0).toInt, inputs(1))
+
+
       }
     }
   }
 
+  def processGameInput() :Unit = {
+    var quit = false
+    while (!quit) {
+      print("---> ")
+      var input = readLine()
+      var inputs = input.split(' ')
+      if (inputs(0) != "quit") {
+        currentPlayer.phase match {
+          case PlayerGamePhase.Place => controller.performTurn(currentPlayer,inputs(0).toInt)
+          case PlayerGamePhase.Move =>
+          case PlayerGamePhase.Fly => controller.performTurn(currentPlayer, inputs(0).toInt, inputs(1).toInt)
+        }
+      } else {
+        quit = true
+      }
+
+    }
+  }
+
+
+
   reactions += {
-    case event: FieldChanged => println(controller.gameboardToString)
+    case event: FieldChanged => {
+      println(controller.gameboardToString)
+      println("Player: " + currentPlayer.name + " ------ Gamephase: " + currentPlayer.phase + " Man")
+    }
+    case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
+    case _: CurrentPlayerChanged => currentPlayer = controller.playerOnTurn
   }
 }

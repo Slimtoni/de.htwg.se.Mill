@@ -45,20 +45,25 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
     neigh.contains((v, w)) || neigh.contains((v, w))
   }
 
-  def set(field: Int, fieldStatus: String): Gameboard = {
+  def set(field: Int, fieldStatus: String): Option[Gameboard] = {
     val fieldtoChange: Option[Field] = vertexList.get(field)
     fieldtoChange match {
       case Some(f) => {
-        fieldStatus match {
-          case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
-          case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
-          case "Empty" =>
-          case _ =>       println("Unknown Fieldstatus")
+        if (f.fieldStatus == FieldStatus.Empty) {
+          fieldStatus match {
+            case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
+            case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
+            case "Empty" =>
+            case _ =>       println("Unknown Fieldstatus")
+          }
+        } else {
+          return None
         }
+
       }
       case None => println("Field " + field + " not found on this Gameboard!")
     }
-    copy(vertexList, neigh)
+    Option(copy(vertexList, neigh))
   }
 
   override def toString: String = {
