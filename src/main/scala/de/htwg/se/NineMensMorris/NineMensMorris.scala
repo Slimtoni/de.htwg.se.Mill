@@ -1,13 +1,13 @@
 package de.htwg.se.NineMensMorris
 import de.htwg.se.NineMensMorris.a_view.Tui
-import de.htwg.se.NineMensMorris.controller.Controller
-import de.htwg.se.NineMensMorris.model.EdgeDirection.EdgeDirection
+import de.htwg.se.NineMensMorris.controller.impl.DefaultGameController
 import de.htwg.se.NineMensMorris.model._
+
 import scala.io.StdIn.readLine
 
 object NineMensMorris {
   var gameboardFactory = new GameboardFactory()
-  val controller = new Controller(gameboardFactory.createGameboard(GameboardSize.Large))
+  val controller = new DefaultGameController(gameboardFactory.createGameboard(GameboardSize.Large))
   val tui = new Tui(controller)
 
 

@@ -1,10 +1,10 @@
 package de.htwg.se.NineMensMorris.a_view
 
-import de.htwg.se.NineMensMorris.controller.{Controller, FieldChanged}
+import de.htwg.se.NineMensMorris.controller.impl.{DefaultGameController, FieldChanged}
 
 import scala.swing.Reactor
 
-case class Tui(controller: Controller) extends Reactor {
+case class Tui(controller: DefaultGameController) extends Reactor {
   listenTo(controller)
   println(controller.gameboardToString)
   println("Pls enter command: ")
@@ -14,7 +14,7 @@ case class Tui(controller: Controller) extends Reactor {
 
     val size = "Large"
     input match {
-      case "n" => controller.createGameboard(size)
+      case "n" => controller.createGameboard()
       case "c" => controller.changeFieldStatus(0, "")
       case _ => {
         //println("Pls enter fieldID and FieldStatus (Black, White, Empty)")

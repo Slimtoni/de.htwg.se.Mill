@@ -1,4 +1,4 @@
-package de.htwg.se.NineMensMorris.controller
+package de.htwg.se.NineMensMorris.controller.impl
 
 import scala.swing.event.Event
 
