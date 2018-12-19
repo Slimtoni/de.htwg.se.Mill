@@ -1,6 +1,6 @@
-package de.htwg.se.Mill.model
+package de.htwg.se.NineMensMorris.model
 
-import de.htwg.se.Mill.model.FieldStatus.FieldStatus
+import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 
 object FieldStatus extends Enumeration {
   type FieldStatus = Value

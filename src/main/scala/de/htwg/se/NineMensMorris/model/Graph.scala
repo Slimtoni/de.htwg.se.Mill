@@ -1,6 +1,6 @@
-package de.htwg.se.Mill.model
+package de.htwg.se.NineMensMorris.model
 
-import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
+import de.htwg.se.NineMensMorris.model.EdgeDirection.EdgeDirection
 
 trait Graph[V] {
 

@@ -1,4 +1,4 @@
-package de.htwg.se.Mill.model
+package de.htwg.se.NineMensMorris.model
 
 import org.scalatest.{Matchers, WordSpec}
 

@@ -1,7 +1,7 @@
-package de.htwg.se.Mill.model
+package de.htwg.se.NineMensMorris.model
 
-import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
-import de.htwg.se.Mill.model.GameboardSize.GameboardSize
+import de.htwg.se.NineMensMorris.model.EdgeDirection.EdgeDirection
+import de.htwg.se.NineMensMorris.model.GameboardSize.GameboardSize
 
 import scala.collection.mutable
 

@@ -1,9 +1,9 @@
-package de.htwg.se.Mill.controller
+package de.htwg.se.NineMensMorris.controller
 
 import java.util.Observable
 import scala.swing.Publisher
 
-import de.htwg.se.Mill.model.{Field, Gameboard, GameboardFactory, GameboardSize}
+import de.htwg.se.NineMensMorris.model.{Field, Gameboard, GameboardFactory, GameboardSize}
 
 class Controller(var gameboard: Gameboard) extends Publisher {
   var gameboardFactory = new GameboardFactory
@@ -22,10 +22,7 @@ class Controller(var gameboard: Gameboard) extends Publisher {
   }
 
   def changeFieldStatus(field: Int, fieldStatus: String): Unit = {
-    gameboard = gameboard.set(0,"Black")
+    gameboard = gameboard.set(field,fieldStatus)
     publish(new FieldChanged)
   }
-
-
-
 }

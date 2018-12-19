@@ -1,6 +1,6 @@
-package de.htwg.se.Mill.model
+package de.htwg.se.NineMensMorris.model
 
-import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
+import de.htwg.se.NineMensMorris.model.EdgeDirection.EdgeDirection
 import scala.collection.mutable
 import scala.language.postfixOps
 
@@ -53,10 +53,10 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
           case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
           case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
           case "Empty" =>
-          case _ =>       vertexList(field) = f.changeFieldStatus(FieldStatus.Empty)
+          case _ =>       println("Unknown Fieldstatus")
         }
       }
-      case None => println("Field not found on this Gameboard!")
+      case None => println("Field " + field + " not found on this Gameboard!")
     }
     copy(vertexList, neigh)
   }
