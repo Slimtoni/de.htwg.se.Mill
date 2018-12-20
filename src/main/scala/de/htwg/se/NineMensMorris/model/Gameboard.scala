@@ -1,7 +1,6 @@
-package de.htwg.se.Mill.model
+package de.htwg.se.NineMensMorris.model
 
-import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
-
+import de.htwg.se.NineMensMorris.model.EdgeDirection.EdgeDirection
 import scala.collection.mutable
 import scala.language.postfixOps
 
@@ -10,19 +9,19 @@ import scala.language.postfixOps
   * @param size is the size of the Gameboard
   * @tparam Field is the type ofgit the Graph-Attribute
   */
-case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutable.MutableList[Edge[Field]])
+case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.MutableList[Edge[Field]])
   extends Graph[Field] {
 
   //def this(size: Int) = this(new mutable.MutableList[Field], new mutable.MutableList[(Field, Field)]){}
   def vertList(): mutable.MutableList[Field] = vertexList
   def nbourList(): mutable.MutableList[Edge[Field]] = neigh
 
-  override def addVertex(v: Field): Gameboard[Field] = {
+  override def addVertex(v: Field): Gameboard = {
     if (!vertexList.contains(v)) vertexList.+=(v)
     copy(vertexList, neigh)
   }
 
-  override def addEdge(v: Field, w: Field, direc : EdgeDirection): Gameboard[Field] = {
+  override def addEdge(v: Field, w: Field, direc : EdgeDirection): Gameboard = {
     if (!containsVertex(v)) addVertex(v)
     if (!containsVertex(w)) addVertex(w)
     if (!containsEdge(v,w) || !containsEdge(w,v)) {
@@ -36,27 +35,48 @@ case class Gameboard[Field](vertexList: mutable.MutableList[Field], neigh: mutab
     for (i<-this.vertexList) {
       if (v.equals(i)) return true
     }
-    return false
+    false
   }
 
   override def containsEdge(v: Field, w: Field): Boolean = {
     if (!containsVertex(v) || !containsVertex(w)) {
       throw new IllegalArgumentException(v + " or "+ w + " isn`t a Vertex")
     }
-    neigh.contains((v, w)) || neigh.contains((w, v))
+    neigh.contains((v, w)) || neigh.contains((v, w))
+  }
+
+  def set(field: Int, fieldStatus: String): Option[Gameboard] = {
+    val fieldtoChange: Option[Field] = vertexList.get(field)
+    fieldtoChange match {
+      case Some(f) => {
+        if (f.fieldStatus == FieldStatus.Empty) {
+          fieldStatus match {
+            case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
+            case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
+            case "Empty" =>
+            case _ =>       println("Unknown Fieldstatus")
+          }
+        } else {
+          return None
+        }
+
+      }
+      case None => println("Field " + field + " not found on this Gameboard!")
+    }
+    Option(copy(vertexList, neigh))
   }
 
   override def toString: String = {
     var gameboardString: String = ""
     var v = vertexList
     if (vertexList.length == 8) {
-      gameboardString += v(0) + "__" + v(1) + "__" + v(2) + "\n"
+      gameboardString += v.head + "__" + v(1) + "__" + v(2) + "\n"
       gameboardString += "|     |\n"
       gameboardString += v(3) + "     " + v(4) + "\n"
       gameboardString += "|     |\n"
       gameboardString += v(5) + "__" + v(6) + "__" + v(7) + "\n"
     } else if (vertexList.length == 24) {
-      gameboardString += v(0) + "__________" + v(1) + "__________" + v(2) + "\n"
+      gameboardString += v.head + "__________" + v(1) + "__________" + v(2) + "\n"
       gameboardString += "|          |          |\n"
       gameboardString += "|   " + v(3) + "______" + v(4) + "______" + v(5) + "   |\n"
       gameboardString += "|   |      |      |   |\n"

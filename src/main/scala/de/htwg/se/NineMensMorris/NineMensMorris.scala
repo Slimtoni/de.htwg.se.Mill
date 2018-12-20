@@ -1,14 +1,14 @@
-package de.htwg.se.Mill
-import de.htwg.se.Mill.a_view.Tui
-import de.htwg.se.Mill.controller.Controller
-import de.htwg.se.Mill.model.EdgeDirection.EdgeDirection
-import de.htwg.se.Mill.model._
+package de.htwg.se.NineMensMorris
+import de.htwg.se.NineMensMorris.a_view.Tui
+import de.htwg.se.NineMensMorris.controller.impl.DefaultGameController
+import de.htwg.se.NineMensMorris.model._
+
 import scala.io.StdIn.readLine
 
-object Mill {
+object NineMensMorris {
   var gameboardFactory = new GameboardFactory()
-  val controller = new Controller(gameboardFactory.createGameboard(GameboardSize.Large))
-  val tui = new Tui(controller)
+  val controller = new DefaultGameController(gameboardFactory.createGameboard(GameboardSize.Large))
+  val tui = Tui(controller)
 
 
   def main(args: Array[String]): Unit = {
