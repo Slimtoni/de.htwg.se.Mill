@@ -16,6 +16,11 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
   def vertList(): mutable.MutableList[Field] = vertexList
   def nbourList(): mutable.MutableList[Edge[Field]] = neigh
 
+  def getField(id: Int): Option[Field] = {
+    for (i <- vertexList.iterator) if (i.id == id) return Some(i)
+    None
+  }
+
   override def addVertex(v: Field): Gameboard = {
     if (!vertexList.contains(v)) vertexList.+=(v)
     copy(vertexList, neigh)
