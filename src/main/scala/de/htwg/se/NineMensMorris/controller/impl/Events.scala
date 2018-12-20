@@ -8,4 +8,6 @@ class GamePhaseChanged extends Event
 
 class CurrentPlayerChanged extends Event
 
+class GameOver extends Event
+
 class Error extends Event

@@ -29,13 +29,19 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
     if (!playerOnTurn.checkPlacedMen()) {
       publish(new GamePhaseChanged)
     }
+
     placeMan(targetFieldID)
     // wenn ein Spieler eine Mühle schließt wechselt der Spieler nicht!!!
   }
+
   override def performTurn(playerOnTurn: Player, startFieldID: Int, targetFieldID: Int): Unit = {
     if (!playerOnTurn.checkPlacedMen()) {
       publish(new GamePhaseChanged)
     }
+    if (playerOnTurn.numberPlacedMen < 3) {
+      publish(new GameOver)
+    }
+
     playerOnTurn.phase match {
       case PlayerGamePhase.Move => moveMan(startFieldID, targetFieldID)
       case PlayerGamePhase.Fly => flyMan(startFieldID, targetFieldID)
@@ -57,7 +63,7 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
   private def flyMan(startFieldId: Int, targetFieldId: Int): Unit = ???
 
   private def changeFieldStatus(field: Int, fieldStatus: String): Unit = {
-    var gameboardNew = gameboard.set(field,fieldStatus)
+    var gameboardNew = gameboard.set(field, fieldStatus)
     gameboardNew match {
       case Some(gameb) => {
         gameboard = gameb
