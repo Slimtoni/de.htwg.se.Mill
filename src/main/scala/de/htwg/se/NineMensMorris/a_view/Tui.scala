@@ -2,7 +2,7 @@ package de.htwg.se.NineMensMorris.a_view
 
 import java.lang.System
 
-import scala.sys.exit
+
 import de.htwg.se.NineMensMorris.controller.impl._
 import de.htwg.se.NineMensMorris.model.{Player, PlayerGamePhase}
 
@@ -58,8 +58,8 @@ case class Tui(controller: DefaultGameController) extends Reactor {
     }
     case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
     case _: CurrentPlayerChanged => currentPlayer = controller.playerOnTurn
-    case _: GameOver => println(controller.playerOnTurn + " lost the game!")
-            sys.exit(0)
+    case _: GameOver => println(controller.playerOnTurn + " won the game!")
+
 
   }
 }

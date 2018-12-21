@@ -3,6 +3,7 @@ package de.htwg.se.NineMensMorris.controller.impl
 import de.htwg.se.NineMensMorris.controller.GameController
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model._
+import scala.sys.exit
 
 class DefaultGameController(var gameboard: Gameboard) extends GameController {
   var gameboardFactory = new GameboardFactory
@@ -39,7 +40,9 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
       publish(new GamePhaseChanged)
     }
     if (playerOnTurn.numberPlacedMen < 3) {
+      changePlayerOnTurn()
       publish(new GameOver)
+      sys.exit(0)
     }
 
     playerOnTurn.phase match {
