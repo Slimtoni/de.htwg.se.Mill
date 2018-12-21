@@ -3,6 +3,7 @@ package de.htwg.se.NineMensMorris.controller.impl
 import de.htwg.se.NineMensMorris.controller.GameController
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model._
+import scala.sys.exit
 
 class DefaultGameController(var gameboard: Gameboard) extends GameController {
   var gameboardFactory = new GameboardFactory
@@ -29,13 +30,21 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
     if (!playerOnTurn.checkPlacedMen()) {
       publish(new GamePhaseChanged)
     }
+
     placeMan(targetFieldID)
     // wenn ein Spieler eine Mühle schließt wechselt der Spieler nicht!!!
   }
+
   override def performTurn(playerOnTurn: Player, startFieldID: Int, targetFieldID: Int): Unit = {
     if (!playerOnTurn.checkPlacedMen()) {
       publish(new GamePhaseChanged)
     }
+    if (playerOnTurn.numberPlacedMen < 3) {
+      changePlayerOnTurn()
+      publish(new GameOver)
+      sys.exit(0)
+    }
+
     playerOnTurn.phase match {
       case PlayerGamePhase.Move => moveMan(startFieldID, targetFieldID)
       case PlayerGamePhase.Fly => flyMan(startFieldID, targetFieldID)
@@ -57,7 +66,7 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
   private def flyMan(startFieldId: Int, targetFieldId: Int): Unit = ???
 
   private def changeFieldStatus(field: Int, fieldStatus: String): Unit = {
-    var gameboardNew = gameboard.set(field,fieldStatus)
+    var gameboardNew = gameboard.set(field, fieldStatus)
     gameboardNew match {
       case Some(gameb) => {
         gameboard = gameb
