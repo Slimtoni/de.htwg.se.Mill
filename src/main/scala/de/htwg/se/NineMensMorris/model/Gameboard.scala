@@ -16,9 +16,9 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
   def vertList(): mutable.MutableList[Field] = vertexList
   def nbourList(): mutable.MutableList[Edge[Field]] = neigh
 
-  def getField(id: Int): Option[Field] = {
-    for (i <- vertexList.iterator) if (i.id == id) return Some(i)
-    None
+  def getField(id: Int): Field = {
+    for (i <- vertexList.iterator) if (i.id == id) return i
+    Field(99,FieldStatus.Empty) // error case with dummy Field
   }
 
   override def addVertex(v: Field): Gameboard = {
@@ -26,11 +26,11 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
     copy(vertexList, neigh)
   }
 
-  override def addEdge(v: Field, w: Field, direc : EdgeDirection): Gameboard = {
+  override def addEdge(v: Field, w: Field): Gameboard = {
     if (!containsVertex(v)) addVertex(v)
     if (!containsVertex(w)) addVertex(w)
     if (!containsEdge(v,w) || !containsEdge(w,v)) {
-      val edge = new Edge[Field](v,w,direc)
+      val edge = new Edge[Field](v,w)
       neigh.+=(edge)
     }
     copy(vertexList, neigh)
@@ -47,24 +47,21 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
     if (!containsVertex(v) || !containsVertex(w)) {
       throw new IllegalArgumentException(v + " or "+ w + " isn`t a Vertex")
     }
-    neigh.contains((v, w)) || neigh.contains((v, w))
+    val edge = Edge(v,w)
+    val edgeInv = Edge(w,v)
+    neigh.contains(edge) || neigh.contains(edgeInv)
   }
 
   def set(field: Int, fieldStatus: String): Option[Gameboard] = {
     val fieldtoChange: Option[Field] = vertexList.get(field)
     fieldtoChange match {
       case Some(f) => {
-        if (f.fieldStatus == FieldStatus.Empty) {
           fieldStatus match {
             case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
             case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
-            case "Empty" =>
+            case "Empty" => vertexList(field) = f.changeFieldStatus(FieldStatus.Empty)
             case _ =>       println("Unknown Fieldstatus")
           }
-        } else {
-          return None
-        }
-
       }
       case None => println("Field " + field + " not found on this Gameboard!")
     }
