@@ -30,7 +30,7 @@ case class Tui(controller: DefaultGameController) extends Reactor {
     }
   }
 
-  def processGameInput() :Unit = {
+  def processGameInput(): Unit = {
     var quit = false
     while (!quit) {
       print("---> ")
@@ -38,7 +38,7 @@ case class Tui(controller: DefaultGameController) extends Reactor {
       var inputs = input.split(' ')
       if (inputs(0) != "quit") {
         currentPlayer.phase match {
-          case PlayerGamePhase.Place => controller.performTurn(currentPlayer,inputs(0).toInt)
+          case PlayerGamePhase.Place => controller.performTurn(currentPlayer, inputs(0).toInt)
           case PlayerGamePhase.Move =>
           case PlayerGamePhase.Fly => controller.performTurn(currentPlayer, inputs(0).toInt, inputs(1).toInt)
         }
@@ -48,7 +48,6 @@ case class Tui(controller: DefaultGameController) extends Reactor {
 
     }
   }
-
 
 
   reactions += {

@@ -3,6 +3,7 @@ package de.htwg.se.NineMensMorris.controller.impl
 import de.htwg.se.NineMensMorris.controller.GameController
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model._
+
 import scala.sys.exit
 
 class DefaultGameController(var gameboard: Gameboard) extends GameController {
@@ -27,6 +28,12 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
   }
 
   override def performTurn(playerOnTurn: Player, targetFieldID: Int): Unit = {
+    if (getPlayerNotOnTurn().numberPlacedMen < 3) {
+      publish(new GameOver)
+      sys.exit(0)
+    }
+
+
     if (!playerOnTurn.checkPlacedMen()) {
       publish(new GamePhaseChanged)
     }
@@ -39,8 +46,7 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
     if (!playerOnTurn.checkPlacedMen()) {
       publish(new GamePhaseChanged)
     }
-    if (playerOnTurn.numberPlacedMen < 3) {
-      changePlayerOnTurn()
+    if (getPlayerNotOnTurn().numberPlacedMen < 3) {
       publish(new GameOver)
       sys.exit(0)
     }
@@ -52,6 +58,14 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
   }
 
   override def getPlayerOnTurnPhase: PlayerGamePhase = playerOnTurn.phase
+
+  def getPlayerNotOnTurn(): Player = {
+    if (playerOnTurn == player1) {
+      return player2
+    } else {
+      return player1
+    }
+  }
 
   private def placeMan(targetFieldId: Int): Unit = {
     playerOnTurn.name match {
@@ -75,6 +89,15 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
       }
       case None => publish(new Error) //TODO: passenden Error definieren
     }
+  }
+
+
+  def killMan(targetFieldId: Int): Unit = {
+    //insert check if man is in mill
+    changeFieldStatus(targetFieldId, "Empty")
+
+
+    publish(new FieldChanged)
   }
 
   override def changePlayerOnTurn(): Unit = {

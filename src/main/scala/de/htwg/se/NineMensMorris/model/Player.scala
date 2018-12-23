@@ -29,6 +29,8 @@ case class Player(name: String,var phase: PlayerGamePhase = PlayerGamePhase.Plac
     copy(name, phase, numberPlacedMen)
   }
 
+
+
   override def toString: String = name
 }
 
