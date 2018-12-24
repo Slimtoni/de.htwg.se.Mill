@@ -28,10 +28,6 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
   }
 
   override def performTurn(playerOnTurn: Player, targetFieldID: Int): Unit = {
-    if (getPlayerNotOnTurn().numberPlacedMen < 3) {
-      publish(new GameOver)
-      sys.exit(0)
-    }
 
 
     if (!playerOnTurn.checkPlacedMen()) {
@@ -95,7 +91,6 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
   def killMan(targetFieldId: Int): Unit = {
     //insert check if man is in mill
     changeFieldStatus(targetFieldId, "Empty")
-
 
     publish(new FieldChanged)
   }
