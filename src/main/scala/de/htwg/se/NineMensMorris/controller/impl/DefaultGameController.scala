@@ -50,25 +50,17 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
 
   private def placeMan(targetFieldId: Int): Unit = {
     playerOnTurn.incrementPlacedMen()
-    playerOnTurn.name match {
-      case "Black" => {
-        //println("Player: " + playerOnTurn.name + " placed men: " + playerOnTurn.numberPlacedMen)
-        changeFieldStatus(targetFieldId, "Black")
-      }
-      case "White" => {
-        //println("Player: " + playerOnTurn.name + " placed men: " + playerOnTurn.numberPlacedMen)
-        changeFieldStatus(targetFieldId, "White")
-      }
-      case _ => changeFieldStatus(targetFieldId, "Empty")
-    }
-
+    changeFieldStatus(targetFieldId, playerOnTurn.name)
   }
 
   private def moveMan(startFieldId: Int, targetFieldId: Int): Unit = {
+    println(gameboard.neigh)
     val startField: Field = gameboard.getField(startFieldId)
     val targetField: Field = gameboard.getField(targetFieldId)
-    if (startField.id != 99 && targetField.id != 99 && startField.fieldStatus.toString == playerOnTurn.name) {
-      if (gameboard.containsEdge(startField,targetField)) {
+    if (startField.fieldStatus.toString == playerOnTurn.name
+        && targetField.fieldStatus == FieldStatus.Empty) {
+      if (gameboard.containsEdge(startField, targetField)) {
+        println("Contains Edge - " + startField.id + " " + targetField.id)
         changeFieldStatus(startFieldId, "Empty")
         changeFieldStatus(targetField.id, playerOnTurn.name)
       } else publish(new MissingEdgeError)

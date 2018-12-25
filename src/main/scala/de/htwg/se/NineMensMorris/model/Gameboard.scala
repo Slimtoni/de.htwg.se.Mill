@@ -9,12 +9,12 @@ import scala.language.postfixOps
   * @param size is the size of the Gameboard
   * @tparam Field is the type ofgit the Graph-Attribute
   */
-case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.MutableList[Edge[Field]])
+case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.MutableList[Edge])
   extends Graph[Field] {
 
   //def this(size: Int) = this(new mutable.MutableList[Field], new mutable.MutableList[(Field, Field)]){}
   def vertList(): mutable.MutableList[Field] = vertexList
-  def nbourList(): mutable.MutableList[Edge[Field]] = neigh
+  def nbourList(): mutable.MutableList[Edge] = neigh
 
   def getField(id: Int): Field = {
     for (i <- vertexList.iterator) if (i.id == id) return i
@@ -30,7 +30,7 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
     if (!containsVertex(v)) addVertex(v)
     if (!containsVertex(w)) addVertex(w)
     if (!containsEdge(v,w) || !containsEdge(w,v)) {
-      val edge = new Edge[Field](v,w)
+      val edge = new Edge(v,w)
       neigh.+=(edge)
     }
     copy(vertexList, neigh)
@@ -38,7 +38,7 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
 
   override def containsVertex(v: Field): Boolean = {
     for (i<-this.vertexList) {
-      if (v.equals(i)) return true
+      if (v.checkID(i)) return true
     }
     false
   }
@@ -48,8 +48,11 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
       throw new IllegalArgumentException(v + " or "+ w + " isn`t a Vertex")
     }
     val edge = Edge(v,w)
-    val edgeInv = Edge(w,v)
-    neigh.contains(edge) || neigh.contains(edgeInv)
+    for (i<-this.neigh) {
+      //print(i)
+      if (edge.equals(i)) return true
+    }
+    false
   }
 
   def set(field: Int, fieldStatus: String): Option[Gameboard] = {

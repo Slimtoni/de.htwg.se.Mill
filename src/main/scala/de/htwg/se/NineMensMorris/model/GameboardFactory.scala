@@ -5,10 +5,7 @@ import de.htwg.se.NineMensMorris.model.GameboardSize.GameboardSize
 
 import scala.collection.mutable
 
-object GameboardSize extends Enumeration {
-  type GameboardSize = Value
-  val Small, Large = Value
-}
+
 
 class GameboardFactory() {
 
@@ -41,20 +38,12 @@ class GameboardFactory() {
     size match {
       case GameboardSize.Small => {
         //print("small")
-        val gameboard = new Gameboard(new mutable.MutableList[Field], new mutable.MutableList[Edge[Field]])
-        gameboard.addEdge(field0, field1)
-        gameboard.addEdge(field1, field2)
-        gameboard.addEdge(field0, field3)
-        gameboard.addEdge(field2, field4)
-        gameboard.addEdge(field3, field5)
-        gameboard.addEdge(field5, field6)
-        gameboard.addEdge(field4, field7)
-        gameboard.addEdge(field6, field7)
+        val gameboard = Gameboard(new mutable.MutableList[Field], new mutable.MutableList[Edge])
         gameboard
       };
       case GameboardSize.Large => {
         //println("large")
-        val gameboard = new Gameboard(new mutable.MutableList[Field], new mutable.MutableList[Edge[Field]])
+        val gameboard = Gameboard(new mutable.MutableList[Field], new mutable.MutableList[Edge])
         gameboard.addEdge(field0, field1)
         gameboard.addEdge(field1, field2)
         gameboard.addEdge(field3, field4)
