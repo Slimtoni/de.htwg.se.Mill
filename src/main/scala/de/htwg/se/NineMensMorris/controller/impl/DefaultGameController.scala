@@ -73,7 +73,16 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
     //if (gameboard.containsEdge(startField, gameboard.getField(targetFieldId)))
   }
 
-  private def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = ???
+  private def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
+    val startField: Field = gameboard.getField(startFieldId)
+    val targetField: Field = gameboard.getField(targetFieldId)
+    if (startField.fieldStatus.toString == playerOnTurn.name
+        && targetField.fieldStatus == FieldStatus.Empty) {
+      var err: Error.Value = changeFieldStatus(startFieldId, "Empty")
+      if (err == Error.NoError) err = changeFieldStatus(targetFieldId, playerOnTurn.name)
+      err
+    } else Error.FieldError
+  }
 
   private def changeFieldStatus(field: Int, fieldStatus: String): impl.Error.Value = {
     val gameboardNew = gameboard.set(field, fieldStatus)
