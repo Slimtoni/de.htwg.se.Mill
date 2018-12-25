@@ -16,10 +16,9 @@ case class Tui(controller: DefaultGameController) extends Reactor {
     input match {
       case "n" => controller.createGameboard()
       case "s" => processGameInput()
-      case _ => {
+      case _ =>
         //var inputs =input.split(' ')
         //controller.changeFieldStatus(inputs(0).toInt, inputs(1))
-      }
     }
   }
 
@@ -27,7 +26,10 @@ case class Tui(controller: DefaultGameController) extends Reactor {
     var quit = false
     while (!quit) {
       val currentPlayer = controller.playerOnTurn
-      processPlayerTurn(currentPlayer)
+      try processPlayerTurn(currentPlayer)
+      catch {
+        case e: Exception => println("Error: " + e)
+      }
     }
   }
   def processPlayerTurn(currentPlayer: Player): Unit = {
@@ -45,23 +47,32 @@ case class Tui(controller: DefaultGameController) extends Reactor {
           else done = true
         }
       case PlayerGamePhase.Move =>
-        println("Please enter ID of the start- and targetField to Move: ")
-        val input = readLine()
-        val inputs = input.split(" ")
-        controller.performTurn(inputs(0).toInt, inputs(1).toInt)
-      case PlayerGamePhase.Fly =>
-        println("Please enter ID of the start- and targetField to Fly: ")
-        val input = readLine()
-        val inputs = input.split(" ")
-        try controller.performTurn(inputs(0).toInt, inputs(1).toInt)
-        catch {
-          case _: Exception => println("Please enter ID of the start- and targetField to Fly: ")
+        var done = false
+        while (!done) {
+          println("Please enter ID of the start- and targetField to Move: ")
+          val input = readLine()
+          val inputs = input.split(" ")
+          val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
+          if (error != Error.NoError) println(error)
+          else done = true
         }
+      case PlayerGamePhase.Fly =>
+        var done = false
+        while (!done) {
+          println("Please enter ID of the start- and targetField to Fly: ")
+          val input = readLine()
+          val inputs = input.split(" ")
+          val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
+          if (error != Error.NoError) println(error)
+          else done = true
+        }
+
+
     }
   }
 
   reactions += {
-    case event: FieldChanged => {
+    case _: FieldChanged => {
       println(controller.gameboardToString)
     }
     case _: PlayerPhaseChanged =>
