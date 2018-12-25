@@ -44,13 +44,12 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
   }
 
   override def containsEdge(v: Field, w: Field): Boolean = {
-    if (!containsVertex(v) || !containsVertex(w)) {
-      throw new IllegalArgumentException(v + " or "+ w + " isn`t a Vertex")
-    }
-    val edge = Edge(v,w)
-    for (i<-this.neigh) {
-      //print(i)
-      if (edge.equals(i)) return true
+    if (containsVertex(v) && containsVertex(w)) {
+      val edge = Edge(v,w)
+      for (i<-this.neigh) {
+        //print(i)
+        if (edge.equals(i)) return true
+      }
     }
     false
   }
@@ -66,7 +65,7 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
             case _ =>       println("Unknown Fieldstatus")
           }
       }
-      case None => println("Field " + field + " not found on this Gameboard!")
+      case None => return None
     }
     Option(copy(vertexList, neigh))
   }

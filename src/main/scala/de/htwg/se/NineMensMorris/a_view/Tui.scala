@@ -19,8 +19,6 @@ case class Tui(controller: DefaultGameController) extends Reactor {
       case _ => {
         //var inputs =input.split(' ')
         //controller.changeFieldStatus(inputs(0).toInt, inputs(1))
-
-
       }
     }
   }
@@ -30,15 +28,6 @@ case class Tui(controller: DefaultGameController) extends Reactor {
     while (!quit) {
       val currentPlayer = controller.playerOnTurn
       processPlayerTurn(currentPlayer)
-      print("---> ")
-      var input = readLine()
-      var inputs = input.split(' ')
-      if (inputs(0) != "quit") {
-
-      } else {
-        quit = true
-      }
-
     }
   }
   def processPlayerTurn(currentPlayer: Player): Unit = {
@@ -46,24 +35,21 @@ case class Tui(controller: DefaultGameController) extends Reactor {
     //currentPlayer = controller.playerOnTurn
     //println("Player: " + currentPlayer.name + " ------ Gamephase: " + currentPlayer.phase + " Man")
     controller.getPlayerOnTurnPhase match {
-      case PlayerGamePhase.Place => {
-        println("Please enter ID of the target Field to Place: ")
-        val input = readInt()
-        try controller.performTurn(input,0)
-        catch {
-          case _: Exception => println("Please enter ID of the target Field to Place: ")
+      case PlayerGamePhase.Place =>
+        var done = false
+        while (!done) {
+          println("Please enter ID of the target Field to Place: ")
+          val input = readInt()
+          val error = controller.performTurn(input, 0)
+          if (error != Error.NoError) println(error)
+          else done = true
         }
-      }
-      case PlayerGamePhase.Move => {
+      case PlayerGamePhase.Move =>
         println("Please enter ID of the start- and targetField to Move: ")
         val input = readLine()
         val inputs = input.split(" ")
-        try controller.performTurn(inputs(0).toInt, inputs(1).toInt)
-        catch {
-          case _: Exception => println("Please enter ID of the start- and targetField to Move: ")
-        }
-      }
-      case PlayerGamePhase.Fly => {
+        controller.performTurn(inputs(0).toInt, inputs(1).toInt)
+      case PlayerGamePhase.Fly =>
         println("Please enter ID of the start- and targetField to Fly: ")
         val input = readLine()
         val inputs = input.split(" ")
@@ -71,7 +57,6 @@ case class Tui(controller: DefaultGameController) extends Reactor {
         catch {
           case _: Exception => println("Please enter ID of the start- and targetField to Fly: ")
         }
-      }
     }
   }
 
@@ -83,7 +68,5 @@ case class Tui(controller: DefaultGameController) extends Reactor {
       println("Player: " + controller.playerOnTurn.name + " ------ Gamephase: " + controller.playerOnTurn.phase + " Man")
     case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
     //case _: CurrentPlayerChanged => controller.playerOnTurn = controller.playerOnTurn
-    case _: InvalidFieldError => println("Invalid Field Error!!!")
-    case _: MissingEdgeError => println("Gameboard does not contain the Edge!!!")
   }
 }

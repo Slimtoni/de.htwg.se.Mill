@@ -1,6 +1,6 @@
 package de.htwg.se.NineMensMorris.controller.impl
 
-import de.htwg.se.NineMensMorris.controller.GameController
+import de.htwg.se.NineMensMorris.controller.{GameController, impl}
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model._
 
@@ -26,57 +26,63 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
 
   def checkPlayer(player: Player): Unit = {
     player.checkPlacedMen() match {
-      case Some(value) => {
+      case Some(value) =>
         //println("Phase of Value:" + value.phase)
         playerOnTurn = value
         publish(new PlayerPhaseChanged)
-      }
       case None => publish(new GamePhaseChanged)
     }
   }
 
   // wenn ein Spieler eine Mühle schließt wechselt der Spieler nicht!!!
 
-  override def performTurn(startFieldID: Int, targetFieldID: Int): Unit = {
+  override def performTurn(startFieldID: Int, targetFieldID: Int): Error.Value = {
+    var err = Error.NoError
     getPlayerOnTurnPhase match {
-      case PlayerGamePhase.Place => placeMan(startFieldID)
-      case PlayerGamePhase.Move => moveMan(startFieldID, targetFieldID)
-      case PlayerGamePhase.Fly => flyMan(startFieldID, targetFieldID)
+      case PlayerGamePhase.Place => err = placeMan(startFieldID)
+      case PlayerGamePhase.Move => err = moveMan(startFieldID, targetFieldID)
+      case PlayerGamePhase.Fly => err = flyMan(startFieldID, targetFieldID)
     }
-    endPlayersTurn()
+    if (err == Error.NoError) endPlayersTurn()
+    err
   }
 
   override def getPlayerOnTurnPhase: PlayerGamePhase = playerOnTurn.phase
 
-  private def placeMan(targetFieldId: Int): Unit = {
-    playerOnTurn.incrementPlacedMen()
-    changeFieldStatus(targetFieldId, playerOnTurn.name)
+  private def placeMan(targetFieldId: Int): Error.Value = {
+    val targetField: Field = gameboard.getField(targetFieldId)
+    if (targetField.fieldStatus == FieldStatus.Empty) {
+      val error = changeFieldStatus(targetFieldId, playerOnTurn.name)
+      if (error == Error.NoError) playerOnTurn.incrementPlacedMen()
+      return error
+    }
+    Error.FieldError
   }
 
-  private def moveMan(startFieldId: Int, targetFieldId: Int): Unit = {
-    println(gameboard.neigh)
+  private def moveMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
     val startField: Field = gameboard.getField(startFieldId)
     val targetField: Field = gameboard.getField(targetFieldId)
     if (startField.fieldStatus.toString == playerOnTurn.name
         && targetField.fieldStatus == FieldStatus.Empty) {
       if (gameboard.containsEdge(startField, targetField)) {
-        println("Contains Edge - " + startField.id + " " + targetField.id)
-        changeFieldStatus(startFieldId, "Empty")
-        changeFieldStatus(targetField.id, playerOnTurn.name)
-      } else publish(new MissingEdgeError)
-    } else publish(new InvalidFieldError)
+        var err: Error.Value = changeFieldStatus(startFieldId, "Empty")
+        if (err == Error.NoError) err = changeFieldStatus(targetField.id, playerOnTurn.name)
+        err
+      } else Error.EdgeError
+    } else Error.FieldError
     //if (gameboard.containsEdge(startField, gameboard.getField(targetFieldId)))
   }
 
-  private def flyMan(startFieldId: Int, targetFieldId: Int): Unit = ???
+  private def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = ???
 
-  private def changeFieldStatus(field: Int, fieldStatus: String): Unit = {
-    var gameboardNew = gameboard.set(field,fieldStatus)
+  private def changeFieldStatus(field: Int, fieldStatus: String): impl.Error.Value = {
+    val gameboardNew = gameboard.set(field, fieldStatus)
     gameboardNew match {
       case Some(gameb) => {
         gameboard = gameb
+        Error.NoError
       }
-      case None => publish(new Error("Invalid Field")) //TODO: passenden Error definieren
+      case None => Error.FieldError
     }
   }
 
@@ -87,11 +93,11 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
 
   override def changePlayerOnTurn(): Unit = {
     if (playerOnTurn == playerWhite) {
-      playerWhite = playerOnTurn
+      //playerWhite = playerOnTurn
       playerOnTurn = playerBlack
     }
     else {
-      playerBlack = playerOnTurn
+      //playerBlack = playerOnTurn
       playerOnTurn = playerWhite
     }
     publish(new CurrentPlayerChanged)

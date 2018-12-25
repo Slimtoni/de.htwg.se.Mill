@@ -9,9 +9,3 @@ class GamePhaseChanged extends Event
 class PlayerPhaseChanged extends Event
 
 class CurrentPlayerChanged extends Event
-
-class Error(msg: String) extends Event
-
-class InvalidFieldError extends Event
-
-class MissingEdgeError extends Event
