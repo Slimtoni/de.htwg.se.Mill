@@ -6,7 +6,7 @@ case class Player(name: String, phase: PlayerGamePhase, var numberPlacedMen: Int
 
   var numberLostMen: Int = 0
   def checkPlacedMen(): Option[Player] = {
-    if (numberPlacedMen >= 9 && numberLostMen <= 6) {
+    if (numberPlacedMen >= 1 && numberLostMen <= 6) {
       return Some(changeGamePhase(PlayerGamePhase.Move))
     } else if (numberPlacedMen <= 9 && numberLostMen > 6) {
       return Some(changeGamePhase(PlayerGamePhase.Fly))
@@ -26,6 +26,11 @@ case class Player(name: String, phase: PlayerGamePhase, var numberPlacedMen: Int
   def decrementPlacedMen(): Player = {
     numberPlacedMen -= 1
     copy(name, phase, numberPlacedMen)
+  }
+
+  def equals(o: Player): Boolean = {
+    if (o.name == this.name) true
+    else false
   }
 
   override def toString: String = name

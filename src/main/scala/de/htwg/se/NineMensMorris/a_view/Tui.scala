@@ -44,7 +44,10 @@ case class Tui(controller: DefaultGameController) extends Reactor {
           val input = readInt()
           val error = controller.performTurn(input, 0)
           if (error != Error.NoError) println(error)
-          else done = true
+          else done = {
+            println("Succesfully placed Man on the Field " + input)
+            true
+          }
         }
       case PlayerGamePhase.Move =>
         var done = false
@@ -54,7 +57,10 @@ case class Tui(controller: DefaultGameController) extends Reactor {
           val inputs = input.split(" ")
           val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
           if (error != Error.NoError) println(error)
-          else done = true
+          else done = {
+            println("Succesfully moved Man from Field " + inputs(0) + " to Field " + inputs(1))
+            true
+          }
         }
       case PlayerGamePhase.Fly =>
         var done = false
@@ -66,8 +72,6 @@ case class Tui(controller: DefaultGameController) extends Reactor {
           if (error != Error.NoError) println(error)
           else done = true
         }
-
-
     }
   }
 

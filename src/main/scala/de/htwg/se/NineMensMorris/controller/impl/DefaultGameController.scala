@@ -92,12 +92,12 @@ class DefaultGameController(var gameboard: Gameboard) extends GameController {
   }
 
   override def changePlayerOnTurn(): Unit = {
-    if (playerOnTurn == playerWhite) {
-      //playerWhite = playerOnTurn
+    if (playerOnTurn.equals(playerWhite)) {
+      playerWhite = playerOnTurn
       playerOnTurn = playerBlack
     }
     else {
-      //playerBlack = playerOnTurn
+      playerBlack = playerOnTurn
       playerOnTurn = playerWhite
     }
     publish(new CurrentPlayerChanged)
