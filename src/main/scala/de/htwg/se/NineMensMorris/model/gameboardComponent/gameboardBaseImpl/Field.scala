@@ -4,7 +4,9 @@ import de.htwg.se.NineMensMorris.model.FieldStatus
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 
-case class Field(var id: Int, var fieldStatus: FieldStatus) extends FieldInterface {
+case class Field(id: Int, var fieldStatus: FieldStatus) extends FieldInterface {
+
+  def this(id: Int) = this(id, FieldStatus.Empty)
 
   def changeFieldStatus(fieldStatus: FieldStatus) : Field = copy(id, fieldStatus)
 
