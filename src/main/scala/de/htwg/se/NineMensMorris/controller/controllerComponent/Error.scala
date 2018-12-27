@@ -1,4 +1,4 @@
-package de.htwg.se.NineMensMorris.controller.impl
+package de.htwg.se.NineMensMorris.controller.controllerComponent
 
 object Error extends Enumeration {
   type Error = Value

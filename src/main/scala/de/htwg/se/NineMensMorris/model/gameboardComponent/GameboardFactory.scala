@@ -1,7 +1,7 @@
 package de.htwg.se.NineMensMorris.model.gameboardComponent
 
 import de.htwg.se.NineMensMorris.model.GameboardSize.GameboardSize
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Edge, Field, GameboardInterface}
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Edge, Field, Gameboard}
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize}
 
 import scala.collection.mutable
@@ -39,12 +39,12 @@ class GameboardFactory() {
     size match {
       case GameboardSize.Small => {
         //print("small")
-        val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[Edge])
+        val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
         gameboard
       };
       case GameboardSize.Large => {
         //println("large")
-        val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[Edge])
+        val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
         gameboard.addEdge(field0, field1)
         gameboard.addEdge(field1, field2)
         gameboard.addEdge(field3, field4)

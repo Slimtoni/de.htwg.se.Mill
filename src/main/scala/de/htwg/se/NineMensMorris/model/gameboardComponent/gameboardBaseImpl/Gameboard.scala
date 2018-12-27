@@ -7,7 +7,7 @@ import scala.collection.mutable
 
 case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mutable.MutableList[EdgeInterface]) extends GameboardInterface {
 
-  def this() = this(mutable.MutableList[Field], mutable.MutableList[Edge])
+  //def this() = this(mutable.MutableList[FieldInterface], mutable.MutableList[EdgeInterface])
 
   def getField(id: Int): FieldInterface = {
     for (i <- vertexList.iterator) if (i.id == id) return i
