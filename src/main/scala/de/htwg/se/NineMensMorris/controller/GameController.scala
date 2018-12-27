@@ -1,8 +1,8 @@
 package de.htwg.se.NineMensMorris.controller
 
 import de.htwg.se.NineMensMorris.controller.impl.Error
-import de.htwg.se.NineMensMorris.model.Player
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
+import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
 import scala.swing.Publisher
 

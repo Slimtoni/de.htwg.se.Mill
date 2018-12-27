@@ -3,8 +3,11 @@ package de.htwg.se.NineMensMorris.controller.impl
 import de.htwg.se.NineMensMorris.controller.{GameController, impl}
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model._
+import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardFactory
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Field, GameboardInterface}
+import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
-class DefaultGameController(var gameboard: Gameboard) extends GameController {
+class DefaultGameController(var gameboard: GameboardInterface) extends GameController {
   var gameboardFactory = new GameboardFactory
   var playerWhite: Player = _
   var playerBlack: Player = _

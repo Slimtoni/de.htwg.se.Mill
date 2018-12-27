@@ -2,6 +2,7 @@ package de.htwg.se.NineMensMorris
 import de.htwg.se.NineMensMorris.a_view.Tui
 import de.htwg.se.NineMensMorris.controller.impl.DefaultGameController
 import de.htwg.se.NineMensMorris.model._
+import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardFactory
 
 import scala.io.StdIn.readLine
 

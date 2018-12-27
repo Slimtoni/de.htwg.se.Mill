@@ -1,7 +1,8 @@
 package de.htwg.se.NineMensMorris.a_view
 
 import de.htwg.se.NineMensMorris.controller.impl._
-import de.htwg.se.NineMensMorris.model.{Player, PlayerGamePhase}
+import de.htwg.se.NineMensMorris.model.PlayerGamePhase
+import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
