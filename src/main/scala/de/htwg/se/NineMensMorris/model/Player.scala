@@ -2,19 +2,18 @@ package de.htwg.se.NineMensMorris.model
 
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
 
-case class Player(name: String,var phase: PlayerGamePhase = PlayerGamePhase.Place,var numberPlacedMen: Int) {
+case class Player(name: String, phase: PlayerGamePhase, var numberPlacedMen: Int) {
 
   var numberLostMen: Int = 0
-
-  def checkPlacedMen(): Boolean = {
-    if (numberPlacedMen <= 9 && numberLostMen <= 6) {
-      changeGamePhase(PlayerGamePhase.Move)
+  def checkPlacedMen(): Option[Player] = {
+    if (numberPlacedMen >= 1 && numberLostMen <= 6) {
+      return Some(changeGamePhase(PlayerGamePhase.Move))
     } else if (numberPlacedMen <= 9 && numberLostMen > 6) {
-      changeGamePhase(PlayerGamePhase.Fly)
+      return Some(changeGamePhase(PlayerGamePhase.Fly))
     } else if (numberLostMen == 7) {
-      return false
+      return None
     }
-    true
+    Some(this)
   }
 
   def changeGamePhase(newPhase: PlayerGamePhase): Player = copy(name, newPhase, numberPlacedMen)
@@ -27,6 +26,11 @@ case class Player(name: String,var phase: PlayerGamePhase = PlayerGamePhase.Plac
   def decrementPlacedMen(): Player = {
     numberPlacedMen -= 1
     copy(name, phase, numberPlacedMen)
+  }
+
+  def equals(o: Player): Boolean = {
+    if (o.name == this.name) true
+    else false
   }
 
   override def toString: String = name

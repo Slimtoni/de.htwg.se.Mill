@@ -6,8 +6,6 @@ class FieldChanged extends Event
 
 class GamePhaseChanged extends Event
 
+class PlayerPhaseChanged extends Event
+
 class CurrentPlayerChanged extends Event
-
-class GameOver extends Event
-
-class Error extends Event

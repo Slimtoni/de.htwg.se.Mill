@@ -1,5 +1,6 @@
 package de.htwg.se.NineMensMorris.controller
 
+import de.htwg.se.NineMensMorris.controller.impl.Error
 import de.htwg.se.NineMensMorris.model.Player
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
 
@@ -11,15 +12,7 @@ trait GameController extends Publisher{
 
   def addPlayer(player1: String, player2: String): Unit
 
-  def performTurn(playerOnTurn: Player, targetId: Int)
-
-  def performTurn(playerOnTurn: Player, startFieldId: Int, targetFieldId: Int)
-
-  /*def placeMan(fieldId: Int): Unit
-
-  def moveMan(startFieldId: Int, targetFieldId: Int): Unit
-
-  def flyMan(startFieldId: Int, targetFieldId: Int): Unit*/
+  def performTurn(startFieldId: Int, targetFieldId: Int): Error.Value
 
   def changePlayerOnTurn(): Unit
 
