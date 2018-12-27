@@ -1,11 +1,14 @@
-package de.htwg.se.NineMensMorris.model
+package de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl
 
+import de.htwg.se.NineMensMorris.model.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
+import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 
-case class Player(name: String, phase: PlayerGamePhase, var numberPlacedMen: Int) {
+case class Player(name: String, phase: PlayerGamePhase, var numberPlacedMen: Int) extends PlayerInterface {
 
   var numberLostMen: Int = 0
-  def checkPlacedMen(): Option[Player] = {
+
+  override def checkedPlacedMen(): Option[PlayerInterface] = {
     if (numberPlacedMen >= 1 && numberLostMen <= 6) {
       return Some(changeGamePhase(PlayerGamePhase.Move))
     } else if (numberPlacedMen <= 9 && numberLostMen > 6) {
@@ -28,11 +31,12 @@ case class Player(name: String, phase: PlayerGamePhase, var numberPlacedMen: Int
     copy(name, phase, numberPlacedMen)
   }
 
-  def equals(o: Player): Boolean = {
+  def equals(o: PlayerInterface): Boolean = {
     if (o.name == this.name) true
     else false
   }
 
   override def toString: String = name
-}
 
+
+}
