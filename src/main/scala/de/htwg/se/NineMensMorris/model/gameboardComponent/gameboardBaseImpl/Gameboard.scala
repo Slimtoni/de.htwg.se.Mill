@@ -7,19 +7,19 @@ import scala.collection.mutable
 
 case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mutable.MutableList[EdgeInterface]) extends GameboardInterface {
 
-  //def this() = this(mutable.MutableList[FieldInterface], mutable.MutableList[EdgeInterface])
+  def this() = this(mutable.MutableList[FieldInterface](), mutable.MutableList[EdgeInterface]())
 
   def getField(id: Int): FieldInterface = {
     for (i <- vertexList.iterator) if (i.id == id) return i
     Field(99,FieldStatus.Empty) // error case with dummy Field
   }
 
-  def addVertex(v: FieldInterface): GameboardInterface = {
+  def addVertex(v: FieldInterface): Gameboard = {
     if (!vertexList.contains(v)) vertexList.+=(v)
     copy(vertexList, neigh)
   }
 
-  def addEdge(v: FieldInterface, w: FieldInterface): GameboardInterface = {
+  def addEdge(v: FieldInterface, w: FieldInterface): Gameboard = {
     if (!containsVertex(v)) addVertex(v)
     if (!containsVertex(w)) addVertex(w)
     if (!containsEdge(v,w) || !containsEdge(w,v)) {
@@ -47,7 +47,7 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
     false
   }
 
-  def set(field: Int, fieldStatus: String): Option[GameboardInterface] = {
+  def set(field: Int, fieldStatus: String): Option[Gameboard] = {
     val fieldtoChange: Option[FieldInterface] = vertexList.get(field)
     fieldtoChange match {
       case Some(f) => {
