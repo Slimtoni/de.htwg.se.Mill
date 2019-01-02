@@ -1,13 +1,16 @@
-package de.htwg.se.NineMensMorris.model
+package de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl
 
+import de.htwg.se.NineMensMorris.model.FieldStatus
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
+import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 
-case class Field(var id: Int, var fieldStatus: FieldStatus) {
+case class Field(var id: Int, var fieldStatus: FieldStatus) extends FieldInterface {
 
   def changeFieldStatus(fieldStatus: FieldStatus) : Field = copy(id, fieldStatus)
 
-  def equals(f: Field): AnyVal = {
+  def checkID(f: FieldInterface): Boolean = {
     if(f.id == this.id) true
+    else false
   }
 
   override def toString: String = {

@@ -1,67 +1,64 @@
-package de.htwg.se.NineMensMorris.model
+package de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl
 
-import de.htwg.se.NineMensMorris.model.EdgeDirection.EdgeDirection
+import de.htwg.se.NineMensMorris.model.FieldStatus
+import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
+
 import scala.collection.mutable
-import scala.language.postfixOps
 
-/**
-  * class of the Gameboard
-  * @param size is the size of the Gameboard
-  * @tparam Field is the type ofgit the Graph-Attribute
-  */
-case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.MutableList[Edge[Field]])
-  extends Graph[Field] {
+case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mutable.MutableList[EdgeInterface]) extends GameboardInterface {
 
-  //def this(size: Int) = this(new mutable.MutableList[Field], new mutable.MutableList[(Field, Field)]){}
-  def vertList(): mutable.MutableList[Field] = vertexList
-  def nbourList(): mutable.MutableList[Edge[Field]] = neigh
+  //def this() = this(mutable.MutableList[FieldInterface], mutable.MutableList[EdgeInterface])
 
-  override def addVertex(v: Field): Gameboard = {
+  def getField(id: Int): FieldInterface = {
+    for (i <- vertexList.iterator) if (i.id == id) return i
+    Field(99,FieldStatus.Empty) // error case with dummy Field
+  }
+
+  def addVertex(v: FieldInterface): GameboardInterface = {
     if (!vertexList.contains(v)) vertexList.+=(v)
     copy(vertexList, neigh)
   }
 
-  override def addEdge(v: Field, w: Field, direc : EdgeDirection): Gameboard = {
+  def addEdge(v: FieldInterface, w: FieldInterface): GameboardInterface = {
     if (!containsVertex(v)) addVertex(v)
     if (!containsVertex(w)) addVertex(w)
     if (!containsEdge(v,w) || !containsEdge(w,v)) {
-      val edge = new Edge[Field](v,w,direc)
+      val edge = Edge(v,w)
       neigh.+=(edge)
     }
     copy(vertexList, neigh)
   }
 
-  override def containsVertex(v: Field): Boolean = {
+  def containsVertex(v: FieldInterface): Boolean = {
     for (i<-this.vertexList) {
-      if (v.equals(i)) return true
+      if (v.checkID(i)) return true
     }
     false
   }
 
-  override def containsEdge(v: Field, w: Field): Boolean = {
-    if (!containsVertex(v) || !containsVertex(w)) {
-      throw new IllegalArgumentException(v + " or "+ w + " isn`t a Vertex")
+  def containsEdge(v: FieldInterface, w: FieldInterface): Boolean = {
+    if (containsVertex(v) && containsVertex(w)) {
+      val edge = Edge(v,w)
+      for (i<-this.neigh) {
+        //print(i)
+        if (edge.equals(i)) return true
+      }
     }
-    neigh.contains((v, w)) || neigh.contains((v, w))
+    false
   }
 
-  def set(field: Int, fieldStatus: String): Option[Gameboard] = {
-    val fieldtoChange: Option[Field] = vertexList.get(field)
+  def set(field: Int, fieldStatus: String): Option[GameboardInterface] = {
+    val fieldtoChange: Option[FieldInterface] = vertexList.get(field)
     fieldtoChange match {
       case Some(f) => {
-        if (f.fieldStatus == FieldStatus.Empty) {
           fieldStatus match {
             case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
             case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
-            case "Empty" =>
+            case "Empty" => vertexList(field) = f.changeFieldStatus(FieldStatus.Empty)
             case _ =>       println("Unknown Fieldstatus")
           }
-        } else {
-          return None
-        }
-
       }
-      case None => println("Field " + field + " not found on this Gameboard!")
+      case None => return None
     }
     Option(copy(vertexList, neigh))
   }
@@ -93,8 +90,3 @@ case class Gameboard(vertexList: mutable.MutableList[Field], neigh: mutable.Muta
     gameboardString
   }
 }
-/*
-object Gameboard {
-  private val _instance = new Gameboard[Field]
-  def instance(): Gameboard[Field] = _instance
-}*/
