@@ -18,5 +18,5 @@ object EdgeDirection extends Enumeration {
 
 object GameboardSize extends Enumeration {
   type GameboardSize = Value
-  val Three, Six, Nine = Value
+  val Six, Nine = Value
 }

@@ -66,12 +66,16 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
   override def toString: String = {
     var gameboardString: String = ""
     var v = vertexList
-    if (vertexList.length == 8) {
-      gameboardString += v.head + "__" + v(1) + "__" + v(2) + "\n"
-      gameboardString += "|     |\n"
-      gameboardString += v(3) + "     " + v(4) + "\n"
-      gameboardString += "|     |\n"
-      gameboardString += v(5) + "__" + v(6) + "__" + v(7) + "\n"
+    if (vertexList.length == 16) {
+      gameboardString += v.head + "______" + v(1) + "______" + v(2) + "\n"
+      gameboardString += "|      |      |\n"
+      gameboardString += "|   " + v(3) + "__" + v(4) + "__" + v(5) + "   |\n"
+      gameboardString += "|   |     |   |\n"
+      gameboardString += v(6) + "___" + v(7) + "     " + v(8) + "___" + v(9) + "\n"
+      gameboardString +=  "|   |     |   |\n"
+      gameboardString += "|   " + v(10) + "__" + v(11) + "__" + v(12) + "   |\n"
+      gameboardString += "|      |      |\n"
+      gameboardString += v(13) + "______" + v(14) + "______" + v(15) + "\n"
     } else if (vertexList.length == 24) {
       gameboardString += v.head + "__________" + v(1) + "__________" + v(2) + "\n"
       gameboardString += "|          |          |\n"
