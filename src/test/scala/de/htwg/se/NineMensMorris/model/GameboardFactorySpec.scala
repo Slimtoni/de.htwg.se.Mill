@@ -7,12 +7,12 @@ import org.scalatest.{Matchers, WordSpec}
 import scala.collection.mutable
 
 class GameboardFactorySpec extends WordSpec with Matchers {
-  "A GameboardFactory" when { "new" should {
-    val gameboardFactory = new GameboardFactory()
+  "A GameboardFactory" when {
+    "new" should {
+      val gameboardFactory = new GameboardFactory()
+      val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
 
-    val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
-
-  }
+    }
   }
 
 }

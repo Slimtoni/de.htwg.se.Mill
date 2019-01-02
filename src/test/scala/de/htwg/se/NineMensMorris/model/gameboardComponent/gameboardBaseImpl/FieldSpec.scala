@@ -15,7 +15,7 @@ class FieldSpec extends WordSpec with Matchers {
       }
     }
     "set as new Field with Status" should {
-      var newField = new Field(1, FieldStatus.White)
+      var newField = Field(1, FieldStatus.White)
       "have an id" in {
         newField.id should be(1)
       }
@@ -32,6 +32,10 @@ class FieldSpec extends WordSpec with Matchers {
       }
       "have a nice String representation" in {
         newField.toString should be("W")
+        newField = newField.changeFieldStatus(FieldStatus.Black)
+        newField.toString should be("B")
+        newField = newField.changeFieldStatus(FieldStatus.Empty)
+        newField.toString should be("O")
       }
     }
   }

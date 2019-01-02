@@ -55,7 +55,7 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
             case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
             case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
             case "Empty" => vertexList(field) = f.changeFieldStatus(FieldStatus.Empty)
-            case _ =>       println("Unknown Fieldstatus")
+            case _ =>       return None
           }
       }
       case None => return None

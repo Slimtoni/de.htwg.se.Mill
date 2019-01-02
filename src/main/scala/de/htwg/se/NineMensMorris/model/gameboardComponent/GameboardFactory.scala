@@ -37,12 +37,14 @@ class GameboardFactory() {
     val field22 = Field(22, FieldStatus.Empty)
     val field23 = Field(23, FieldStatus.Empty)
     size match {
-      case GameboardSize.Small => {
+      case GameboardSize.Three =>
         //print("small")
         val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
+        gameboard;
+      case GameboardSize.Six =>
+        val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
         gameboard
-      };
-      case GameboardSize.Large => {
+      case GameboardSize.Nine =>
         //println("large")
         val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
         gameboard.addEdge(field0, field1)
@@ -77,8 +79,7 @@ class GameboardFactory() {
         gameboard.addEdge(field13, field20)
         gameboard.addEdge(field2, field14)
         gameboard.addEdge(field14, field23)
-        gameboard
-      };
+        gameboard;
     }
   }
 }
