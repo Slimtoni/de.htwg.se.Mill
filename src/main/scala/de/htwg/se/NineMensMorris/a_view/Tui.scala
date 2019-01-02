@@ -2,14 +2,14 @@ package de.htwg.se.NineMensMorris.a_view
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged}
-import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.{ControllerMill}
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
 
-case class Tui(controller: Controller) extends Reactor {
+case class Tui(controller: ControllerMill) extends Reactor {
   listenTo(controller)
   controller.createGameboard()
 

@@ -7,7 +7,7 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, Gameb
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
-class Controller(var gameboard: GameboardInterface) extends ControllerInterface {
+class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterface {
   var gameboardFactory = new GameboardFactory
   var playerWhite: PlayerInterface = _
   var playerBlack: PlayerInterface = _
@@ -57,7 +57,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
 
   override def getPlayerOnTurn: String = playerOnTurn.name
 
-  private def placeMan(targetFieldId: Int): Error.Value = {
+  def placeMan(targetFieldId: Int): Error.Value = {
     val targetField: FieldInterface = gameboard.getField(targetFieldId)
     if (targetField.fieldStatus == FieldStatus.Empty) {
       val error = changeFieldStatus(targetFieldId, playerOnTurn.name)
@@ -67,11 +67,11 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     Error.FieldError
   }
 
-  private def moveMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
+  def moveMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
     val startField: FieldInterface = gameboard.getField(startFieldId)
     val targetField: FieldInterface = gameboard.getField(targetFieldId)
     if (startField.fieldStatus.toString == playerOnTurn.name
-        && targetField.fieldStatus == FieldStatus.Empty) {
+      && targetField.fieldStatus == FieldStatus.Empty) {
       if (gameboard.containsEdge(startField, targetField)) {
         var err: Error.Value = changeFieldStatus(startFieldId, "Empty")
         if (err == Error.NoError) err = changeFieldStatus(targetField.id, playerOnTurn.name)
@@ -81,18 +81,18 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     //if (gameboard.containsEdge(startField, gameboard.getField(targetFieldId)))
   }
 
-  private def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
+  def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
     val startField: FieldInterface = gameboard.getField(startFieldId)
     val targetField: FieldInterface = gameboard.getField(targetFieldId)
     if (startField.fieldStatus.toString == playerOnTurn.name
-        && targetField.fieldStatus == FieldStatus.Empty) {
+      && targetField.fieldStatus == FieldStatus.Empty) {
       var err: Error.Value = changeFieldStatus(startFieldId, "Empty")
       if (err == Error.NoError) err = changeFieldStatus(targetFieldId, playerOnTurn.name)
       err
     } else Error.FieldError
   }
 
-  private def changeFieldStatus(field: Int, fieldStatus: String): Error.Value = {
+  def changeFieldStatus(field: Int, fieldStatus: String): Error.Value = {
     val gameboardNew = gameboard.set(field, fieldStatus)
     gameboardNew match {
       case Some(gameb) => {
@@ -120,7 +120,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     publish(new CurrentPlayerChanged)
   }
 
-  private def getPlayer(name: String): PlayerInterface = {
+  def getPlayer(name: String): PlayerInterface = {
     if (players._1.name == name) players._1
     else players._2
   }
