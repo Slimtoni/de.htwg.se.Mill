@@ -71,7 +71,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     val startField: FieldInterface = gameboard.getField(startFieldId)
     val targetField: FieldInterface = gameboard.getField(targetFieldId)
     if (startField.fieldStatus.toString == playerOnTurn.name
-        && targetField.fieldStatus == FieldStatus.Empty) {
+      && targetField.fieldStatus == FieldStatus.Empty) {
       if (gameboard.containsEdge(startField, targetField)) {
         var err: Error.Value = changeFieldStatus(startFieldId, "Empty")
         if (err == Error.NoError) err = changeFieldStatus(targetField.id, playerOnTurn.name)
@@ -85,11 +85,23 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     val startField: FieldInterface = gameboard.getField(startFieldId)
     val targetField: FieldInterface = gameboard.getField(targetFieldId)
     if (startField.fieldStatus.toString == playerOnTurn.name
-        && targetField.fieldStatus == FieldStatus.Empty) {
+      && targetField.fieldStatus == FieldStatus.Empty) {
       var err: Error.Value = changeFieldStatus(startFieldId, "Empty")
       if (err == Error.NoError) err = changeFieldStatus(targetFieldId, playerOnTurn.name)
       err
     } else Error.FieldError
+  }
+
+  def killMan(fieldId: Int): Unit = {
+    val field: FieldInterface = gameboard.getField(fieldId)
+    if (field.fieldStatus.toString != playerOnTurn.name) {
+      //check if Man isnt in Mill
+      changeFieldStatus(fieldId, "Empty")
+      publish(new FieldChanged)
+    } else {
+      Error.WrongFieldInputError
+    }
+
   }
 
   private def changeFieldStatus(field: Int, fieldStatus: String): Error.Value = {
