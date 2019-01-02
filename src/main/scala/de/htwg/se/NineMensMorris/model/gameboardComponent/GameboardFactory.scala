@@ -43,6 +43,26 @@ class GameboardFactory() {
         gameboard;
       case GameboardSize.Six =>
         val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
+        gameboard.addEdge(field0,field1)
+        gameboard.addEdge(field1,field2)
+        gameboard.addEdge(field3,field4)
+        gameboard.addEdge(field4,field5)
+        gameboard.addEdge(field6,field7)
+        gameboard.addEdge(field8,field9)
+        gameboard.addEdge(field10,field11)
+        gameboard.addEdge(field11,field12)
+        gameboard.addEdge(field13,field14)
+        gameboard.addEdge(field14,field15)
+        gameboard.addEdge(field0,field6)
+        gameboard.addEdge(field6,field13)
+        gameboard.addEdge(field3,field7)
+        gameboard.addEdge(field7,field10)
+        gameboard.addEdge(field1,field4)
+        gameboard.addEdge(field11,field14)
+        gameboard.addEdge(field5,field8)
+        gameboard.addEdge(field8,field12)
+        gameboard.addEdge(field2,field9)
+        gameboard.addEdge(field9,field15)
         gameboard
       case GameboardSize.Nine =>
         //println("large")
