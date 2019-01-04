@@ -32,4 +32,6 @@ object EmptyField extends FieldInterface {
   override def changeFieldStatus(fieldStatus: FieldStatus): FieldInterface = this
 
   override def checkID(f: FieldInterface): Boolean = true
+
+  override def neighList: List[Tuple2[_, _]] = ???
 }

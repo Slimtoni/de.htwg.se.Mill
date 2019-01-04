@@ -18,4 +18,5 @@ class FieldChanged extends Event
 class GamePhaseChanged extends Event
 class PlayerPhaseChanged extends Event
 class CurrentPlayerChanged extends Event
+class CaseOfMill extends Event
 
