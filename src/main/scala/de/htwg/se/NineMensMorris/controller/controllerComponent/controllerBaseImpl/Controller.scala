@@ -126,6 +126,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
       } else {
         if (!checkMill(fieldtmp)) {
           //a black man gets removed
+          //call killMan
         }
 
       }
@@ -135,6 +136,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
       } else {
         if (!checkMill(fieldtmp)) {
           //a white man gets removed
+          //call killMan
         }
 
       }
