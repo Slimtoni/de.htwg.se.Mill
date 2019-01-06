@@ -4,9 +4,12 @@ import de.htwg.se.NineMensMorris.model.FieldStatus
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 
-case class Field(id: Int, var fieldStatus: FieldStatus) extends FieldInterface {
 
-  def this(id: Int) = this(id, FieldStatus.Empty)
+case class Field(var id: Int, var fieldStatus: FieldStatus, var millneigh: List[(Field, Field)]) extends FieldInterface {
+
+  def this(id: Int) = this(id, FieldStatus.Empty, List.empty)
+
+  def this(id: Int, fieldStatus: FieldStatus) = this(id, fieldStatus, List.empty)
 
   def changeFieldStatus(fieldStatus: FieldStatus) : Field = copy(id, fieldStatus)
 
@@ -22,4 +25,5 @@ case class Field(id: Int, var fieldStatus: FieldStatus) extends FieldInterface {
       case FieldStatus.White => "W"
     }
   }
+
 }

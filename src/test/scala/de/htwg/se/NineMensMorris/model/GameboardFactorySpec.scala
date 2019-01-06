@@ -30,17 +30,7 @@ class GameboardFactorySpec extends WordSpec with Matchers {
       }
       "create new Gameboard with 16 Fields" in {
         val gameboard = gameboardFactory.createGameboard(GameboardSize.Six)
-        gameboard.toString should be(
-            "O______O______O\n" +
-            "|      |      |\n" +
-            "|   O__O__O   |\n" +
-            "|   |     |   |\n" +
-            "O___O     O___O\n" +
-            "|   |     |   |\n" +
-            "|   O__O__O   |\n" +
-            "|      |      |\n" +
-            "O______O______O\n"
-        )
+        gameboard.toString should be("")
       }
     }
 

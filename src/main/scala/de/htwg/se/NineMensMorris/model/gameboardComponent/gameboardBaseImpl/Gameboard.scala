@@ -1,8 +1,6 @@
 package de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl
 
 import de.htwg.se.NineMensMorris.model.FieldStatus
-import de.htwg.se.NineMensMorris.model.Status.FieldStatus
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
 
 import scala.collection.mutable

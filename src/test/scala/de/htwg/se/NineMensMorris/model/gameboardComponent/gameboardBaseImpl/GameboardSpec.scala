@@ -50,8 +50,8 @@ class GameboardSpec extends WordSpec with Matchers {
         gameboard.containsEdge(new Field(3), new Field(1)) should be(false)
       }
       "set an existing Field" in {
-        val field1 = Field(1, FieldStatus.Black)
-        val field2 = Field(2, FieldStatus.Empty)
+        val field1 = new Field(1, FieldStatus.Black)
+        val field2 = new Field(2, FieldStatus.Empty)
         var testGameboard = new Gameboard
         testGameboard = testGameboard.addEdge(field1,field2)
         //gameboard.set(1, "Black") shouldEqual  Some(testGameboard)

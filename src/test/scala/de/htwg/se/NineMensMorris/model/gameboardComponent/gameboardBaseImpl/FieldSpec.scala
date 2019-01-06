@@ -15,7 +15,7 @@ class FieldSpec extends WordSpec with Matchers {
       }
     }
     "set as new Field with Status" should {
-      var newField = Field(1, FieldStatus.White)
+      var newField = new Field(1, FieldStatus.White)
       "have an id" in {
         newField.id should be(1)
       }
