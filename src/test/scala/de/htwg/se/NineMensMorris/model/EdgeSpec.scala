@@ -4,7 +4,5 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Fiel
 import org.scalatest.{Matchers, WordSpec}
 
 class EdgeSpec extends WordSpec with Matchers {
-  "A Field" when { "new" should {
-    val field = new Field(0, FieldStatus.Empty)
-  }}
+
 }

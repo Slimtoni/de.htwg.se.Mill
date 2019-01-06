@@ -1,6 +1,8 @@
 package de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl
 
 import de.htwg.se.NineMensMorris.model.FieldStatus
+import de.htwg.se.NineMensMorris.model.Status.FieldStatus
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
 
 import scala.collection.mutable
@@ -11,7 +13,7 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
 
   def getField(id: Int): FieldInterface = {
     for (i <- vertexList.iterator) if (i.id == id) return i
-    Field(99,FieldStatus.Empty) // error case with dummy Field
+    Field(99,FieldStatus.Empty, List()) // error case with dummy Field
   }
 
   def addVertex(v: FieldInterface): GameboardInterface = {

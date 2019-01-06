@@ -4,6 +4,7 @@ import de.htwg.se.NineMensMorris.model.FieldStatus
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
 
+import scala.annotation.meta.field
 import scala.collection.mutable
 
 class Gameboard() extends GameboardInterface {
@@ -29,7 +30,13 @@ object EmptyField extends FieldInterface {
 
   override def fieldStatus: FieldStatus = FieldStatus.Empty
 
+  override def millneigh: List[(FieldInterface, FieldInterface)] = List.empty
+
   override def changeFieldStatus(fieldStatus: FieldStatus): FieldInterface = this
 
   override def checkID(f: FieldInterface): Boolean = true
+
+
+
+
 }
