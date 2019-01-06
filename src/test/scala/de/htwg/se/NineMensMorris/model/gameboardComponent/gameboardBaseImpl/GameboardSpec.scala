@@ -21,7 +21,20 @@ class GameboardSpec extends WordSpec with Matchers {
         gameboard = gameboard.addVertex(field1)
         gameboard.vertexList should be(mutable.MutableList(field1))
       }
+      "adding a new Vertex in the Gameboard that already exists" in {
+        val field1 = new Field(1)
+        gameboard = gameboard.addVertex(field1)
+        gameboard.vertexList should be(mutable.MutableList(field1))
+      }
       "adding a new Edge in the Gameboard" in {
+        val field1 = new Field(1)
+        val field2 = new Field(2)
+        val edge = Edge(field1, field2)
+        gameboard = gameboard.addEdge(field1, field2)
+        gameboard.vertexList should be(mutable.MutableList(field1, field2))
+        gameboard.neigh should be(mutable.MutableList(edge))
+      }
+      "adding a new Edge in the Gameboard that already exists" in {
         val field1 = new Field(1)
         val field2 = new Field(2)
         val edge = Edge(field1, field2)
@@ -49,13 +62,30 @@ class GameboardSpec extends WordSpec with Matchers {
       "not containing an Edge" in {
         gameboard.containsEdge(new Field(3), new Field(1)) should be(false)
       }
-      "set an existing Field" in {
-        val field1 = new Field(1, FieldStatus.Black)
-        val field2 = new Field(2, FieldStatus.Empty)
-        var testGameboard = new Gameboard
-        testGameboard = testGameboard.addEdge(field1,field2)
-        //gameboard.set(1, "Black") shouldEqual  Some(testGameboard)
+      /*"set an existing Field Black" in {
+        var setGameboard = new Gameboard
+        setGameboard = setGameboard.addEdge(new Field(0), new Field(1))
+
+        var testGameboard1 = new Gameboard
+        testGameboard1 = testGameboard1.addEdge(new Field(0, FieldStatus.Black), new Field(1))
+        setGameboard.set(0, "Black") shouldEqual  Some(testGameboard1)
       }
+      "set an existing Field White" in {
+        var setGameboard = new Gameboard
+        setGameboard = setGameboard.addEdge(new Field(0), new Field(1))
+
+        var testGameboard2 = new Gameboard
+        testGameboard2 = testGameboard2.addEdge(new Field(0, FieldStatus.White), new Field(1))
+        setGameboard.set(0, "White") shouldEqual  Some(testGameboard2)
+      }
+      "set an existing Field Empty" in {
+        var setGameboard = new Gameboard
+        setGameboard = setGameboard.addEdge(new Field(0, FieldStatus.Black), new Field(1))
+
+        var testGameboard3 = new Gameboard
+        testGameboard3 = testGameboard3.addEdge(new Field(0, FieldStatus.Empty), new Field(1))
+        setGameboard.set(0, "Empty") shouldEqual  Some(testGameboard3)
+      }*/
       "set a non-existing Field" in {
         gameboard.set(3, "Black") shouldEqual None
       }
