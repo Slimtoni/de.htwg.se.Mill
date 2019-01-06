@@ -26,6 +26,7 @@ trait EdgeInterface {
 trait FieldInterface {
   def id: Int
   def fieldStatus: FieldStatus
+  def millneigh: List[(FieldInterface, FieldInterface)]
 
   def changeFieldStatus(fieldStatus: FieldStatus): FieldInterface
   def checkID(f: FieldInterface): Boolean
