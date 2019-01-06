@@ -108,8 +108,8 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
   def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     val checkCol = field.fieldStatus
-    if (field.neighList(1)._1 == checkCol && field.neighList(1)._2 == checkCol ||
-      field.neighList(2)._1 == checkCol && field.neighList(2)._2 == checkCol) {
+    if (field.millneigh(1)._1 == checkCol && field.millneigh(1)._2 == checkCol ||
+      field.millneigh(2)._1 == checkCol && field.millneigh(2)._2 == checkCol) {
       //Mill for checked color
       true
     } else false
@@ -127,6 +127,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
         if (!checkMill(fieldtmp)) {
           //a black man gets removed
           //call killMan
+          killMan(fieldtmp)
         }
 
       }
@@ -137,13 +138,18 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
         if (!checkMill(fieldtmp)) {
           //a white man gets removed
           //call killMan
+          killMan(fieldtmp)
         }
 
       }
     }
 
+  }
 
-    //kill man
+  def killMan(fieldId: Int): Unit = {
+    val field: FieldInterface = gameboard.getField(fieldId)
+    changeFieldStatus(fieldId, "Empty")
+    publish(new FieldChanged)
   }
 
 
