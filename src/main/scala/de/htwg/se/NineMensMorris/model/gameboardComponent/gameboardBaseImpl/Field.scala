@@ -24,5 +24,4 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
     }
   }
 
-   override def neighList: List[(Field, Field)] = ???
  }
