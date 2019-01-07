@@ -17,7 +17,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
   def gameboardToString: String = gameboard.toString
 
   def createGameboard(): Unit = {
-    gameboard = gameboardFactory.createGameboard(GameboardSize.Large)
+    gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)
     addPlayer("White", "Black")
     playerOnTurn = playerWhite
     publish(new FieldChanged)

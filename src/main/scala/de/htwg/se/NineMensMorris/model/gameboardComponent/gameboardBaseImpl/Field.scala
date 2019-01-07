@@ -5,7 +5,11 @@ import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 
 
- case class Field(var id: Int, var fieldStatus: FieldStatus, var millneigh: List[(Field, Field)]) extends FieldInterface {
+case class Field(var id: Int, var fieldStatus: FieldStatus, var millneigh: List[(Field, Field)]) extends FieldInterface {
+
+  def this(id: Int) = this(id, FieldStatus.Empty, List.empty)
+
+  def this(id: Int, fieldStatus: FieldStatus) = this(id, fieldStatus, List.empty)
 
   def changeFieldStatus(fieldStatus: FieldStatus) : Field = copy(id, fieldStatus)
 
@@ -13,8 +17,6 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
     if(f.id == this.id) true
     else false
   }
-
-
 
   override def toString: String = {
     fieldStatus match {
@@ -24,4 +26,4 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
     }
   }
 
- }
+}

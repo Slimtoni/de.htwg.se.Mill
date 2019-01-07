@@ -1,11 +1,5 @@
 package de.htwg.se.NineMensMorris.model
 
-
-object Status extends Enumeration {
-  type FieldStatus = Value
-  val Empty, Black, White = Value
-}
-
 object FieldStatus extends Enumeration {
   type FieldStatus = Value
   val Empty, Black, White = Value
@@ -24,5 +18,5 @@ object EdgeDirection extends Enumeration {
 
 object GameboardSize extends Enumeration {
   type GameboardSize = Value
-  val Small, Large = Value
+  val Six, Nine = Value
 }
