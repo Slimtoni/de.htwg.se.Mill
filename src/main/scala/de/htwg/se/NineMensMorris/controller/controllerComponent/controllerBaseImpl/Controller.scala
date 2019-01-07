@@ -7,6 +7,8 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, Gameb
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
+import scala.collection.mutable
+
 class Controller(var gameboard: GameboardInterface) extends ControllerInterface {
   var gameboardFactory = new GameboardFactory
   var playerWhite: PlayerInterface = _
@@ -173,5 +175,9 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
   private def getPlayer(name: String): PlayerInterface = {
     if (players._1.name == name) players._1
     else players._2
+  }
+
+  def getVertexList(): mutable.MutableList[FieldInterface] = {
+    gameboard.vertexList
   }
 }
