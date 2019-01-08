@@ -18,9 +18,9 @@ class Controller extends WordSpec with Matchers {
   var playerTest: PlayerInterface = new Player("White", PlayerGamePhase.Place, 0)
   var playerOnTurn: PlayerInterface = _
   var gameboardFactory = new GameboardFactory
-  var gameboard = gameboardFactory.createGameboard(GameboardSize.Large)
+  var gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)
   var players: (PlayerInterface, PlayerInterface) = _
-  var controller = new ControllerMill(gameboardFactory.createGameboard(GameboardSize.Large))
+  var controller = new ControllerMill(gameboardFactory.createGameboard(GameboardSize.Nine))
   gameboard.getField(7).changeFieldStatus(FieldStatus.Black)
 
   controller.createGameboard()
