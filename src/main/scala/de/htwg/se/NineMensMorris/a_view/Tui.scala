@@ -1,12 +1,15 @@
 package de.htwg.se.NineMensMorris.a_view
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent
-import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged}
-import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged, CaseOfMill}
+import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.{ControllerMill}
+import de.htwg.se.NineMensMorris.model.PlayerGamePhase
+import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
+
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
 
-case class Tui(controller: Controller) extends Reactor {
+case class Tui(controller: ControllerMill) extends Reactor {
   listenTo(controller)
   controller.createGameboard()
 
@@ -20,16 +23,17 @@ case class Tui(controller: Controller) extends Reactor {
     }
   }
 
-  def processGameInput() :Unit = {
+  def processGameInput(): Unit = {
     val quit = false
     while (!quit) {
       val currentPlayer: String = controller.getPlayerOnTurn
       try processPlayerTurn(currentPlayer)
       catch {
-        case e: Exception => println("Error: " + e)
+        case e: Exception => println("Error213: " + e)
       }
     }
   }
+
   def processPlayerTurn(currentPlayer: String): Unit = {
     controller.checkPlayer(currentPlayer)
     //currentPlayer = controller.playerOnTurn
@@ -44,6 +48,10 @@ case class Tui(controller: Controller) extends Reactor {
           if (error != controllerComponent.Error.NoError) println(error)
           else done = {
             println("Succesfully placed Man on the Field " + input)
+            if (controller.checkMill(input)) {
+              processMill()
+            }
+            controller.endPlayersTurn()
             true
           }
         }
@@ -57,6 +65,12 @@ case class Tui(controller: Controller) extends Reactor {
           if (error != controllerComponent.Error.NoError) println(error)
           else done = {
             println("Succesfully moved Man from Field " + inputs(0) + " to Field " + inputs(1))
+            println("Succesfully placed Man on the Field " + input)
+            if (controller.checkMill(inputs(1).toInt)) {
+              processMill()
+            }
+            controller.endPlayersTurn()
+
             true
           }
         }
@@ -68,8 +82,25 @@ case class Tui(controller: Controller) extends Reactor {
           val inputs = input.split(" ")
           val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
           if (error != controllerComponent.Error.NoError) println(error)
-          else done = true
+          else done = {
+            if (controller.checkMill(inputs(1).toInt)) {
+              processMill()
+            }
+            controller.endPlayersTurn()
+            true
+          }
         }
+    }
+  }
+
+  def processMill(): Unit = {
+    var done = false
+    while (!done) {
+      println("Player " + controller.playerOnTurn + " got a Mill. Please select a man to remove")
+      val input = readInt()
+      val error = controller.caseOfMill(input)
+      if(error != controllerComponent.Error.NoError) println(error)
+      else done = true
     }
   }
 
@@ -80,5 +111,7 @@ case class Tui(controller: Controller) extends Reactor {
       println("Player: " + controller.playerOnTurn.name + " ------ Gamephase: " + controller.playerOnTurn.phase + " Man")
     case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
     //case _: CurrentPlayerChanged => controller.playerOnTurn = controller.playerOnTurn
+    case _: CaseOfMill =>
+      println("Player " + controller.playerOnTurn + " got a mill. Please select a man to remove")
   }
 }
