@@ -1,6 +1,7 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
+import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
@@ -19,6 +20,13 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   def createGameboard(): Unit = {
     gameboard = gameboardFactory.createGameboard(GameboardSize.Large)
     addPlayer("White", "Black")
+    val gameboardtmp = gameboard.setNeigh()
+    gameboardtmp match {
+      case Some(gmb) => {
+        gameboard = gmb
+      }
+        Error.FieldError
+    }
     playerOnTurn = playerWhite
     publish(new FieldChanged)
   }
@@ -97,19 +105,33 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     gameboardNew match {
       case Some(gameb) => {
         gameboard = gameb
+
+
+        val gameboardtmp = gameboard.setNeigh()
+        gameboardtmp match {
+          case Some(gmb2) => {
+            gameboard = gmb2
+            if (checkMill(field)) {
+              publish(new CaseOfMill)
+              caseOfMill(field)
+            }
+          }
+            Error.FieldError
+        }
         Error.NoError
       }
       case None => Error.FieldError
     }
   }
 
+
   //checks if a selected man is in a mill
   // future call: if (checkMill("man that just got placed") == true){caseOfMill("man that should be removed")}
   def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
-    val checkCol = field.fieldStatus
-    if (field.millneigh(1)._1 == checkCol && field.millneigh(1)._2 == checkCol ||
-      field.millneigh(2)._1 == checkCol && field.millneigh(2)._2 == checkCol) {
+    val checkCol: FieldStatus = field.fieldStatus
+    if (field.millneigh(0)._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
+      field.millneigh(1)._1.fieldStatus == checkCol && field.millneigh(1)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty) {
       //Mill for checked color
       true
     } else false
@@ -140,10 +162,8 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
           //call killMan
           killMan(fieldtmp)
         }
-
       }
     }
-
   }
 
   def killMan(fieldId: Int): Unit = {

@@ -1,7 +1,7 @@
 package de.htwg.se.NineMensMorris.a_view
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent
-import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged}
+import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged, CaseOfMill}
 import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.{ControllerMill}
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
@@ -83,5 +83,7 @@ case class Tui(controller: ControllerMill) extends Reactor {
       println("Player: " + controller.playerOnTurn.name + " ------ Gamephase: " + controller.playerOnTurn.phase + " Man")
     case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
     //case _: CurrentPlayerChanged => controller.playerOnTurn = controller.playerOnTurn
+    case _: CaseOfMill =>
+      println("Player " + controller.playerOnTurn + " got a mill. Please select a man to remove")
   }
 }

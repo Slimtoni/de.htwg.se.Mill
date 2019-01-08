@@ -11,77 +11,30 @@ class GameboardFactory() {
 
 
   def createGameboard(size: GameboardSize): GameboardInterface = {
-    val field0 = Field(0, FieldStatus.Empty, List())
-    val field1 = Field(1, FieldStatus.Empty, List())
-    val field2 = Field(2, FieldStatus.Empty, List())
-    val field3 = Field(3, FieldStatus.Empty, List())
-    val field4 = Field(4, FieldStatus.Empty, List())
-    val field5 = Field(5, FieldStatus.Empty, List())
-    val field6 = Field(6, FieldStatus.Empty, List())
-    val field7 = Field(7, FieldStatus.Empty, List())
-    val field8 = Field(8, FieldStatus.Empty, List())
-    val field9 = Field(9, FieldStatus.Empty, List())
-    val field10 = Field(10, FieldStatus.Empty, List())
-    val field11 = Field(11, FieldStatus.Empty, List())
-    val field12 = Field(12, FieldStatus.Empty, List())
-    val field13 = Field(13, FieldStatus.Empty, List())
-    val field14 = Field(14, FieldStatus.Empty, List())
-    val field15 = Field(15, FieldStatus.Empty, List())
-    val field16 = Field(16, FieldStatus.Empty, List())
-    val field17 = Field(17, FieldStatus.Empty, List())
-    val field18 = Field(18, FieldStatus.Empty, List())
-    val field19 = Field(19, FieldStatus.Empty, List())
-    val field20 = Field(20, FieldStatus.Empty, List())
-    val field21 = Field(21, FieldStatus.Empty, List())
-    val field22 = Field(22, FieldStatus.Empty, List())
-    val field23 = Field(23, FieldStatus.Empty, List())
-
-
-
-    field0.millneigh = List((field1, field2), (field9, field21))
-    field1.millneigh = List((field0, field2), (field4, field7))
-    field2.millneigh = List((field0, field1), (field14, field23))
-    field3.millneigh = List((field4, field5), (field10, field18))
-    field4.millneigh = List((field3, field5), (field1, field7))
-    field5.millneigh = List((field3, field4), (field13, field20))
-    field6.millneigh = List((field7, field8), (field11, field15))
-    field7.millneigh = List((field6, field8), (field9, field21))
-    field8.millneigh = List((field6, field7), (field12, field17))
-    field9.millneigh = List((field10, field11), (field0, field21))
-    field10.millneigh = List((field9, field11), (field3, field18))
-    field11.millneigh = List((field9, field10), (field6, field15))
-    field12.millneigh = List((field13, field14), (field8, field17))
-    field13.millneigh = List((field12, field14), (field5, field20))
-    field14.millneigh = List((field12, field13), (field2, field23))
-    field15.millneigh = List((field16, field17), (field6, field11))
-    field16.millneigh = List((field15, field17), (field19, field22))
-    field17.millneigh = List((field15, field16), (field8, field12))
-    field18.millneigh = List((field19, field20), (field3, field11))
-    field19.millneigh = List((field18, field20), (field16, field22))
-    field20.millneigh = List((field18, field19), (field5, field13))
-    field21.millneigh = List((field0, field9), (field22, field23))
-    field22.millneigh = List((field21, field23), (field16, field19))
-    field23.millneigh = List((field21, field22), (field2, field14))
-
-   /* val MillList = List(
-      List(field0, field1, field2),
-      List(field3, field4, field5),
-      List(field6, field7, field8),
-      List(field15, field16, field17),
-      List(field18, field19, field20),
-      List(field21, field22, field23),
-      List(field9, field10, field11),
-      List(field12, field13, field14),
-      List(field1, field4, field7),
-      List(field16, field19, field22),
-      List(field0, field9, field21),
-      List(field3, field10, field18),
-      List(field6, field11, field15),
-      List(field8, field12, field17),
-      List(field5, field13, field20),
-      List(field2, field14, field23))*/
-
-
+    val field0 = Field(0, FieldStatus.Empty, mutable.MutableList.empty)
+    val field1 = Field(1, FieldStatus.Empty, mutable.MutableList.empty)
+    val field2 = Field(2, FieldStatus.Empty, mutable.MutableList.empty)
+    val field3 = Field(3, FieldStatus.Empty, mutable.MutableList.empty)
+    val field4 = Field(4, FieldStatus.Empty, mutable.MutableList.empty)
+    val field5 = Field(5, FieldStatus.Empty, mutable.MutableList.empty)
+    val field6 = Field(6, FieldStatus.Empty, mutable.MutableList.empty)
+    val field7 = Field(7, FieldStatus.Empty, mutable.MutableList.empty)
+    val field8 = Field(8, FieldStatus.Empty, mutable.MutableList.empty)
+    val field9 = Field(9, FieldStatus.Empty, mutable.MutableList.empty)
+    val field10 = Field(10, FieldStatus.Empty, mutable.MutableList.empty)
+    val field11 = Field(11, FieldStatus.Empty, mutable.MutableList.empty)
+    val field12 = Field(12, FieldStatus.Empty, mutable.MutableList.empty)
+    val field13 = Field(13, FieldStatus.Empty, mutable.MutableList.empty)
+    val field14 = Field(14, FieldStatus.Empty, mutable.MutableList.empty)
+    val field15 = Field(15, FieldStatus.Empty, mutable.MutableList.empty)
+    val field16 = Field(16, FieldStatus.Empty, mutable.MutableList.empty)
+    val field17 = Field(17, FieldStatus.Empty, mutable.MutableList.empty)
+    val field18 = Field(18, FieldStatus.Empty, mutable.MutableList.empty)
+    val field19 = Field(19, FieldStatus.Empty, mutable.MutableList.empty)
+    val field20 = Field(20, FieldStatus.Empty, mutable.MutableList.empty)
+    val field21 = Field(21, FieldStatus.Empty, mutable.MutableList.empty)
+    val field22 = Field(22, FieldStatus.Empty, mutable.MutableList.empty)
+    val field23 = Field(23, FieldStatus.Empty, mutable.MutableList.empty)
 
 
     size match {
@@ -125,6 +78,37 @@ class GameboardFactory() {
         gameboard.addEdge(field13, field20)
         gameboard.addEdge(field2, field14)
         gameboard.addEdge(field14, field23)
+
+
+        /*
+        val v = gameboard.vertexList
+        field0.millneigh = List((v(1), v(2)), (v(9), v(21)))
+        field1.millneigh = List((field0, field2), (field4, field7))
+        field2.millneigh = List((field0, field1), (field14, field23))
+        field3.millneigh = List((field4, field5), (field10, field18))
+        field4.millneigh = List((field3, field5), (field1, field7))
+        field5.millneigh = List((field3, field4), (field13, field20))
+        field6.millneigh = List((field7, field8), (field11, field15))
+        field7.millneigh = List((field6, field8), (field1, field4))
+        field8.millneigh = List((field6, field7), (field12, field17))
+        field9.millneigh = List((field10, field11), (field0, field21))
+        field10.millneigh = List((field9, field11), (field3, field18))
+        field11.millneigh = List((field9, field10), (field6, field15))
+        field12.millneigh = List((field13, field14), (field8, field17))
+        field13.millneigh = List((field12, field14), (field5, field20))
+        field14.millneigh = List((field12, field13), (field2, field23))
+        field15.millneigh = List((field16, field17), (field6, field11))
+        field16.millneigh = List((field15, field17), (field19, field22))
+        field17.millneigh = List((field15, field16), (field8, field12))
+        field18.millneigh = List((field19, field20), (field3, field10))
+        field19.millneigh = List((field18, field20), (field16, field22))
+        field20.millneigh = List((field18, field19), (field5, field13))
+        field21.millneigh = List((field0, field9), (field22, field23))
+        field22.millneigh = List((field21, field23), (field16, field19))
+        field23.millneigh = List((field21, field22), (field2, field14))
+
+        */
+
         gameboard
       };
     }

@@ -3,12 +3,14 @@ package de.htwg.se.NineMensMorris.controller
 import de.htwg.se.NineMensMorris.NineMensMorris.gameboardFactory
 import org.scalatest.{Matchers, WordSpec}
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
-import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.{ControllerMill}
+import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Field, Gameboard}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
+
+import scala.collection.mutable
 
 class Controller extends WordSpec with Matchers {
   var playerWhite: PlayerInterface = _
@@ -16,11 +18,13 @@ class Controller extends WordSpec with Matchers {
   var playerTest: PlayerInterface = new Player("White", PlayerGamePhase.Place, 0)
   var playerOnTurn: PlayerInterface = _
   var gameboardFactory = new GameboardFactory
-  var gameboard: GameboardInterface = gameboardFactory.createGameboard(GameboardSize.Large)
+  var gameboard = gameboardFactory.createGameboard(GameboardSize.Large)
   var players: (PlayerInterface, PlayerInterface) = _
   var controller = new ControllerMill(gameboardFactory.createGameboard(GameboardSize.Large))
+  gameboard.getField(7).changeFieldStatus(FieldStatus.Black)
 
   controller.createGameboard()
+  val v = controller.gameboard.vertexList
 
 
   "A Controller" when {
@@ -30,6 +34,8 @@ class Controller extends WordSpec with Matchers {
         playerOnTurn should be(playerWhite)
       }
       "have a String representation" in {
+
+
         controller.gameboardToString should be(
           "O__________O__________O\n" +
             "|          |          |\n" +
@@ -65,18 +71,22 @@ class Controller extends WordSpec with Matchers {
       }
 
       "perform Turns" in {
-        controller.placeMan(0)
-        controller.placeMan(3)
-        controller.placeMan(0) should be(Error.FieldError)
+
+        controller.placeMan(8)
+        controller.placeMan(9)
+        controller.placeMan(22)
+
+        controller.placeMan(8) should be(Error.FieldError)
         playerTest = playerTest.changeGamePhase(PlayerGamePhase.Fly)
-        controller.moveMan(0, 1) should be(Error.NoError)
-        controller.moveMan(0, 0) should be(Error.FieldError)
+        controller.moveMan(9, 10) should be(Error.NoError)
+        controller.flyMan(10, 12) should be(Error.NoError)
+        controller.moveMan(9, 10) should be(Error.FieldError)
+        controller.flyMan(9, 10) should be(Error.FieldError)
 
-        controller.flyMan(1, 5) should be(Error.NoError)
-        controller.flyMan(1, 1) should be(Error.FieldError)
-        controller.performTurn(0, 1) should be(Error.NoError)
+        controller.performTurn(22, 23) should be(Error.FieldError)
 
 
+        true should be(true)
       }
 
       "change Player on Turn" in {
@@ -90,8 +100,28 @@ class Controller extends WordSpec with Matchers {
 
         playerOnTurn should be(playerWhite)
       }
+
+      "check for Mills" in {
+
+        controller.changeFieldStatus(0, "Black")
+        controller.changeFieldStatus(1, "Black")
+        controller.changeFieldStatus(2, "Black")
+        controller.changeFieldStatus(6, "Black")
+
+        controller.changeFieldStatus(21, "White")
+        controller.changeFieldStatus(22, "White")
+        controller.changeFieldStatus(23, "White")
+
+
+        controller.checkMill(0) should be(true)
+        controller.changePlayerOnTurn()
+        controller.checkMill(21) should be(true)
+
+        controller.killMan(6)
+        v(6).fieldStatus should be(FieldStatus.Empty)
+
+
+      }
     }
   }
-
-
 }
