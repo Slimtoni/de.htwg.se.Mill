@@ -57,7 +57,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
       case PlayerGamePhase.Move => err = moveMan(startFieldID, targetFieldID)
       case PlayerGamePhase.Fly => err = flyMan(startFieldID, targetFieldID)
     }
-    if (err == Error.NoError) endPlayersTurn()
     err
   }
 
@@ -111,10 +110,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
         gameboardtmp match {
           case Some(gmb2) => {
             gameboard = gmb2
-            if (checkMill(field)) {
-              publish(new CaseOfMill)
-              caseOfMill(field)
-            }
           }
             Error.FieldError
         }
@@ -139,31 +134,35 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
 
   //checks if a selected man can be removed
-  def caseOfMill(fieldtmp: Int): Unit = {
+  def caseOfMill(fieldtmp: Int): Error.Value = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     //check if man is from the opponent and not in a mill
     if (playerOnTurn == playerWhite) {
-      if (field.fieldStatus.toString.equals("W") || field.fieldStatus.toString.equals("O")) {
-        Error.SelectError
+      if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {
+        return Error.SelectError
       } else {
         if (!checkMill(fieldtmp)) {
           //a black man gets removed
           //call killMan
           killMan(fieldtmp)
+          return Error.NoError
         }
 
       }
     } else if (playerOnTurn == playerBlack) {
-      if (field.fieldStatus.toString.equals("B") || field.fieldStatus.toString.equals("O")) {
-        Error.SelectError
+      if (field.equals("B") || field.equals("O")) {
+        return Error.SelectError
       } else {
         if (!checkMill(fieldtmp)) {
           //a white man gets removed
           //call killMan
           killMan(fieldtmp)
+         return Error.NoError
+
         }
       }
     }
+    Error.NoError
   }
 
   def killMan(fieldId: Int): Unit = {
