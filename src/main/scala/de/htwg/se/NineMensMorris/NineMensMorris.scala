@@ -8,7 +8,7 @@ import scala.io.StdIn.readLine
 
 object NineMensMorris {
   var gameboardFactory = new GameboardFactory()
-  val controller = new ControllerMill(gameboardFactory.createGameboard(GameboardSize.Large))
+  val controller = new ControllerMill(gameboardFactory.createGameboard(GameboardSize.Nine))
   val tui = Tui(controller)
 
   def main(args: Array[String]): Unit = {

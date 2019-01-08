@@ -18,7 +18,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   def gameboardToString: String = gameboard.toString
 
   def createGameboard(): Unit = {
-    gameboard = gameboardFactory.createGameboard(GameboardSize.Large)
+    gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)
     addPlayer("White", "Black")
     val gameboardtmp = gameboard.setNeigh()
     gameboardtmp match {

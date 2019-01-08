@@ -18,8 +18,8 @@ case class Tui(controller: ControllerMill) extends Reactor {
       case "n" => controller.createGameboard()
       case "s" => processGameInput()
       case _ =>
-      //var inputs =input.split(' ')
-      //controller.changeFieldStatus(inputs(0).toInt, inputs(1))
+        //var inputs =input.split(' ')
+        //controller.changeFieldStatus(inputs(0).toInt, inputs(1))
     }
   }
 
@@ -46,13 +46,8 @@ case class Tui(controller: ControllerMill) extends Reactor {
           val input = readInt()
           val error = controller.performTurn(input, 0)
           if (error != controllerComponent.Error.NoError) println(error)
-
           else done = {
             println("Succesfully placed Man on the Field " + input)
-            if (controller.checkMill(input)) {
-              processMill()
-            }
-            controller.endPlayersTurn()
             true
           }
         }
