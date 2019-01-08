@@ -48,6 +48,10 @@ case class Tui(controller: ControllerMill) extends Reactor {
           if (error != controllerComponent.Error.NoError) println(error)
           else done = {
             println("Succesfully placed Man on the Field " + input)
+            if (controller.checkMill(input)) {
+              processMill()
+            }
+            controller.endPlayersTurn()
             true
           }
         }
