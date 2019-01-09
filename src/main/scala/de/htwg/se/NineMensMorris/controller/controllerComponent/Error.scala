@@ -6,8 +6,8 @@ object Error extends Enumeration {
 
   val map = Map[Error, String] (
     NoError -> "No Error: No Error occured!",
-    FieldError -> "Error: A Field Error occured!",
-    EdgeError -> "Error: An Edge Error occured!",
+    FieldError -> "Error: Please select a valid field!",
+    EdgeError -> "Error: Please select two connected Fields!",
     SelectError -> "Error: Please Select a valid man",
     InputError -> "Error: Please use the correct input format")
 

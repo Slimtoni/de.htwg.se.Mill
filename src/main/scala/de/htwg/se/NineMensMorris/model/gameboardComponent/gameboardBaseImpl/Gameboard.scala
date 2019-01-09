@@ -1,8 +1,6 @@
 package de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl
 
 import de.htwg.se.NineMensMorris.model.FieldStatus
-import de.htwg.se.NineMensMorris.model.FieldStatus
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
 
 import scala.collection.mutable
@@ -78,20 +76,20 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
     v.update(23, v(23).changeMillNeigh(mutable.MutableList((v(21), v(22)), (v(2), v(14)))))
 
 
-    Option(copy(v,neigh))
+    Option(copy(v, neigh))
 
-    }
+  }
 
   def set(field: Int, fieldStatus: String): Option[Gameboard] = {
     val fieldtoChange: Option[FieldInterface] = vertexList.get(field)
     fieldtoChange match {
       case Some(f) => {
-          fieldStatus match {
-            case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
-            case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
-            case "Empty" => vertexList(field) = f.changeFieldStatus(FieldStatus.Empty)
-            case _ =>       return None
-          }
+        fieldStatus match {
+          case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
+          case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
+          case "Empty" => vertexList(field) = f.changeFieldStatus(FieldStatus.Empty)
+          case _ => return None
+        }
       }
       case None => return None
     }
@@ -107,7 +105,7 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
       gameboardString += "|   " + v(3) + "__" + v(4) + "__" + v(5) + "   |\n"
       gameboardString += "|   |     |   |\n"
       gameboardString += v(6) + "___" + v(7) + "     " + v(8) + "___" + v(9) + "\n"
-      gameboardString +=  "|   |     |   |\n"
+      gameboardString += "|   |     |   |\n"
       gameboardString += "|   " + v(10) + "__" + v(11) + "__" + v(12) + "   |\n"
       gameboardString += "|      |      |\n"
       gameboardString += v(13) + "______" + v(14) + "______" + v(15) + "\n"

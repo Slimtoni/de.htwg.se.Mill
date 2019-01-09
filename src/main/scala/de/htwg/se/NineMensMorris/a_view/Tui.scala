@@ -3,9 +3,8 @@ package de.htwg.se.NineMensMorris.a_view
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent.Error._
 import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged, CaseOfMill}
-import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.{ControllerMill}
-import de.htwg.se.NineMensMorris.model.PlayerGamePhase
-import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
+import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
+
 
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
@@ -19,8 +18,6 @@ case class Tui(controller: ControllerMill) extends Reactor {
       case "n" => controller.createGameboard()
       case "s" => processGameInput()
       case _ =>
-      //var inputs =input.split(' ')
-      //controller.changeFieldStatus(inputs(0).toInt, inputs(1))
     }
   }
 
@@ -126,7 +123,6 @@ case class Tui(controller: ControllerMill) extends Reactor {
     case _: PlayerPhaseChanged =>
       println("Player: " + controller.playerOnTurn.name + " ------ Gamephase: " + controller.playerOnTurn.phase + " Man")
     case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
-    //case _: CurrentPlayerChanged => controller.playerOnTurn = controller.playerOnTurn
     case _: CaseOfMill =>
       println("Player " + controller.playerOnTurn + " got a mill. Please select a man to remove")
   }
