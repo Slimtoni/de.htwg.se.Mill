@@ -44,16 +44,21 @@ case class Tui(controller: ControllerMill) extends Reactor {
         var done = false
         while (!done) {
           println("Please enter ID of the target Field to Place: ")
-          val input = readInt()
-          val error = controller.performTurn(input, 0)
-          if (error != controllerComponent.Error.NoError) errorMessage(error)
-          else done = {
-            println("Succesfully placed Man on the Field " + input)
-            if (controller.checkMill(input)) {
-              processMill()
+          try {
+            val input = readInt()
+            val error = controller.performTurn(input, 0)
+            if (error != controllerComponent.Error.NoError) errorMessage(error)
+            else done = {
+              println("Succesfully placed Man on the Field " + input)
+              if (controller.checkMill(input)) {
+                processMill()
+              }
+              controller.endPlayersTurn()
+              true
             }
-            controller.endPlayersTurn()
-            true
+          } catch {
+            case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+            case nfe: NumberFormatException => errorMessage(InputError)
           }
         }
       case "Move" =>
@@ -76,8 +81,8 @@ case class Tui(controller: ControllerMill) extends Reactor {
             }
           }
           catch {
-            case ioobe: IndexOutOfBoundsException => errorMessage(FieldError)
-            case nfe: NumberFormatException => errorMessage(FieldError)
+            case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+            case nfe: NumberFormatException => errorMessage(InputError)
           }
         }
       case "Fly" =>
@@ -97,8 +102,8 @@ case class Tui(controller: ControllerMill) extends Reactor {
               true
             }
           } catch {
-            case ioobe: IndexOutOfBoundsException => errorMessage(FieldError)
-            case nfe: NumberFormatException => errorMessage(FieldError)
+            case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+            case nfe: NumberFormatException => errorMessage(InputError)
           }
         }
     }

@@ -60,7 +60,7 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
     v.update(5, v(5).changeMillNeigh(mutable.MutableList((v(3), v(4)), (v(14), v(23)))))
     v.update(6, v(6).changeMillNeigh(mutable.MutableList((v(7), v(8)), (v(11), v(15)))))
     v.update(7, v(7).changeMillNeigh(mutable.MutableList((v(6), v(8)), (v(1), v(4)))))
-    v.update(8, v(8).changeMillNeigh(mutable.MutableList((v(6), v(8)), (v(12), v(17)))))
+    v.update(8, v(8).changeMillNeigh(mutable.MutableList((v(6), v(7)), (v(12), v(17)))))
     v.update(9, v(9).changeMillNeigh(mutable.MutableList((v(10), v(11)), (v(0), v(21)))))
     v.update(10, v(10).changeMillNeigh(mutable.MutableList((v(9), v(11)), (v(3), v(18)))))
     v.update(11, v(11).changeMillNeigh(mutable.MutableList((v(9), v(10)), (v(6), v(15)))))

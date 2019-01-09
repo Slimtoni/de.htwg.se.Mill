@@ -85,7 +85,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
         err
       } else Error.EdgeError
     } else Error.FieldError
-    //if (gameboard.containsEdge(startField, gameboard.getField(targetFieldId)))
   }
 
   def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
@@ -157,7 +156,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
           //a white man gets removed
           //call killMan
           killMan(fieldtmp)
-         return Error.NoError
+          return Error.NoError
 
         }
       }
