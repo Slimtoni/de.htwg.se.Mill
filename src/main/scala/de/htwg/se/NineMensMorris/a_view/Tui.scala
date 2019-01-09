@@ -34,8 +34,6 @@ case class Tui(controller: ControllerMill) extends Reactor {
 
   def processPlayerTurn(currentPlayer: String): Unit = {
     controller.checkPlayer(currentPlayer)
-    //currentPlayer = controller.playerOnTurn
-    //println("Player: " + currentPlayer.name + " ------ Gamephase: " + currentPlayer.phase + " Man")
     controller.getPlayerOnTurnPhase match {
       case "Place" =>
         var done = false
@@ -110,10 +108,14 @@ case class Tui(controller: ControllerMill) extends Reactor {
     var done = false
     while (!done) {
       println("Player " + controller.playerOnTurn + " got a Mill. Please select a man to remove")
-      val input = readInt()
-      val error = controller.caseOfMill(input)
-      if (error != controllerComponent.Error.NoError) println(error)
-      else done = true
+      try {
+        val input = readInt()
+        val error = controller.caseOfMill(input)
+        if (error != controllerComponent.Error.NoError) println(error)
+        else done = true
+      } catch {
+        case nfe: NumberFormatException => errorMessage(InputError)
+      }
     }
   }
 

@@ -40,7 +40,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     val player: PlayerInterface = getPlayer(splayer)
     player.checkedPlacedMen() match {
       case Some(value) =>
-        //println("Phase of Value:" + value.phase)
         playerOnTurn = value
         publish(new PlayerPhaseChanged)
       case None => publish(new GamePhaseChanged)
@@ -129,7 +128,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
   def caseOfMill(fieldtmp: Int): Error.Value = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
-    if (playerOnTurn == playerWhite) {
+    if (playerOnTurn.equals(playerWhite)) {
       if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {
         return Error.SelectError
       } else {
@@ -138,7 +137,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
           return Error.NoError
         }
       }
-    } else if (playerOnTurn == playerBlack) {
+    } else if (playerOnTurn.equals(playerBlack)) {
       if (field.fieldStatus == FieldStatus.Black || field.fieldStatus == FieldStatus.Empty) {
         return Error.SelectError
       } else {
@@ -148,7 +147,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
         }
       }
     }
-    Error.NoError
+    Error.SelectError
   }
 
   def killMan(fieldId: Int): Unit = {
