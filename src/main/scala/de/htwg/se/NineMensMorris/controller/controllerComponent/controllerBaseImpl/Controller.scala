@@ -150,7 +150,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
       }
     } else if (playerOnTurn == playerBlack) {
-      if (field.equals("B") || field.equals("O")) {
+      if (field.fieldStatus == FieldStatus.Black || field.fieldStatus == FieldStatus.Empty) {
         return Error.SelectError
       } else {
         if (!checkMill(fieldtmp)) {
