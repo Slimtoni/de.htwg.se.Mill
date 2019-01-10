@@ -99,12 +99,7 @@ class Board(controller: ControllerInterface) extends Component {
     var lastVertex: (FieldInterface, Point) = null
     val vertexCords = getBoardList()
     for (i <- vertexCords) {
-      println(i._2)
       var counter = new Ellipse2D.Double(i._2.x,i._2.y, 50, 50)
-      //counter
-      //g.draw(new Ellipse2D.Double(i._2.x,i._2.y, 50, 50))
-      //g.fillOval(i._2.x, i._2.y, 50 , 50)
-      //if (lastVertex != null) g.draw(new Line2D.Double(i._2.x,i._2.y,lastVertex._2.x,lastVertex._2.y))
       lastVertex = i
     }
     //g.drawImage(ImageIO.read(new File("res/Board.png")), 0, 0, null)

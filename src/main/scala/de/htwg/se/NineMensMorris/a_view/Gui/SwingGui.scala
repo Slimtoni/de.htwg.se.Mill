@@ -1,6 +1,6 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
-import de.htwg.se.NineMensMorris.controller.controllerComponent.ControllerInterface
+import de.htwg.se.NineMensMorris.controller.controllerComponent.{ControllerInterface, PlayerPhaseChanged}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
 import javax.swing._
@@ -13,14 +13,14 @@ import scala.swing.event.{ButtonClicked, MousePressed}
 class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
-  //resizable = false
+  resizable = false
   val framesize = new Dimension(650, 700)
   minimumSize = framesize
   preferredSize = framesize
   maximumSize = framesize
 
   val board = new Board(controller)
-  val vertexList = board.getBoardList()
+  val vertexList: mutable.MutableList[(FieldInterface, Point)] = board.getBoardList()
 
   val chooseFileButton = new Button("Choose file")
   var fieldButs: mutable.MutableList[FieldButton] = mutable.MutableList.empty
@@ -38,7 +38,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   def mouseClick(xCor: Int, yCor: Int, boardDim: Dimension): Option[FieldInterface] = {
     val x0 = 25
     val y0 = 25
-    Console.println("X: " + xCor + " | " + "Y: " + yCor)
     for (i <- vertexList) {
       if ((xCor >= i._2.x && xCor <= i._2.x + 50) && (yCor >= i._2.y && yCor <= i._2.y + 50))
         return Some(i._1)
@@ -109,8 +108,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     */
 
   }*/
-
-  contents = new FlowPanel() {
+  val mainPanel: FlowPanel = new FlowPanel() {
     contents += new BoxPanel(Orientation.Vertical) {
       listenTo(this.mouse.clicks)
       contents += board
@@ -119,9 +117,24 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           mouseClick(point.x,point.y, this.size) match {
             case Some(value) => println(value.id + " clicked!")
             case None => println("No Button clicked")
-        }
+          }
       }
     }
+  }
+
+  val statusPanel: GridPanel = new GridPanel(1,2) {
+    val currentPlayerLabel = new Label("Current Player: " + controller.getPlayerOnTurn)
+    currentPlayerLabel.horizontalAlignment = Alignment.Left
+    val playerPhaseLabel = new Label("Current Players Gamephase: " + controller.getPlayerOnTurnPhase)
+    playerPhaseLabel.horizontalAlignment = Alignment.Right
+    contents += currentPlayerLabel
+    contents += playerPhaseLabel
+  }
+
+
+  contents = new BorderPanel {
+    add(mainPanel, BorderPanel.Position.Center)
+    add(statusPanel, BorderPanel.Position.South)
   }
 
   reactions += {
@@ -130,6 +143,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         if(buttonPressed == i) println(i.id)
       //Console.println("zegfzewgzi")
     }
+    case _: PlayerPhaseChanged =>
   }
 
   pack()
