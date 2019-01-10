@@ -14,10 +14,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
   resizable = false
-  val framesize = new Dimension(650, 700)
+  val framesize = new Dimension(650, 730)
   minimumSize = framesize
   preferredSize = framesize
   maximumSize = framesize
+
 
   val board = new Board(controller)
   val vertexList: mutable.MutableList[(FieldInterface, Point)] = board.getBoardList()
@@ -45,69 +46,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     None
   }
 
-  //listenTo(fieldButs(1))
-  //val fields =
-
-  /*contents = new Board(controller, 7, 7) {
-
-    /*contents += new RowBoardPanel(1,3) {
-      contents += fieldButs.head
-      //contents += dummyBut
-      //contents += dummyBut
-      contents += fieldButs(1)
-      //contents += dummyBut
-      //contents += dummyBut
-      contents += fieldButs(2)
-    }
-    contents += new RowBoardPanel(1,3) {
-      contents += fieldButs(3)
-      contents += fieldButs(4)
-      contents += fieldButs(5)
-    }
-    contents += new RowBoardPanel(1,3) {
-      contents += fieldButs(6)
-      contents += fieldButs(7)
-      contents += fieldButs(8)
-    }
-    contents += new RowBoardPanel(1,6) {
-      contents += fieldButs(12)
-      contents += fieldButs(13)
-      contents += fieldButs(14)
-      contents += fieldButs(15)
-      contents += fieldButs(16)
-      contents += fieldButs(17)
-    }
-    contents += new RowBoardPanel(1,3) {
-      contents += fieldButs(9)
-      contents += fieldButs(10)
-      contents += fieldButs(11)
-    }
-    contents += new RowBoardPanel(1,3) {
-      contents += fieldButs(18)
-      contents += fieldButs(19)
-      contents += fieldButs(20)
-    }
-    contents += new RowBoardPanel(1,3) {
-      contents += fieldButs(21)
-      contents += fieldButs(22)
-      contents += fieldButs(23)
-    }
-    //for (fieldB <- fieldButs)
-     // contents += fieldB
-    //contents.update(0,f0But)
-    //contents.update(1,f1But)
-    //contents += field
-    /*contents += fieldButs(0)
-    contents += dummyBut
-    contents += dummyBut
-    contents += fieldButs(1)
-    contents += dummyBut
-    contents += dummyBut
-    contents += fieldButs(2)
-    contents += dummyBut*/
-    */
-
-  }*/
   val mainPanel: FlowPanel = new FlowPanel() {
     contents += new BoxPanel(Orientation.Vertical) {
       listenTo(this.mouse.clicks)
@@ -121,15 +59,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       }
     }
   }
+  val statusPanel = new StatusPanel(controller)
+  listenTo(statusPanel)
+  listenTo(controller)
 
-  val statusPanel: GridPanel = new GridPanel(1,2) {
-    val currentPlayerLabel = new Label("Current Player: " + controller.getPlayerOnTurn)
-    currentPlayerLabel.horizontalAlignment = Alignment.Left
-    val playerPhaseLabel = new Label("Current Players Gamephase: " + controller.getPlayerOnTurnPhase)
-    playerPhaseLabel.horizontalAlignment = Alignment.Right
-    contents += currentPlayerLabel
-    contents += playerPhaseLabel
-  }
+
 
 
   contents = new BorderPanel {
@@ -143,7 +77,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         if(buttonPressed == i) println(i.id)
       //Console.println("zegfzewgzi")
     }
-    case _: PlayerPhaseChanged =>
+    case _: PlayerPhaseChanged => statusPanel.refresh()
   }
 
   pack()
