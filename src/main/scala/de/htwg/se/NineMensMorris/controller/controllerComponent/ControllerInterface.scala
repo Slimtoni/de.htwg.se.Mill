@@ -1,6 +1,9 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent
 
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
+import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface}
+
+import scala.collection.mutable
 import scala.swing.event.Event
 import scala.swing.Publisher
 
@@ -12,6 +15,8 @@ trait ControllerInterface extends Publisher{
   def changePlayerOnTurn(): Unit
   def getPlayerOnTurnPhase: String
   def getPlayerOnTurn: String
+  def getVertexList: mutable.MutableList[FieldInterface]
+  def getNeigh: mutable.MutableList[EdgeInterface]
 }
 
 class FieldChanged extends Event

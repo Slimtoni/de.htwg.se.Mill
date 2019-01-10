@@ -1,53 +1,69 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent.ControllerInterface
+import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
 import javax.swing._
 
 import scala.collection.mutable
 import scala.swing._
-import scala.swing.event.{ButtonClicked}
+import scala.swing.event.{ButtonClicked, MousePressed}
 
 
 class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
-  minimumSize = new Dimension(700, 728)
+  //resizable = false
+  val framesize = new Dimension(650, 700)
+  minimumSize = framesize
+  preferredSize = framesize
+  maximumSize = framesize
+
+  val board = new Board(controller)
+  val vertexList = board.getBoardList()
+
   val chooseFileButton = new Button("Choose file")
   var fieldButs: mutable.MutableList[FieldButton] = mutable.MutableList.empty
   val blackIcon: Icon = new ImageIcon("res/Black_50.png")
   for (i <- 0 to 23) {
     val fieldtmp = FieldButton(i)
-    println(fieldtmp)
     listenTo(fieldtmp)
     if (fieldtmp != null) fieldButs.+=(fieldtmp)
   }
-  //val field: FieldButton = new FieldButton
+  //val field: FieldButton =new FieldButton
   val dummyBut: FieldButton = new FieldButton(100) {
     visible = false
+  }
+
+  def mouseClick(xCor: Int, yCor: Int, boardDim: Dimension): Option[FieldInterface] = {
+    val x0 = 25
+    val y0 = 25
+    Console.println("X: " + xCor + " | " + "Y: " + yCor)
+    for (i <- vertexList) {
+      if ((xCor >= i._2.x && xCor <= i._2.x + 50) && (yCor >= i._2.y && yCor <= i._2.y + 50))
+        return Some(i._1)
+    }
+    None
   }
 
   //listenTo(fieldButs(1))
   //val fields =
 
-  contents = new BoardPanel(controller, 7, 7) {
+  /*contents = new Board(controller, 7, 7) {
 
-    contents += new RowBoardPanel(1,7) {
+    /*contents += new RowBoardPanel(1,3) {
       contents += fieldButs.head
-      contents += dummyBut
-      contents += dummyBut
+      //contents += dummyBut
+      //contents += dummyBut
       contents += fieldButs(1)
-      contents += dummyBut
-      contents += dummyBut
+      //contents += dummyBut
+      //contents += dummyBut
       contents += fieldButs(2)
     }
-    contents += new RowBoardPanel(1,7) {
-      contents += dummyBut
+    contents += new RowBoardPanel(1,3) {
       contents += fieldButs(3)
-      contents += dummyBut
       contents += fieldButs(4)
-      contents += dummyBut
       contents += fieldButs(5)
-      contents += dummyBut
     }
     contents += new RowBoardPanel(1,3) {
       contents += fieldButs(6)
@@ -90,7 +106,22 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     contents += dummyBut
     contents += fieldButs(2)
     contents += dummyBut*/
+    */
 
+  }*/
+
+  contents = new FlowPanel() {
+    contents += new BoxPanel(Orientation.Vertical) {
+      listenTo(this.mouse.clicks)
+      contents += board
+      reactions += {
+        case MousePressed(com, point, _, _,_) =>
+          mouseClick(point.x,point.y, this.size) match {
+            case Some(value) => println(value.id + " clicked!")
+            case None => println("No Button clicked")
+        }
+      }
+    }
   }
 
   reactions += {

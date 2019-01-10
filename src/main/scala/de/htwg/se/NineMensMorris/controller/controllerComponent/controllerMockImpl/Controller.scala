@@ -4,8 +4,10 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent.ControllerInterface
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
-import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardInterface
+import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardMockImpl.Gameboard
+
+import scala.collection.mutable
 
 class Controller(var gameboard: GameboardInterface) extends ControllerInterface {
 
@@ -23,4 +25,8 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
   override def getPlayerOnTurnPhase: String = PlayerGamePhase.Place.toString
 
   override def getPlayerOnTurn: String = "White"
+
+  override def getVertexList: mutable.MutableList[FieldInterface] = mutable.MutableList.empty
+
+  override def getNeigh: mutable.MutableList[EdgeInterface] = mutable.MutableList.empty
 }

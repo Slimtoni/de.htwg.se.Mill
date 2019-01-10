@@ -3,7 +3,7 @@ package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseI
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field._
-import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
+import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
@@ -177,7 +177,11 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     else players._2
   }
 
-  def getVertexList(): mutable.MutableList[FieldInterface] = {
+  def getVertexList: mutable.MutableList[FieldInterface] = {
     gameboard.vertexList
   }
+
+   def getNeigh: mutable.MutableList[EdgeInterface] = {
+     gameboard.neigh
+   }
 }
