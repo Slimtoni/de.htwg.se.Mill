@@ -1,16 +1,13 @@
-package de.htwg.se.NineMensMorris.controller
+package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
-import de.htwg.se.NineMensMorris.NineMensMorris.gameboardFactory
 import org.scalatest.{Matchers, WordSpec}
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Field, Gameboard}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
+import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardFactory
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
-import scala.collection.mutable
 
 class Controller extends WordSpec with Matchers {
   var playerWhite: PlayerInterface = _
@@ -107,18 +104,26 @@ class Controller extends WordSpec with Matchers {
         controller.changeFieldStatus(1, "Black")
         controller.changeFieldStatus(2, "Black")
         controller.changeFieldStatus(6, "Black")
+        controller.changeFieldStatus(7, "Black")
 
         controller.changeFieldStatus(21, "White")
         controller.changeFieldStatus(22, "White")
         controller.changeFieldStatus(23, "White")
+        controller.changeFieldStatus(9, "White")
 
 
         controller.checkMill(0) should be(true)
         controller.changePlayerOnTurn()
         controller.checkMill(21) should be(true)
 
+        controller.caseOfMill(9) should be (Error.NoError)
+        controller.caseOfMill(0) should be (Error.SelectError)
+
         controller.killMan(6)
         v(6).fieldStatus should be(FieldStatus.Empty)
+        controller.changePlayerOnTurn()
+        controller.caseOfMill(7) should be (Error.NoError)
+
 
 
       }

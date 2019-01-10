@@ -3,9 +3,8 @@ package de.htwg.se.NineMensMorris.a_view
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent.Error._
 import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged, CaseOfMill}
-import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.{ControllerMill}
-import de.htwg.se.NineMensMorris.model.PlayerGamePhase
-import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
+import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
+
 
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
@@ -19,8 +18,6 @@ case class Tui(controller: ControllerMill) extends Reactor {
       case "n" => controller.createGameboard()
       case "s" => processGameInput()
       case _ =>
-      //var inputs =input.split(' ')
-      //controller.changeFieldStatus(inputs(0).toInt, inputs(1))
     }
   }
 
@@ -37,23 +34,26 @@ case class Tui(controller: ControllerMill) extends Reactor {
 
   def processPlayerTurn(currentPlayer: String): Unit = {
     controller.checkPlayer(currentPlayer)
-    //currentPlayer = controller.playerOnTurn
-    //println("Player: " + currentPlayer.name + " ------ Gamephase: " + currentPlayer.phase + " Man")
     controller.getPlayerOnTurnPhase match {
       case "Place" =>
         var done = false
         while (!done) {
           println("Please enter ID of the target Field to Place: ")
-          val input = readInt()
-          val error = controller.performTurn(input, 0)
-          if (error != controllerComponent.Error.NoError) errorMessage(error)
-          else done = {
-            println("Succesfully placed Man on the Field " + input)
-            if (controller.checkMill(input)) {
-              processMill()
+          try {
+            val input = readInt()
+            val error = controller.performTurn(input, 0)
+            if (error != controllerComponent.Error.NoError) errorMessage(error)
+            else done = {
+              println("Succesfully placed Man on the Field " + input)
+              if (controller.checkMill(input)) {
+                processMill()
+              }
+              controller.endPlayersTurn()
+              true
             }
-            controller.endPlayersTurn()
-            true
+          } catch {
+            case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+            case nfe: NumberFormatException => errorMessage(InputError)
           }
         }
       case "Move" =>
@@ -76,8 +76,8 @@ case class Tui(controller: ControllerMill) extends Reactor {
             }
           }
           catch {
-            case ioobe: IndexOutOfBoundsException => errorMessage(FieldError)
-            case nfe: NumberFormatException => errorMessage(FieldError)
+            case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+            case nfe: NumberFormatException => errorMessage(InputError)
           }
         }
       case "Fly" =>
@@ -97,8 +97,8 @@ case class Tui(controller: ControllerMill) extends Reactor {
               true
             }
           } catch {
-            case ioobe: IndexOutOfBoundsException => errorMessage(FieldError)
-            case nfe: NumberFormatException => errorMessage(FieldError)
+            case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+            case nfe: NumberFormatException => errorMessage(InputError)
           }
         }
     }
@@ -108,10 +108,14 @@ case class Tui(controller: ControllerMill) extends Reactor {
     var done = false
     while (!done) {
       println("Player " + controller.playerOnTurn + " got a Mill. Please select a man to remove")
-      val input = readInt()
-      val error = controller.caseOfMill(input)
-      if (error != controllerComponent.Error.NoError) println(error)
-      else done = true
+      try {
+        val input = readInt()
+        val error = controller.caseOfMill(input)
+        if (error != controllerComponent.Error.NoError) println(error)
+        else done = true
+      } catch {
+        case nfe: NumberFormatException => errorMessage(InputError)
+      }
     }
   }
 
@@ -121,7 +125,6 @@ case class Tui(controller: ControllerMill) extends Reactor {
     case _: PlayerPhaseChanged =>
       println("Player: " + controller.playerOnTurn.name + " ------ Gamephase: " + controller.playerOnTurn.phase + " Man")
     case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
-    //case _: CurrentPlayerChanged => controller.playerOnTurn = controller.playerOnTurn
     case _: CaseOfMill =>
       println("Player " + controller.playerOnTurn + " got a mill. Please select a man to remove")
   }

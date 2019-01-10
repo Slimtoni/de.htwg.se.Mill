@@ -3,7 +3,6 @@ package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseI
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
@@ -41,14 +40,12 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     val player: PlayerInterface = getPlayer(splayer)
     player.checkedPlacedMen() match {
       case Some(value) =>
-        //println("Phase of Value:" + value.phase)
         playerOnTurn = value
         publish(new PlayerPhaseChanged)
       case None => publish(new GamePhaseChanged)
     }
   }
 
-  // wenn ein Spieler eine Mühle schließt wechselt der Spieler nicht!!!
 
   override def performTurn(startFieldID: Int, targetFieldID: Int): Error.Value = {
     var err = Error.NoError
@@ -85,7 +82,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
         err
       } else Error.EdgeError
     } else Error.FieldError
-    //if (gameboard.containsEdge(startField, gameboard.getField(targetFieldId)))
   }
 
   def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
@@ -120,49 +116,38 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   }
 
 
-  //checks if a selected man is in a mill
-  // future call: if (checkMill("man that just got placed") == true){caseOfMill("man that should be removed")}
   def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     val checkCol: FieldStatus = field.fieldStatus
     if (field.millneigh(0)._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
       field.millneigh(1)._1.fieldStatus == checkCol && field.millneigh(1)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty) {
-      //Mill for checked color
       true
     } else false
   }
 
 
-  //checks if a selected man can be removed
   def caseOfMill(fieldtmp: Int): Error.Value = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
-    //check if man is from the opponent and not in a mill
-    if (playerOnTurn == playerWhite) {
+    if (playerOnTurn.equals(playerWhite)) {
       if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {
         return Error.SelectError
       } else {
         if (!checkMill(fieldtmp)) {
-          //a black man gets removed
-          //call killMan
           killMan(fieldtmp)
           return Error.NoError
         }
-
       }
-    } else if (playerOnTurn == playerBlack) {
+    } else if (playerOnTurn.equals(playerBlack)) {
       if (field.fieldStatus == FieldStatus.Black || field.fieldStatus == FieldStatus.Empty) {
         return Error.SelectError
       } else {
         if (!checkMill(fieldtmp)) {
-          //a white man gets removed
-          //call killMan
           killMan(fieldtmp)
-         return Error.NoError
-
+          return Error.NoError
         }
       }
     }
-    Error.NoError
+    Error.SelectError
   }
 
   def killMan(fieldId: Int): Unit = {

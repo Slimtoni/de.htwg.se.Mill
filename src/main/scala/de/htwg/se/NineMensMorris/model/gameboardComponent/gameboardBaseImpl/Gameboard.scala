@@ -1,8 +1,6 @@
 package de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl
 
 import de.htwg.se.NineMensMorris.model.FieldStatus
-import de.htwg.se.NineMensMorris.model.FieldStatus
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
 
 import scala.collection.mutable
@@ -60,7 +58,7 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
     v.update(5, v(5).changeMillNeigh(mutable.MutableList((v(3), v(4)), (v(14), v(23)))))
     v.update(6, v(6).changeMillNeigh(mutable.MutableList((v(7), v(8)), (v(11), v(15)))))
     v.update(7, v(7).changeMillNeigh(mutable.MutableList((v(6), v(8)), (v(1), v(4)))))
-    v.update(8, v(8).changeMillNeigh(mutable.MutableList((v(6), v(8)), (v(12), v(17)))))
+    v.update(8, v(8).changeMillNeigh(mutable.MutableList((v(6), v(7)), (v(12), v(17)))))
     v.update(9, v(9).changeMillNeigh(mutable.MutableList((v(10), v(11)), (v(0), v(21)))))
     v.update(10, v(10).changeMillNeigh(mutable.MutableList((v(9), v(11)), (v(3), v(18)))))
     v.update(11, v(11).changeMillNeigh(mutable.MutableList((v(9), v(10)), (v(6), v(15)))))
@@ -78,20 +76,20 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
     v.update(23, v(23).changeMillNeigh(mutable.MutableList((v(21), v(22)), (v(2), v(14)))))
 
 
-    Option(copy(v,neigh))
+    Option(copy(v, neigh))
 
-    }
+  }
 
   def set(field: Int, fieldStatus: String): Option[Gameboard] = {
     val fieldtoChange: Option[FieldInterface] = vertexList.get(field)
     fieldtoChange match {
       case Some(f) => {
-          fieldStatus match {
-            case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
-            case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
-            case "Empty" => vertexList(field) = f.changeFieldStatus(FieldStatus.Empty)
-            case _ =>       return None
-          }
+        fieldStatus match {
+          case "Black" => vertexList(field) = f.changeFieldStatus(FieldStatus.Black)
+          case "White" => vertexList(field) = f.changeFieldStatus(FieldStatus.White)
+          case "Empty" => vertexList(field) = f.changeFieldStatus(FieldStatus.Empty)
+          case _ => return None
+        }
       }
       case None => return None
     }
@@ -107,7 +105,7 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
       gameboardString += "|   " + v(3) + "__" + v(4) + "__" + v(5) + "   |\n"
       gameboardString += "|   |     |   |\n"
       gameboardString += v(6) + "___" + v(7) + "     " + v(8) + "___" + v(9) + "\n"
-      gameboardString +=  "|   |     |   |\n"
+      gameboardString += "|   |     |   |\n"
       gameboardString += "|   " + v(10) + "__" + v(11) + "__" + v(12) + "   |\n"
       gameboardString += "|      |      |\n"
       gameboardString += v(13) + "______" + v(14) + "______" + v(15) + "\n"
