@@ -7,6 +7,7 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, Gameb
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
+
 class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterface {
   var gameboardFactory = new GameboardFactory
   var playerWhite: PlayerInterface = _
@@ -153,6 +154,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   def killMan(fieldId: Int): Unit = {
     val field: FieldInterface = gameboard.getField(fieldId)
     changeFieldStatus(fieldId, "Empty")
+    playerOnTurn = playerOnTurn.decrementPlacedMen()
     publish(new FieldChanged)
   }
 
@@ -178,4 +180,5 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     if (players._1.name == name) players._1
     else players._2
   }
+
 }
