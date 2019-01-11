@@ -1,19 +1,18 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
+import java.awt.Color
 import java.awt.geom.{Ellipse2D, Line2D}
 import java.awt.image.BufferedImage
 import java.io.File
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent.ControllerInterface
+import de.htwg.se.NineMensMorris.model.FieldStatus
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
-import javafx.scene.shape.Circle
 import javax.imageio.ImageIO
-import javax.swing.border.Border
 
 import scala.collection.mutable
 import scala.swing.Swing.LineBorder
-import scala.swing.{BoxPanel, Component, Dimension, FlowPanel, Graphics2D, GridPanel, Orientation, Point, Rectangle}
+import scala.swing.{Component, Dimension, Graphics2D, GridPanel, Point}
 
 class Board(controller: ControllerInterface) extends Component {
 
@@ -24,9 +23,7 @@ class Board(controller: ControllerInterface) extends Component {
   val imageBlack: BufferedImage = ImageIO.read(new File("res/Black_50.png"))
   val imageWhite: BufferedImage = ImageIO.read(new File("res/Black_50.png"))
   var currentImage: BufferedImage = _
-  border = LineBorder(java.awt.Color.BLUE, 2)
-
-
+  listenTo(controller)
 
   def getBoardList(): mutable.MutableList[(FieldInterface, Point)] = {
     val vertexCords: mutable.MutableList[(FieldInterface, Point)] = new mutable.MutableList[(FieldInterface, Point)]
@@ -87,11 +84,8 @@ class Board(controller: ControllerInterface) extends Component {
     vertexCords
   }
 
-
-
   override def paintComponent(g:Graphics2D): Unit =
   {
-    listenTo()
     val image = ImageIO.read(new File("res/Board.png"))
 
     g.drawImage(image, 0, 0, null)
@@ -99,26 +93,22 @@ class Board(controller: ControllerInterface) extends Component {
     var lastVertex: (FieldInterface, Point) = null
     val vertexCords = getBoardList()
     for (i <- vertexCords) {
-      var counter = new Ellipse2D.Double(i._2.x,i._2.y, 50, 50)
-      lastVertex = i
+      //val counter = new Ellipse2D.Double(i._2.x,i._2.y, 50, 50)
+      i._1.fieldStatus match {
+        case FieldStatus.Black =>
+          g.setColor(Color.BLACK)
+          g.fillOval(i._2.x, i._2.y, 50, 50)
+          g.setColor(Color.GRAY)
+          g.drawOval(i._2.x, i._2.y, 50, 50)
+          g.drawOval(i._2.x + 12, i._2.y + 12, 25, 25)
+        case FieldStatus.White =>
+          g.setColor(Color.WHITE)
+          g.fillOval(i._2.x, i._2.y, 50, 50)
+          g.setColor(Color.GRAY)
+          g.drawOval(i._2.x, i._2.y, 50, 50)
+          g.drawOval(i._2.x + 12, i._2.y + 12, 25, 25)
+        case FieldStatus.Empty =>
+      }
     }
-    //g.drawImage(ImageIO.read(new File("res/Board.png")), 0, 0, null)
-    /*g.draw(new Line2D.Double(40,40,760, 40))
-    g.draw(new Line2D.Double(40,760,760, 760))
-    g.draw(new Line2D.Double(40,40,40, 760))
-    g.draw(new Line2D.Double(40,40,760, 40))
-    g.draw(new Line2D.Double(40,40,760, 40))*/
-    //g.draw(new Line2D.Double(35,35,))
-
-    //g.drawImage(imageBlack, 10, 10, null)
-
-  }
-}
-
-class RowBoardPanel(rows: Int, cols: Int) extends GridPanel(rows, cols) {
-  border = LineBorder(java.awt.Color.RED, 2)
-
-  override def paintComponent(g:Graphics2D): Unit =
-  {
   }
 }

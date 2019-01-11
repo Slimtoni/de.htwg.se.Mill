@@ -1,8 +1,12 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
-import de.htwg.se.NineMensMorris.controller.controllerComponent.{ControllerInterface, PlayerPhaseChanged}
+import java.awt.image.BufferedImage
+import java.io.File
+
+import de.htwg.se.NineMensMorris.controller.controllerComponent.{ControllerInterface, FieldChanged, GamePhaseChanged, PlayerPhaseChanged}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
+import javax.imageio.ImageIO
 import javax.swing._
 
 import scala.collection.mutable
@@ -18,6 +22,9 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   minimumSize = framesize
   preferredSize = framesize
   maximumSize = framesize
+  val icon: Image = ImageIO.read(new File("res/GameIcon.png"))
+  iconImage = icon
+
 
 
   val board = new Board(controller)
@@ -53,7 +60,10 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       reactions += {
         case MousePressed(com, point, _, _,_) =>
           mouseClick(point.x,point.y, this.size) match {
-            case Some(value) => println(value.id + " clicked!")
+            case Some(value) => {
+
+              println(value.id + " clicked!")
+            }
             case None => println("No Button clicked")
           }
       }
@@ -77,6 +87,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         if(buttonPressed == i) println(i.id)
       //Console.println("zegfzewgzi")
     }
+    case x: FieldChanged => board.repaint()
     case _: PlayerPhaseChanged => statusPanel.refresh()
   }
 
