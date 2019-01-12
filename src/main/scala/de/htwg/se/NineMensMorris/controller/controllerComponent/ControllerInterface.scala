@@ -11,12 +11,14 @@ trait ControllerInterface extends Publisher{
 
   def createGameboard(): Unit
   def addPlayer(player1: String, player2: String): Unit
+  def checkPlayer(player: String): Unit
   def performTurn(startFieldId: Int, targetFieldId: Int): Error.Value
   def changePlayerOnTurn(): Unit
   def getPlayerOnTurnPhase: String
   def getPlayerOnTurn: String
   def getVertexList: mutable.MutableList[FieldInterface]
   def getNeigh: mutable.MutableList[EdgeInterface]
+  def getField(id: Int): Option[FieldInterface]
 }
 
 class FieldChanged extends Event

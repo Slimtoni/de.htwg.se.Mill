@@ -184,4 +184,10 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
    def getNeigh: mutable.MutableList[EdgeInterface] = {
      gameboard.neigh
    }
+
+  override def getField(id: Int): Option[FieldInterface] = {
+    val field = gameboard.getField(id)
+    if (field.id != 99) Some(field)
+    else None
+  }
 }

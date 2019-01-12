@@ -29,4 +29,8 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
   override def getVertexList: mutable.MutableList[FieldInterface] = mutable.MutableList.empty
 
   override def getNeigh: mutable.MutableList[EdgeInterface] = mutable.MutableList.empty
+
+  override def checkPlayer(player: String): Unit = {}
+
+  override def getField(id: Int): Option[FieldInterface] = None
 }

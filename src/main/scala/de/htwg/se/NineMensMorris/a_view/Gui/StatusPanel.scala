@@ -8,6 +8,7 @@ import scala.swing.{Alignment, BorderPanel, FlowPanel, GridPanel, Label}
 
 class StatusPanel(controller: ControllerInterface) extends BorderPanel {
   var message = new Label("Welcome to NineMensMill!")
+  var info = new Label("Game started!")
   val currentPlayerLabel = new Label("Current Player: ")
   val playerPhaseLabel = new Label("Current Players Gamephase: ")
   val backgroundColor =  new Color(255, 255, 102)
@@ -15,6 +16,7 @@ class StatusPanel(controller: ControllerInterface) extends BorderPanel {
 
   val infoPanel: FlowPanel = new FlowPanel {
     contents += message
+    contents += info
     background = backgroundColor
   }
 
@@ -24,6 +26,13 @@ class StatusPanel(controller: ControllerInterface) extends BorderPanel {
     contents += currentPlayerLabel
     contents += playerPhaseLabel
     background = backgroundColor
+  }
+
+  def setMessage(msg: String): Unit = {
+    message.text = msg
+  }
+  def setInfo(msg: String): Unit = {
+    info.text = msg
   }
 
   def refresh(): Unit = {
