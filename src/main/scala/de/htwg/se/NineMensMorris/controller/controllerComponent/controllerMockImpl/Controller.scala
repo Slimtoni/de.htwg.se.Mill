@@ -33,4 +33,8 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
   override def checkPlayer(player: String): Unit = {}
 
   override def getField(id: Int): Option[FieldInterface] = None
+
+  override def checkMill(field: Int): Boolean = false
+
+  override def endPlayersTurn(): Unit = {}
 }
