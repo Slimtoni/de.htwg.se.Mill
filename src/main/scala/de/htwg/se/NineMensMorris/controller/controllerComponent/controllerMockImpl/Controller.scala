@@ -3,8 +3,8 @@ package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerMockI
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent.ControllerInterface
 import de.htwg.se.NineMensMorris.model.PlayerGamePhase
-import de.htwg.se.NineMensMorris.model.PlayerGamePhase.PlayerGamePhase
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
+import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardMockImpl.Gameboard
 
 import scala.collection.mutable

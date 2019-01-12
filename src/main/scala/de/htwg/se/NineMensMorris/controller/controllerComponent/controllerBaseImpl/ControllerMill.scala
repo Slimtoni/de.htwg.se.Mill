@@ -1,15 +1,16 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
+import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardFactory, GameboardInterface}
+import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
-
 import scala.collection.mutable
 
-class Controller(var gameboard: GameboardInterface) extends ControllerInterface {
+class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterface {
+
   var gameboardFactory = new GameboardFactory
   var playerWhite: PlayerInterface = _
   var playerBlack: PlayerInterface = _
@@ -21,6 +22,13 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
   def createGameboard(): Unit = {
     gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)
     addPlayer("White", "Black")
+    val gameboardtmp = gameboard.setNeigh()
+    gameboardtmp match {
+      case Some(gmb) => {
+        gameboard = gmb
+      }
+        Error.FieldError
+    }
     playerOnTurn = playerWhite
     publish(new FieldChanged)
   }
@@ -51,7 +59,6 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
       case PlayerGamePhase.Move => err = moveMan(startFieldID, targetFieldID)
       case PlayerGamePhase.Fly => err = flyMan(startFieldID, targetFieldID)
     }
-    if (err == Error.NoError) endPlayersTurn()
     err
   }
 
@@ -59,7 +66,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
 
   override def getPlayerOnTurn: String = playerOnTurn.name
 
-  private def placeMan(targetFieldId: Int): Error.Value = {
+  def placeMan(targetFieldId: Int): Error.Value = {
     val targetField: FieldInterface = gameboard.getField(targetFieldId)
     if (targetField.fieldStatus == FieldStatus.Empty) {
       val error = changeFieldStatus(targetFieldId, playerOnTurn.name)
@@ -69,7 +76,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     Error.FieldError
   }
 
-  private def moveMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
+  def moveMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
     val startField: FieldInterface = gameboard.getField(startFieldId)
     val targetField: FieldInterface = gameboard.getField(targetFieldId)
     if (startField.fieldStatus.toString == playerOnTurn.name
@@ -83,7 +90,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     //if (gameboard.containsEdge(startField, gameboard.getField(targetFieldId)))
   }
 
-  private def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
+  def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
     val startField: FieldInterface = gameboard.getField(startFieldId)
     val targetField: FieldInterface = gameboard.getField(targetFieldId)
     if (startField.fieldStatus.toString == playerOnTurn.name
@@ -94,63 +101,65 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     } else Error.FieldError
   }
 
-  private def changeFieldStatus(field: Int, fieldStatus: String): Error.Value = {
+  def changeFieldStatus(field: Int, fieldStatus: String): Error.Value = {
     val gameboardNew = gameboard.set(field, fieldStatus)
     gameboardNew match {
       case Some(gameb) => {
         gameboard = gameb
+
+
+        val gameboardtmp = gameboard.setNeigh()
+        gameboardtmp match {
+          case Some(gmb2) => {
+            gameboard = gmb2
+          }
+            Error.FieldError
+        }
         Error.NoError
       }
       case None => Error.FieldError
     }
   }
 
-  //checks if a selected man is in a mill
-  // future call: if (checkMill("man that just got placed") == true){caseOfMill("man that should be removed")}
+
   def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
-    val checkCol = field.fieldStatus
-    if (field.millneigh(1)._1 == checkCol && field.millneigh(1)._2 == checkCol ||
-      field.millneigh(2)._1 == checkCol && field.millneigh(2)._2 == checkCol) {
-      //Mill for checked color
+    val checkCol: FieldStatus = field.fieldStatus
+    if (field.millneigh(0)._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
+      field.millneigh(1)._1.fieldStatus == checkCol && field.millneigh(1)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty) {
       true
     } else false
   }
 
 
-  //checks if a selected man can be removed
-  def caseOfMill(fieldtmp: Int): Unit = {
+  def caseOfMill(fieldtmp: Int): Error.Value = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
-    //check if man is from the opponent and not in a mill
-    if (playerOnTurn == playerWhite) {
-      if (field.fieldStatus.toString.equals("W") || field.fieldStatus.toString.equals("O")) {
-        Error.SelectError
+    if (playerOnTurn.equals(playerWhite)) {
+      if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {
+        return Error.SelectError
       } else {
         if (!checkMill(fieldtmp)) {
-          //a black man gets removed
-          //call killMan
           killMan(fieldtmp)
+          return Error.NoError
         }
-
       }
-    } else if (playerOnTurn == playerBlack) {
-      if (field.fieldStatus.toString.equals("B") || field.fieldStatus.toString.equals("O")) {
-        Error.SelectError
+    } else if (playerOnTurn.equals(playerBlack)) {
+      if (field.fieldStatus == FieldStatus.Black || field.fieldStatus == FieldStatus.Empty) {
+        return Error.SelectError
       } else {
         if (!checkMill(fieldtmp)) {
-          //a white man gets removed
-          //call killMan
           killMan(fieldtmp)
+          return Error.NoError
         }
-
       }
     }
-
+    Error.SelectError
   }
 
   def killMan(fieldId: Int): Unit = {
     val field: FieldInterface = gameboard.getField(fieldId)
     changeFieldStatus(fieldId, "Empty")
+    playerOnTurn = playerOnTurn.decrementPlacedMen()
     publish(new FieldChanged)
   }
 
@@ -172,7 +181,7 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     publish(new CurrentPlayerChanged)
   }
 
-  private def getPlayer(name: String): PlayerInterface = {
+  def getPlayer(name: String): PlayerInterface = {
     if (players._1.name == name) players._1
     else players._2
   }
@@ -190,4 +199,5 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
     if (field.id != 99) Some(field)
     else None
   }
+
 }

@@ -1,26 +1,33 @@
 package de.htwg.se.NineMensMorris.a_view
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent
-import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged}
-import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.NineMensMorris.controller.controllerComponent.Error._
+import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged, CaseOfMill}
+import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
+
+
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
 
-case class Tui(controller: Controller) extends Reactor {
+case class Tui(controller: ControllerMill) extends Reactor {
   listenTo(controller)
   controller.createGameboard()
 
-  def processInputLine(input: String): Unit = {
+  def processInputLine(): Unit = {
+    println("Nine mens morris by Toni & Matze\n" +
+      "--------------------------------\n" +
+      "s - start game\n" +
+      "q - quit\n" +
+      "--------------------------------")
+    val input = readLine()
     input match {
-      case "n" => controller.createGameboard()
       case "s" => processGameInput()
-      case _ =>
-        //var inputs =input.split(' ')
-        //controller.changeFieldStatus(inputs(0).toInt, inputs(1))
+      case "q" => sys.exit()
+      case _ => processInputLine()
     }
   }
 
-  def processGameInput() :Unit = {
+  def processGameInput(): Unit = {
     val quit = false
     while (!quit) {
       val currentPlayer: String = controller.getPlayerOnTurn
@@ -30,21 +37,44 @@ case class Tui(controller: Controller) extends Reactor {
       }
     }
   }
+
+  def endGame(): Unit = {
+    println("If you want to exit the game press y. Otherwise press any button")
+    val input = readLine()
+    if (input.equals("y")) {
+      sys.exit()
+    }
+  }
+
   def processPlayerTurn(currentPlayer: String): Unit = {
     controller.checkPlayer(currentPlayer)
-    //currentPlayer = controller.playerOnTurn
-    //println("Player: " + currentPlayer.name + " ------ Gamephase: " + currentPlayer.phase + " Man")
     controller.getPlayerOnTurnPhase match {
       case "Place" =>
         var done = false
         while (!done) {
           println("Please enter ID of the target Field to Place: ")
-          val input = readInt()
-          val error = controller.performTurn(input, 0)
-          if (error != controllerComponent.Error.NoError) println(error)
-          else done = {
-            println("Succesfully placed Man on the Field " + input)
-            true
+          try {
+            val input = readLine()
+            if (input.equals("q")) {
+              endGame()
+            } else {
+              val inputs = input.split(" ")
+              val error = controller.performTurn(inputs(0).toInt, 0)
+              if (error != controllerComponent.Error.NoError) errorMessage(error)
+              else done = {
+                println("Succesfully placed Man on the Field " + input)
+                if (controller.checkMill(inputs(0).toInt)) {
+                  processMill()
+                }
+                controller.endPlayersTurn()
+                true
+              }
+            }
+          }
+          catch {
+            case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+            case nfe: NumberFormatException => errorMessage(InputError)
+
           }
         }
       case "Move" =>
@@ -53,11 +83,27 @@ case class Tui(controller: Controller) extends Reactor {
           println("Please enter ID of the start- and targetField to Move: ")
           val input = readLine()
           val inputs = input.split(" ")
-          val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
-          if (error != controllerComponent.Error.NoError) println(error)
-          else done = {
-            println("Succesfully moved Man from Field " + inputs(0) + " to Field " + inputs(1))
-            true
+          if (input.equals("q")) {
+            endGame()
+          } else {
+            try {
+              val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
+              if (error != controllerComponent.Error.NoError) errorMessage(error)
+              else done = {
+                println("Succesfully moved Man from Field " + inputs(0) + " to Field " + inputs(1))
+                println("Succesfully placed Man on the Field " + input)
+                if (controller.checkMill(inputs(1).toInt)) {
+                  processMill()
+                }
+                controller.endPlayersTurn()
+                true
+              }
+            }
+
+            catch {
+              case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+              case nfe: NumberFormatException => errorMessage(InputError)
+            }
           }
         }
       case "Fly" =>
@@ -66,10 +112,42 @@ case class Tui(controller: Controller) extends Reactor {
           println("Please enter ID of the start- and targetField to Fly: ")
           val input = readLine()
           val inputs = input.split(" ")
-          val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
-          if (error != controllerComponent.Error.NoError) println(error)
-          else done = true
+          if (input.equals("q")) {
+            endGame()
+          } else {
+            try {
+              val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
+              if (error != controllerComponent.Error.NoError) errorMessage(error)
+              else done = {
+                if (controller.checkMill(inputs(1).toInt)) {
+                  processMill()
+                }
+                controller.endPlayersTurn()
+                true
+              }
+            }
+
+            catch {
+              case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+              case nfe: NumberFormatException => errorMessage(InputError)
+            }
+          }
         }
+    }
+  }
+
+  def processMill(): Unit = {
+    var done = false
+    while (!done) {
+      println("Player " + controller.playerOnTurn + " got a Mill. Please select a man to remove")
+      try {
+        val input = readInt()
+        val error = controller.caseOfMill(input)
+        if (error != controllerComponent.Error.NoError) errorMessage(error)
+        else done = true
+      } catch {
+        case nfe: NumberFormatException => errorMessage(InputError)
+      }
     }
   }
 
@@ -79,6 +157,7 @@ case class Tui(controller: Controller) extends Reactor {
     case _: PlayerPhaseChanged =>
       println("Player: " + controller.playerOnTurn.name + " ------ Gamephase: " + controller.playerOnTurn.phase + " Man")
     case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
-    //case _: CurrentPlayerChanged => controller.playerOnTurn = controller.playerOnTurn
+    case _: CaseOfMill =>
+      println("Player " + controller.playerOnTurn + " got a mill. Please select a man to remove")
   }
 }

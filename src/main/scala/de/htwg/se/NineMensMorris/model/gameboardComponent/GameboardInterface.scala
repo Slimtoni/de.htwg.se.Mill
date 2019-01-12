@@ -14,6 +14,7 @@ trait GameboardInterface {
   def containsVertex(v: FieldInterface): Boolean
   def containsEdge(v: FieldInterface, w: FieldInterface): Boolean
   def set(field: Int, fieldStatus: String): Option[GameboardInterface]
+  def setNeigh(): Option[GameboardInterface]
 }
 
 trait EdgeInterface {
@@ -26,8 +27,9 @@ trait EdgeInterface {
 trait FieldInterface {
   def id: Int
   def fieldStatus: FieldStatus
-  def millneigh: List[(FieldInterface, FieldInterface)]
+  def millneigh: mutable.MutableList[(FieldInterface, FieldInterface)]
 
   def changeFieldStatus(fieldStatus: FieldStatus): FieldInterface
+  def changeMillNeigh(list: mutable.MutableList[(FieldInterface, FieldInterface)]): FieldInterface
   def checkID(f: FieldInterface): Boolean
 }

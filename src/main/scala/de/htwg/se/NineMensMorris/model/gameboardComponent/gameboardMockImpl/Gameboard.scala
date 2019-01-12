@@ -23,6 +23,8 @@ class Gameboard() extends GameboardInterface {
   override def containsEdge(v: FieldInterface, w: FieldInterface): Boolean = false
 
   override def set(field: Int, fieldStatus: String): Option[GameboardInterface] = Some(this)
+
+  override def setNeigh(): Option[GameboardInterface] = Some(this)
 }
 
 object EmptyField extends FieldInterface {
@@ -30,9 +32,11 @@ object EmptyField extends FieldInterface {
 
   override def fieldStatus: FieldStatus = FieldStatus.Empty
 
-  override def millneigh: List[(FieldInterface, FieldInterface)] = List.empty
+  override def millneigh: mutable.MutableList[(FieldInterface, FieldInterface)] = mutable.MutableList.empty
 
   override def changeFieldStatus(fieldStatus: FieldStatus): FieldInterface = this
+
+  override def changeMillNeigh(list: mutable.MutableList[(FieldInterface, FieldInterface)]): FieldInterface = this
 
   override def checkID(f: FieldInterface): Boolean = true
 
