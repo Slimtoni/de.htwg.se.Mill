@@ -13,11 +13,17 @@ case class Tui(controller: ControllerMill) extends Reactor {
   listenTo(controller)
   controller.createGameboard()
 
-  def processInputLine(input: String): Unit = {
+  def processInputLine(): Unit = {
+    println("Nine mens morris by Toni & Matze\n" +
+      "--------------------------------\n" +
+      "s - start game\n" +
+      "q - quit\n" +
+      "--------------------------------")
+    val input = readLine()
     input match {
-      case "n" => controller.createGameboard()
       case "s" => processGameInput()
-      case _ =>
+      case "q" => sys.exit()
+      case _ => processInputLine()
     }
   }
 
@@ -32,6 +38,14 @@ case class Tui(controller: ControllerMill) extends Reactor {
     }
   }
 
+  def endGame(): Unit = {
+    println("If you want to exit the game press y. Otherwise press any button")
+    val input = readLine()
+    if (input.equals("y")) {
+      sys.exit()
+    }
+  }
+
   def processPlayerTurn(currentPlayer: String): Unit = {
     controller.checkPlayer(currentPlayer)
     controller.getPlayerOnTurnPhase match {
@@ -40,20 +54,27 @@ case class Tui(controller: ControllerMill) extends Reactor {
         while (!done) {
           println("Please enter ID of the target Field to Place: ")
           try {
-            val input = readInt()
-            val error = controller.performTurn(input, 0)
-            if (error != controllerComponent.Error.NoError) errorMessage(error)
-            else done = {
-              println("Succesfully placed Man on the Field " + input)
-              if (controller.checkMill(input)) {
-                processMill()
+            val input = readLine()
+            if (input.equals("q")) {
+              endGame()
+            } else {
+              val inputs = input.split(" ")
+              val error = controller.performTurn(inputs(0).toInt, 0)
+              if (error != controllerComponent.Error.NoError) errorMessage(error)
+              else done = {
+                println("Succesfully placed Man on the Field " + input)
+                if (controller.checkMill(inputs(0).toInt)) {
+                  processMill()
+                }
+                controller.endPlayersTurn()
+                true
               }
-              controller.endPlayersTurn()
-              true
             }
-          } catch {
+          }
+          catch {
             case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
             case nfe: NumberFormatException => errorMessage(InputError)
+
           }
         }
       case "Move" =>
@@ -62,22 +83,27 @@ case class Tui(controller: ControllerMill) extends Reactor {
           println("Please enter ID of the start- and targetField to Move: ")
           val input = readLine()
           val inputs = input.split(" ")
-          try {
-            val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
-            if (error != controllerComponent.Error.NoError) errorMessage(error)
-            else done = {
-              println("Succesfully moved Man from Field " + inputs(0) + " to Field " + inputs(1))
-              println("Succesfully placed Man on the Field " + input)
-              if (controller.checkMill(inputs(1).toInt)) {
-                processMill()
+          if (input.equals("q")) {
+            endGame()
+          } else {
+            try {
+              val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
+              if (error != controllerComponent.Error.NoError) errorMessage(error)
+              else done = {
+                println("Succesfully moved Man from Field " + inputs(0) + " to Field " + inputs(1))
+                println("Succesfully placed Man on the Field " + input)
+                if (controller.checkMill(inputs(1).toInt)) {
+                  processMill()
+                }
+                controller.endPlayersTurn()
+                true
               }
-              controller.endPlayersTurn()
-              true
             }
-          }
-          catch {
-            case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
-            case nfe: NumberFormatException => errorMessage(InputError)
+
+            catch {
+              case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+              case nfe: NumberFormatException => errorMessage(InputError)
+            }
           }
         }
       case "Fly" =>
@@ -86,19 +112,25 @@ case class Tui(controller: ControllerMill) extends Reactor {
           println("Please enter ID of the start- and targetField to Fly: ")
           val input = readLine()
           val inputs = input.split(" ")
-          try {
-            val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
-            if (error != controllerComponent.Error.NoError) println(error)
-            else done = {
-              if (controller.checkMill(inputs(1).toInt)) {
-                processMill()
+          if (input.equals("q")) {
+            endGame()
+          } else {
+            try {
+              val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
+              if (error != controllerComponent.Error.NoError) errorMessage(error)
+              else done = {
+                if (controller.checkMill(inputs(1).toInt)) {
+                  processMill()
+                }
+                controller.endPlayersTurn()
+                true
               }
-              controller.endPlayersTurn()
-              true
             }
-          } catch {
-            case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
-            case nfe: NumberFormatException => errorMessage(InputError)
+
+            catch {
+              case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+              case nfe: NumberFormatException => errorMessage(InputError)
+            }
           }
         }
     }
@@ -111,7 +143,7 @@ case class Tui(controller: ControllerMill) extends Reactor {
       try {
         val input = readInt()
         val error = controller.caseOfMill(input)
-        if (error != controllerComponent.Error.NoError) println(error)
+        if (error != controllerComponent.Error.NoError) errorMessage(error)
         else done = true
       } catch {
         case nfe: NumberFormatException => errorMessage(InputError)
