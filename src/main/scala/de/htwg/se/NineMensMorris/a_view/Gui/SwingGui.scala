@@ -1,17 +1,15 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent
-import de.htwg.se.NineMensMorris.controller.controllerComponent.{ControllerInterface, FieldChanged, GamePhaseChanged, PlayerPhaseChanged}
+import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
-
 import javax.imageio.ImageIO
-import javax.swing._
-
+import javax.swing.{Icon, ImageIcon}
 import java.io.File
 
 import scala.collection.mutable
 import scala.swing._
-import scala.swing.event.{ButtonClicked, MousePressed}
+import scala.swing.event.{ButtonClicked, Key, MousePressed}
 
 
 class SwingGui(controller: ControllerInterface) extends Frame {
@@ -24,7 +22,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   maximumSize = framesize
   val icon: Image = ImageIO.read(new File("res/GameIcon.png"))
   iconImage = icon
-
   val board = new Board(controller)
   val vertexList: mutable.MutableList[(FieldInterface, Point)] = board.getBoardList
 
@@ -93,6 +90,32 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       }
     }
   }
+  menuBar = new MenuBar {
+    contents += new Menu("File") {
+      mnemonic = Key.F
+      contents += new MenuItem(Action("New") { controller.startNewGame() })
+      contents += new MenuItem(Action("Random") {  })
+      contents += new MenuItem(Action("Quit") { System.exit(0) })
+    }
+    contents += new Menu("Edit") {
+      mnemonic = Key.E
+      contents += new MenuItem(Action("Undo") {  })
+      contents += new MenuItem(Action("Redo") {  })
+    }
+    contents += new Menu("Solve") {
+      mnemonic = Key.S
+      contents += new MenuItem(Action("Solve") {  })
+    }
+    contents += new Menu("Options") {
+      mnemonic = Key.O
+      contents += new MenuItem(Action("Show all candidates") { })
+      contents += new MenuItem(Action("Size 1*1") {  })
+      contents += new MenuItem(Action("Size 4*4") {  })
+      contents += new MenuItem(Action("Size 9*9") {  })
+
+    }
+  }
+
 
   val statusPanel = new StatusPanel(controller)
   statusPanel.visible = false
@@ -116,40 +139,49 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
   }
 
-  val startPanel: FlowPanel = new FlowPanel() {
+  /*val startPanel: FlowPanel = new FlowPanel() {
     visible = true
     var startButton = new Button("Start Game")
     contents += startButton
     listenTo(startButton)
     reactions += {
-      case ButtonClicked(_) =>
-        //TODO: Methode für Spielstart
-        this.visible = false
-        mainPanel.visible = true
-        mainPanel.enabled = true
-        statusPanel.visible = true
-        //board.repaint()
-        statusPanel.refresh()
+      case ButtonClicked(startbutton) =>
+        Console.println("Start Game clicked")
+        controller.startNewGame()
     }
+  }*/
+
+
+  def refreshAll(): Unit = {
+    statusPanel.refresh()
+    board.repaint()
+    this.repaint()
+    //startPanel.repaint()
   }
 
   def startGame(): Unit = {
-    controller.changePlayerOnTurn()
+    refreshAll()
+    mainPanel.visible = true
+    statusPanel.visible = true
   }
 
   contents = new BorderPanel {
     add(mainPanel, BorderPanel.Position.Center)
     add(statusPanel, BorderPanel.Position.South)
-    add(startPanel, BorderPanel.Position.North)
+    //add(startPanel, BorderPanel.Position.North)
   }
+
+
   reactions += {
-    case ButtonClicked(buttonPressed) => {
-      for (i <- fieldButs)
-        if (buttonPressed == i) println(i.id)
+    case _: FieldChanged => refreshAll()
+    case _: PlayerPhaseChanged => refreshAll()
+    case _: GamePhaseChanged => {
+      mainPanel.visible = false
+      mainPanel.enabled = false
+      statusPanel.visible = false
+      //startPanel.visible = true
     }
-    case x: FieldChanged => board.repaint()
-      statusPanel.refresh()
-    case _: PlayerPhaseChanged => statusPanel.refresh()
+    case _: StartNewGame => startGame()
   }
   pack()
   centerOnScreen()

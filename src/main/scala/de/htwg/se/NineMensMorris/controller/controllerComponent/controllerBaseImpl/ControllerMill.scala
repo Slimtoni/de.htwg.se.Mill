@@ -16,6 +16,8 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   var playerBlack: PlayerInterface = _
   var playerOnTurn: PlayerInterface = _
   var players: (PlayerInterface, PlayerInterface) = _
+  var gameStarted = false
+
 
   def gameboardToString: String = gameboard.toString
 
@@ -31,6 +33,11 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     }
     playerOnTurn = playerWhite
     publish(new FieldChanged)
+  }
+
+  override def startNewGame(): Unit = {
+    createGameboard()
+    publish(new StartNewGame)
   }
 
   override def addPlayer(sPlayerWhite: String, sPlayerBlack: String): Unit = {
@@ -178,7 +185,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
       playerBlack = playerOnTurn
       playerOnTurn = playerWhite
     }
-    publish(new CurrentPlayerChanged)
   }
 
   def getPlayer(name: String): PlayerInterface = {
@@ -199,5 +205,4 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     if (field.id != 99) Some(field)
     else None
   }
-
 }
