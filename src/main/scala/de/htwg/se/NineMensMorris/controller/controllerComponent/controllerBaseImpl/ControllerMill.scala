@@ -111,10 +111,8 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   def changeFieldStatus(field: Int, fieldStatus: String): Error.Value = {
     val gameboardNew = gameboard.set(field, fieldStatus)
     gameboardNew match {
-      case Some(gameb) => {
+      case Some(gameb) =>
         gameboard = gameb
-
-
         val gameboardtmp = gameboard.setNeigh()
         gameboardtmp match {
           case Some(gmb2) => {
@@ -123,7 +121,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
             Error.FieldError
         }
         Error.NoError
-      }
       case None => Error.FieldError
     }
   }
@@ -139,7 +136,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   }
 
 
-  def caseOfMill(fieldtmp: Int): Error.Value = {
+  override def caseOfMill(fieldtmp: Int): Error.Value = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     if (playerOnTurn.equals(playerWhite)) {
       if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {

@@ -17,6 +17,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   visible = true
   resizable = false
   val framesize = new Dimension(650, 730)
+  var foundMill = false
   minimumSize = framesize
   preferredSize = framesize
   maximumSize = framesize
@@ -51,45 +52,62 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   def clickHandler(id: Int): Unit = {
     val dummyTargetId = 0
     controller.checkPlayer(controller.getPlayerOnTurn)
-    if (controller.getPlayerOnTurnPhase == "Move" || controller.getPlayerOnTurnPhase == "Fly") {
-      if (firstClick) {
-        controller.getField(id) match {
-          case Some(value) =>
-            if (value.fieldStatus.toString == controller.getPlayerOnTurn) {
-              clickOne = id
-              firstClick = false
-              statusPanel.setInfo("Field " + id +  " selected! Choose second Field to " +
-                controller.getPlayerOnTurnPhase + "!")
-            } else {
-              statusPanel.setInfo("Please select one of your own mens to " + controller.getPlayerOnTurnPhase)
-            }
-        }
-
-      } else {
-        if (id == clickOne) {
-          clickOne = 0
-          firstClick = true
-          statusPanel.setInfo("Field " + id +  " diselected! Choose a Man to " +
-            controller.getPlayerOnTurnPhase + "!")
-        } else {
-          val error = controller.performTurn(clickOne, id)
-          if (error == controllerComponent.Error.NoError) {
-            firstClick = true
-            statusPanel.setInfo("Succesfully moved Man from Field " + clickOne + " to Field " + id)
-          } else {
-
+    if (!foundMill) {
+      if (controller.getPlayerOnTurnPhase == "Move" || controller.getPlayerOnTurnPhase == "Fly") {
+        if (firstClick) {
+          controller.getField(id) match {
+            case Some(value) =>
+              if (value.fieldStatus.toString == controller.getPlayerOnTurn) {
+                clickOne = id
+                firstClick = false
+                statusPanel.setInfo("Field " + id +  " selected! Choose second Field to " +
+                  controller.getPlayerOnTurnPhase + "!")
+              } else {
+                statusPanel.setInfo("Please select one of your own mens to " + controller.getPlayerOnTurnPhase)
+              }
           }
+
+        } else {
+          if (id == clickOne) {
+            clickOne = 0
+            firstClick = true
+            statusPanel.setInfo("Field " + id +  " diselected! Choose a Man to " +
+              controller.getPlayerOnTurnPhase + "!")
+          } else {
+            val error = controller.performTurn(clickOne, id)
+            if (error != controllerComponent.Error.NoError) {
+              statusPanel.setInfo(error.toString)
+            } else {
+              if (controller.checkMill(id)) foundMill = true
+              controller.endPlayersTurn()
+              firstClick = true
+            }
+          }
+        }
+      } else {
+        val error = controller.performTurn(id, dummyTargetId)
+        if (error != controllerComponent.Error.NoError) {
+          statusPanel.setInfo(error.toString)
+        } else {
+          statusPanel.setInfo("Succesfully placed Man on the Field " + id)
+          if (controller.checkMill(id)) {
+            statusPanel.setMessage("A Mill was closed!")
+            foundMill = true
+          }
+          controller.endPlayersTurn()
         }
       }
     } else {
-      val error = controller.performTurn(id, dummyTargetId)
+      statusPanel.setInfo("Player " + controller.getPlayerOnTurn + " got a Mill. Please select a man to remove")
+      val error = controller.caseOfMill(id)
       if (error != controllerComponent.Error.NoError) {
         statusPanel.setInfo(error.toString)
-      } else {
-        statusPanel.setInfo("Succesfully placed Man on the Field " + id)
-      }
+      } else foundMill = false
     }
+
   }
+
+
   menuBar = new MenuBar {
     contents += new Menu("File") {
       mnemonic = Key.F
@@ -139,48 +157,49 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
   }
 
-  /*val startPanel: FlowPanel = new FlowPanel() {
+  val startPanel: FlowPanel = new FlowPanel() {
     visible = true
     var startButton = new Button("Start Game")
     contents += startButton
     listenTo(startButton)
     reactions += {
-      case ButtonClicked(startbutton) =>
-        Console.println("Start Game clicked")
+      case ButtonClicked(_) =>
+        //Console.println("Start Game clicked")
         controller.startNewGame()
     }
-  }*/
-
+  }
 
   def refreshAll(): Unit = {
     statusPanel.refresh()
     board.repaint()
     this.repaint()
-    //startPanel.repaint()
+    startPanel.repaint()
   }
 
   def startGame(): Unit = {
+    foundMill = false
     refreshAll()
     mainPanel.visible = true
     statusPanel.visible = true
+    startPanel.visible = false
   }
 
   contents = new BorderPanel {
     add(mainPanel, BorderPanel.Position.Center)
     add(statusPanel, BorderPanel.Position.South)
-    //add(startPanel, BorderPanel.Position.North)
+    add(startPanel, BorderPanel.Position.North)
   }
 
 
   reactions += {
-    case _: FieldChanged => refreshAll()
+    case _: FieldChanged =>
+      refreshAll()
     case _: PlayerPhaseChanged => refreshAll()
-    case _: GamePhaseChanged => {
+    case _: GamePhaseChanged =>
       mainPanel.visible = false
       mainPanel.enabled = false
       statusPanel.visible = false
-      //startPanel.visible = true
-    }
+      startPanel.visible = true
     case _: StartNewGame => startGame()
   }
   pack()

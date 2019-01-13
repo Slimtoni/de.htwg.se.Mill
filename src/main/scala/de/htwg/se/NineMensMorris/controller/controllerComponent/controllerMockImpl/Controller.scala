@@ -39,4 +39,6 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
   override def endPlayersTurn(): Unit = {}
 
   override def startNewGame(): Unit = {}
+
+  override def caseOfMill(fieldtmp: Int): controllerComponent.Error.Value = controllerComponent.Error.NoError
 }
