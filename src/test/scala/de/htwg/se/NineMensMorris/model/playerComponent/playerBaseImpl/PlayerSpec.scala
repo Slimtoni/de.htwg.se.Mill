@@ -28,7 +28,7 @@ class PlayerSpec extends WordSpec with Matchers {
     "be able to check the placed men and change to Fly GamePhase" in {
       player.numberPlacedMen = 9
       player.numberLostMen = 6
-      player.checkedPlacedMen() shouldEqual Some(Player("White", PlayerGamePhase.Fly, 9, 0))
+      player.checkedPlacedMen() shouldEqual Some(Player("White", PlayerGamePhase.Fly, 9, 6))
     }
     "be able to check the placed men and loose the game" in {
       player.numberPlacedMen = 9
@@ -36,7 +36,7 @@ class PlayerSpec extends WordSpec with Matchers {
       player.checkedPlacedMen() shouldEqual None
     }
     "be able to change the GamePhase" in {
-      player.changeGamePhase(PlayerGamePhase.Place) shouldEqual Player("White", PlayerGamePhase.Place, 9, 0)
+      player.changeGamePhase(PlayerGamePhase.Place) shouldEqual Player("White", PlayerGamePhase.Place, 9, 7)
     }
     "be able to increment the Placed Men" in {
       var player1 = Player("White", PlayerGamePhase.Move, 9, 0)

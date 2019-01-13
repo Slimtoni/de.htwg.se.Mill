@@ -6,9 +6,6 @@ import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 
 case class Player(name: String, phase: PlayerGamePhase, var numberPlacedMen: Int, var numberLostMen: Int) extends PlayerInterface {
 
-
-  println(name + "| numberPlacedMen: " + numberPlacedMen + "| numberLostMen: " + numberLostMen)
-
   override def checkedPlacedMen(): Option[PlayerInterface] = {
     if (numberPlacedMen == 9 && numberLostMen < 6) {
       return Some(changeGamePhase(PlayerGamePhase.Move))
