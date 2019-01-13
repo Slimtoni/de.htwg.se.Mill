@@ -1,7 +1,6 @@
 package de.htwg.se.NineMensMorris
 import de.htwg.se.NineMensMorris.a_view.Gui.SwingGui
 import de.htwg.se.NineMensMorris.a_view.Tui
-import de.htwg.se.NineMensMorris.controller.controllerComponent.ControllerInterface
 import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
 import de.htwg.se.NineMensMorris.model._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardFactory

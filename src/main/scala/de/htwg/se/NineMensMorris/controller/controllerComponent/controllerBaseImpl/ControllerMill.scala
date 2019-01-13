@@ -41,8 +41,8 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   }
 
   override def addPlayer(sPlayerWhite: String, sPlayerBlack: String): Unit = {
-    playerWhite = Player(sPlayerWhite, PlayerGamePhase.Place, 0)
-    playerBlack = Player(sPlayerBlack, PlayerGamePhase.Place, 0)
+    playerWhite = Player(sPlayerWhite, PlayerGamePhase.Place, 0, 0)
+    playerBlack = Player(sPlayerBlack, PlayerGamePhase.Place, 0, 0)
     players = (playerWhite, playerBlack)
   }
 
@@ -162,9 +162,16 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
   def killMan(fieldId: Int): Unit = {
     val field: FieldInterface = gameboard.getField(fieldId)
-    changeFieldStatus(fieldId, "Empty")
-    playerOnTurn = playerOnTurn.decrementPlacedMen()
-    publish(new FieldChanged)
+    val error = changeFieldStatus(fieldId, "Empty")
+    if (error == Error.NoError) {
+      if (playerOnTurn.equals(playerWhite))
+        playerBlack.incrementLostMen()
+      else {
+        playerWhite.incrementLostMen()
+      }
+      publish(new FieldChanged)
+    }
+
   }
 
 

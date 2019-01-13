@@ -78,8 +78,10 @@ class SwingGui(controller: ControllerInterface) extends Frame {
             if (error != controllerComponent.Error.NoError) {
               statusPanel.setInfo(error.toString)
             } else {
-              if (controller.checkMill(id)) foundMill = true
-              controller.endPlayersTurn()
+              if (controller.checkMill(id)) {
+                statusPanel.setMessage("Player " + controller.getPlayerOnTurn + " got a Mill. Please select a man to remove")
+                foundMill = true
+              } else controller.endPlayersTurn()
               firstClick = true
             }
           }
@@ -91,18 +93,20 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         } else {
           statusPanel.setInfo("Succesfully placed Man on the Field " + id)
           if (controller.checkMill(id)) {
-            statusPanel.setMessage("A Mill was closed!")
+            statusPanel.setMessage("Player " + controller.getPlayerOnTurn + " got a Mill. Please select a man to remove")
             foundMill = true
-          }
-          controller.endPlayersTurn()
+          } else controller.endPlayersTurn()
         }
       }
     } else {
-      statusPanel.setInfo("Player " + controller.getPlayerOnTurn + " got a Mill. Please select a man to remove")
       val error = controller.caseOfMill(id)
       if (error != controllerComponent.Error.NoError) {
         statusPanel.setInfo(error.toString)
-      } else foundMill = false
+      } else {
+        foundMill = false
+        statusPanel.setInfo("Succesfully removed a Man on the Field " + id)
+        controller.endPlayersTurn()
+      }
     }
 
   }
@@ -196,6 +200,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       refreshAll()
     case _: PlayerPhaseChanged => refreshAll()
     case _: GamePhaseChanged =>
+      println("GamePhaseChanged!!!")
       mainPanel.visible = false
       mainPanel.enabled = false
       statusPanel.visible = false

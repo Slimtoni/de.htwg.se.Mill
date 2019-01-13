@@ -12,7 +12,7 @@ import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 class Controller extends WordSpec with Matchers {
   var playerWhite: PlayerInterface = _
   var playerBlack: PlayerInterface = _
-  var playerTest: PlayerInterface = new Player("White", PlayerGamePhase.Place, 0)
+  var playerTest: PlayerInterface = new Player("White", PlayerGamePhase.Place, 0, 0)
   var playerOnTurn: PlayerInterface = _
   var gameboardFactory = new GameboardFactory
   var gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)

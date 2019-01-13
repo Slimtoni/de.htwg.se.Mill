@@ -17,7 +17,7 @@ class Player extends PlayerInterface {
 
   override def incrementPlacedMen(): PlayerInterface = this
 
-  override def decrementPlacedMen(): PlayerInterface = this
+  override def incrementLostMen(): PlayerInterface = this
 
   override def equals(p: PlayerInterface): Boolean = true
 }
