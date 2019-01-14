@@ -78,37 +78,6 @@ class GameboardFactory() {
         gameboard.addEdge(field13, field20)
         gameboard.addEdge(field2, field14)
         gameboard.addEdge(field14, field23)
-
-
-        /*
-        val v = gameboard.vertexList
-        field0.millneigh = List((v(1), v(2)), (v(9), v(21)))
-        field1.millneigh = List((field0, field2), (field4, field7))
-        field2.millneigh = List((field0, field1), (field14, field23))
-        field3.millneigh = List((field4, field5), (field10, field18))
-        field4.millneigh = List((field3, field5), (field1, field7))
-        field5.millneigh = List((field3, field4), (field13, field20))
-        field6.millneigh = List((field7, field8), (field11, field15))
-        field7.millneigh = List((field6, field8), (field1, field4))
-        field8.millneigh = List((field6, field7), (field12, field17))
-        field9.millneigh = List((field10, field11), (field0, field21))
-        field10.millneigh = List((field9, field11), (field3, field18))
-        field11.millneigh = List((field9, field10), (field6, field15))
-        field12.millneigh = List((field13, field14), (field8, field17))
-        field13.millneigh = List((field12, field14), (field5, field20))
-        field14.millneigh = List((field12, field13), (field2, field23))
-        field15.millneigh = List((field16, field17), (field6, field11))
-        field16.millneigh = List((field15, field17), (field19, field22))
-        field17.millneigh = List((field15, field16), (field8, field12))
-        field18.millneigh = List((field19, field20), (field3, field10))
-        field19.millneigh = List((field18, field20), (field16, field22))
-        field20.millneigh = List((field18, field19), (field5, field13))
-        field21.millneigh = List((field0, field9), (field22, field23))
-        field22.millneigh = List((field21, field23), (field16, field19))
-        field23.millneigh = List((field21, field22), (field2, field14))
-
-        */
-
         gameboard
       };
     }
