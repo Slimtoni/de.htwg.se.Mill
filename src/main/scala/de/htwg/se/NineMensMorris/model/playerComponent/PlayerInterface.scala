@@ -10,6 +10,6 @@ trait PlayerInterface {
   def checkedPlacedMen(): Option[PlayerInterface]
   def changeGamePhase(newPhase: PlayerGamePhase): PlayerInterface
   def incrementPlacedMen(): PlayerInterface
-  def decrementPlacedMen(): PlayerInterface
+  def incrementLostMen(): PlayerInterface
   def equals(p: PlayerInterface): Boolean
 }

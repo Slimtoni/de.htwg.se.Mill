@@ -1,117 +1,142 @@
 package de.htwg.se.NineMensMorris.a_view
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent
-import de.htwg.se.NineMensMorris.controller.controllerComponent.{FieldChanged, GamePhaseChanged, PlayerPhaseChanged, CaseOfMill}
-import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.{ControllerMill}
-import de.htwg.se.NineMensMorris.model.PlayerGamePhase
-import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
+import de.htwg.se.NineMensMorris.controller.controllerComponent.Error._
+import de.htwg.se.NineMensMorris.controller.controllerComponent._
+import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
 
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
 
-case class Tui(controller: ControllerMill) extends Reactor {
+class Tui(controller: ControllerMill) extends Reactor {
   listenTo(controller)
-  controller.createGameboard()
+  var gamestarted = false
 
   def processInputLine(input: String): Unit = {
     input match {
-      case "n" => controller.createGameboard()
-      case "s" => processGameInput()
+      case "n" =>
+        controller.startNewGame()
+        gamestarted = true
+      case "q" => System.exit(0)
+      case "g" =>
+        if (gamestarted) processPlayerTurn()
+        else println("Please start a new Game!")
       case _ =>
-        //var inputs =input.split(' ')
-        //controller.changeFieldStatus(inputs(0).toInt, inputs(1))
     }
   }
 
-  def processGameInput(): Unit = {
-    val quit = false
-    while (!quit) {
-      val currentPlayer: String = controller.getPlayerOnTurn
-      try processPlayerTurn(currentPlayer)
-      catch {
-        case e: Exception => println("Error213: " + e)
-      }
+  def endGame(): Unit = {
+    println("If you want to exit the game press y. Otherwise press any button")
+    val input = readLine()
+    if (input.equals("y")) {
+      gamestarted = false
+      sys.exit()
     }
   }
 
-  def processPlayerTurn(currentPlayer: String): Unit = {
+  def processPlayerTurn(): Unit = {
+    val currentPlayer = controller.getPlayerOnTurn
     controller.checkPlayer(currentPlayer)
-    //currentPlayer = controller.playerOnTurn
-    //println("Player: " + currentPlayer.name + " ------ Gamephase: " + currentPlayer.phase + " Man")
     controller.getPlayerOnTurnPhase match {
       case "Place" =>
-        var done = false
-        while (!done) {
-          println("Please enter ID of the target Field to Place: ")
-          val input = readInt()
+        println("Please enter ID of the target Field to Place: ")
+        try {
+          val input = readLine().toInt
           val error = controller.performTurn(input, 0)
-          if (error != controllerComponent.Error.NoError) println(error)
-          else done = {
+          if (error != controllerComponent.Error.NoError) {
+            errorMessage(error)
+            processPlayerTurn()
+          }
+          else {
             println("Succesfully placed Man on the Field " + input)
             if (controller.checkMill(input)) {
               processMill()
             }
             controller.endPlayersTurn()
-            true
           }
         }
+        catch {
+          case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+          case nfe: NumberFormatException => errorMessage(InputError)
+        }
+
       case "Move" =>
-        var done = false
-        while (!done) {
-          println("Please enter ID of the start- and targetField to Move: ")
-          val input = readLine()
-          val inputs = input.split(" ")
+        println("Please enter ID of the start- and targetField to Move: ")
+        val input = readLine()
+        val inputs = input.split(" ")
+        try {
           val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
-          if (error != controllerComponent.Error.NoError) println(error)
-          else done = {
+          if (error != controllerComponent.Error.NoError) {
+            errorMessage(error)
+            processPlayerTurn()
+          }
+          else {
             println("Succesfully moved Man from Field " + inputs(0) + " to Field " + inputs(1))
             println("Succesfully placed Man on the Field " + input)
             if (controller.checkMill(inputs(1).toInt)) {
               processMill()
             }
             controller.endPlayersTurn()
-
-            true
           }
         }
+
+        catch {
+          case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+          case nfe: NumberFormatException => errorMessage(InputError)
+        }
+
       case "Fly" =>
-        var done = false
-        while (!done) {
-          println("Please enter ID of the start- and targetField to Fly: ")
-          val input = readLine()
-          val inputs = input.split(" ")
+        println("Please enter ID of the start- and targetField to Fly: ")
+        val input = readLine()
+        val inputs = input.split(" ")
+        try {
           val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
-          if (error != controllerComponent.Error.NoError) println(error)
-          else done = {
+          if (error != controllerComponent.Error.NoError) {
+            errorMessage(error)
+            processPlayerTurn()
+          }
+          else {
             if (controller.checkMill(inputs(1).toInt)) {
               processMill()
             }
             controller.endPlayersTurn()
-            true
           }
+        }
+
+        catch {
+          case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+          case nfe: NumberFormatException => errorMessage(InputError)
         }
     }
   }
 
   def processMill(): Unit = {
-    var done = false
-    while (!done) {
-      println("Player " + controller.playerOnTurn + " got a Mill. Please select a man to remove")
+    println("Player " + controller.playerOnTurn + " got a Mill. Please select a man to remove")
+    try {
       val input = readInt()
       val error = controller.caseOfMill(input)
-      if(error != controllerComponent.Error.NoError) println(error)
-      else done = true
+      if (error != controllerComponent.Error.NoError) {
+        errorMessage(error)
+        processMill()
+      }
+    } catch {
+      case nfe: NumberFormatException => errorMessage(InputError)
     }
+
   }
 
   reactions += {
     case _: FieldChanged =>
       println(controller.gameboardToString)
+      processInputLine("")
     case _: PlayerPhaseChanged =>
       println("Player: " + controller.playerOnTurn.name + " ------ Gamephase: " + controller.playerOnTurn.phase + " Man")
     case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
-    //case _: CurrentPlayerChanged => controller.playerOnTurn = controller.playerOnTurn
     case _: CaseOfMill =>
       println("Player " + controller.playerOnTurn + " got a mill. Please select a man to remove")
+    case _: StartNewGame => {
+      gamestarted = true
+      processInputLine("")
+    }
   }
 }

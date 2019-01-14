@@ -1,7 +1,5 @@
 package de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl
 
-import de.htwg.se.NineMensMorris.model.FieldStatus
-import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.mutable
