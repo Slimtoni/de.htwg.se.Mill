@@ -11,7 +11,7 @@ class StatusPanel(controller: ControllerInterface) extends BorderPanel {
   var info = new Label("Game started!")
   val currentPlayerLabel = new Label("Current Player: ")
   val playerPhaseLabel = new Label("Current Players Gamephase: ")
-  val backgroundColor =  new Color(255, 255, 102)
+  val backgroundColor =  new Color(255, 222, 99)
 
 
   val infoPanel: FlowPanel = new FlowPanel {

@@ -20,8 +20,8 @@ class Board(controller: ControllerInterface) extends Component {
   minimumSize = panelDimension
   preferredSize = panelDimension
   maximumSize = panelDimension
-  val imageBlack: BufferedImage = ImageIO.read(new File("res/Black_50.png"))
-  val imageWhite: BufferedImage = ImageIO.read(new File("res/Black_50.png"))
+  val imageBlack: BufferedImage = ImageIO.read(new File("res/BlackStone_45.jpg"))
+  val imageWhite: BufferedImage = ImageIO.read(new File("res/WhiteStone.jpg"))
   var currentImage: BufferedImage = _
   listenTo(controller)
   controller.createGameboard()
@@ -86,7 +86,7 @@ class Board(controller: ControllerInterface) extends Component {
   }
 
   override def paintComponent(g: Graphics2D): Unit = {
-    val image = ImageIO.read(new File("res/Board.png"))
+    val image = ImageIO.read(new File("res/BoardSkin.jpg"))
 
     g.drawImage(image, 0, 0, null)
 
@@ -96,17 +96,19 @@ class Board(controller: ControllerInterface) extends Component {
       //val counter = new Ellipse2D.Double(i._2.x,i._2.y, 50, 50)
       i._1.fieldStatus match {
         case FieldStatus.Black =>
-          g.setColor(Color.BLACK)
-          g.fillOval(i._2.x, i._2.y, 50, 50)
+          g.setColor(new Color(41, 163, 163))
+          g.fillOval(i._2.x, i._2.y, 55, 55)
           g.setColor(Color.GRAY)
-          g.drawOval(i._2.x, i._2.y, 50, 50)
+          g.drawOval(i._2.x, i._2.y, 55, 55)
           g.drawOval(i._2.x + 12, i._2.y + 12, 25, 25)
+          //g.drawImage(imageBlack, i._2.x, i._2.y, null)
         case FieldStatus.White =>
-          g.setColor(Color.WHITE)
-          g.fillOval(i._2.x, i._2.y, 50, 50)
+          g.setColor(new Color(255, 219, 56))
+          g.fillOval(i._2.x, i._2.y, 55, 55)
           g.setColor(Color.GRAY)
-          g.drawOval(i._2.x, i._2.y, 50, 50)
+          g.drawOval(i._2.x, i._2.y, 55, 55)
           g.drawOval(i._2.x + 12, i._2.y + 12, 25, 25)
+          //g.drawImage(imageWhite, i._2.x, i._2.y, null)
         case FieldStatus.Empty =>
       }
     }

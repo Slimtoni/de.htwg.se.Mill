@@ -1,5 +1,7 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
+import java.awt.Color
+
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
@@ -16,7 +18,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
   resizable = false
-  val framesize = new Dimension(650, 730)
+  val framesize = new Dimension(650, 739)
   var foundMill = false
   minimumSize = framesize
   preferredSize = framesize
@@ -113,6 +115,8 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
 
   menuBar = new MenuBar {
+    background =  new Color(255, 222, 99)
+
     contents += new Menu("File") {
       mnemonic = Key.F
       contents += new MenuItem(Action("New") { controller.startNewGame() })
