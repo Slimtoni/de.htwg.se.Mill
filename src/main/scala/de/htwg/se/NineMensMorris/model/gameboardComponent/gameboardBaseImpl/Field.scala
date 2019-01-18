@@ -12,7 +12,7 @@ case class Field(var id: Int, var fieldStatus: FieldStatus, var millneigh: mutab
 
   def this(id: Int, fieldStatus: FieldStatus) = this(id, fieldStatus, mutable.MutableList.empty)
 
-  def changeFieldStatus(fieldStatus: FieldStatus) : Field = copy(id, fieldStatus)
+  def changeFieldStatus(fieldStatus: FieldStatus): Field = copy(id, fieldStatus)
 
   def changeMillNeigh(list: mutable.MutableList[(FieldInterface, FieldInterface)]): Field = copy(id, fieldStatus, list)
 
@@ -20,7 +20,6 @@ case class Field(var id: Int, var fieldStatus: FieldStatus, var millneigh: mutab
     if (f.id == this.id) true
     else false
   }
-
 
 
   override def toString: String = {
@@ -31,4 +30,6 @@ case class Field(var id: Int, var fieldStatus: FieldStatus, var millneigh: mutab
     }
   }
 
- }
+}
+
+

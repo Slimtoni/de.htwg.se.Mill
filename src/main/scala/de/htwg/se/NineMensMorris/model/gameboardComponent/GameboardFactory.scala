@@ -6,7 +6,6 @@ import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize}
 
 import scala.collection.mutable
 
-
 class GameboardFactory() {
 
 
@@ -82,4 +81,6 @@ class GameboardFactory() {
       };
     }
   }
+
+
 }

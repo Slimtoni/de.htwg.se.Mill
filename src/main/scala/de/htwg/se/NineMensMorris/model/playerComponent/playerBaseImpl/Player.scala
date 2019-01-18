@@ -38,3 +38,5 @@ case class Player(name: String, phase: PlayerGamePhase, var numberPlacedMen: Int
 
 
 }
+
+

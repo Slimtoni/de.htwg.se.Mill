@@ -1,13 +1,19 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
+import java.io.File
+
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Gameboard
+
 import scala.collection.mutable
+
 
 class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterface {
 
@@ -20,6 +26,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
 
   def gameboardToString: String = gameboard.toString
+
 
   def createGameboard(): Unit = {
     gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)
@@ -200,9 +207,9 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     gameboard.vertexList
   }
 
-   def getNeigh: mutable.MutableList[EdgeInterface] = {
-     gameboard.neigh
-   }
+  def getNeigh: mutable.MutableList[EdgeInterface] = {
+    gameboard.neigh
+  }
 
   override def getField(id: Int): Option[FieldInterface] = {
     val field = gameboard.getField(id)
