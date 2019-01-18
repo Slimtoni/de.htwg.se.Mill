@@ -40,7 +40,6 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
     if (containsVertex(v) && containsVertex(w)) {
       val edge = Edge(v, w)
       for (i <- this.neigh) {
-        //print(i)
         if (edge.equals(i)) return true
       }
     }
@@ -126,4 +125,6 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
     }
     gameboardString
   }
+
 }
+

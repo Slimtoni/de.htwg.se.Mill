@@ -5,6 +5,8 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent.Error._
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
 
+
+
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
 
@@ -18,6 +20,7 @@ class Tui(controller: ControllerMill) extends Reactor {
         controller.startNewGame()
         gamestarted = true
       case "q" => System.exit(0)
+      case "s" => controller.save()
       case "g" =>
         if (gamestarted) processPlayerTurn()
         else println("Please start a new Game!")
