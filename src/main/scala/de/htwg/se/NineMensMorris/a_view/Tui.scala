@@ -131,7 +131,7 @@ class Tui(controller: ControllerMill) extends Reactor {
       processInputLine("")
     case _: PlayerPhaseChanged =>
       println("Player: " + controller.playerOnTurn.name + " ------ Gamephase: " + controller.playerOnTurn.phase + " Man")
-    case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
+    case _: GameOver => println(controller.playerOnTurn + " lost the game!")
     case _: CaseOfMill =>
       println("Player " + controller.playerOnTurn + " got a mill. Please select a man to remove")
     case _: StartNewGame => {

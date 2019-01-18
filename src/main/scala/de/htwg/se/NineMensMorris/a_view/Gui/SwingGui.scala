@@ -16,11 +16,10 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
   resizable = false
-  val framesize = new Dimension(650, 730)
-  var foundMill = false
-  minimumSize = framesize
-  preferredSize = framesize
-  maximumSize = framesize
+  val frameSize = new Dimension(650, 730)
+  minimumSize = frameSize
+  preferredSize = frameSize
+  maximumSize = frameSize
   val icon: Image = ImageIO.read(new File("res/GameIcon.png"))
   iconImage = icon
   val board = new Board(controller)
@@ -28,7 +27,9 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   val chooseFileButton = new Button("Choose file")
   var fieldButs: mutable.MutableList[FieldButton] = mutable.MutableList.empty
-  val blackIcon: Icon = new ImageIcon("res/Black_50.png")
+  var foundMill = false
+
+
   for (i <- 0 to 23) {
     val fieldtmp = FieldButton(i)
     listenTo(fieldtmp)
@@ -45,7 +46,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
     None
   }
-
   var firstClick = true
   var clickOne = 0
 
@@ -65,6 +65,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
               } else {
                 statusPanel.setInfo("Please select one of your own mens to " + controller.getPlayerOnTurnPhase)
               }
+            case None => statusPanel.setInfo("Field doesnt exist!")
           }
 
         } else {
@@ -108,7 +109,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         controller.endPlayersTurn()
       }
     }
-
   }
 
 
@@ -154,7 +154,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         case MousePressed(_, point, _, _, _) =>
           mouseClick(point.x, point.y, this.size) match {
             case Some(value) =>
-              clickHandler(value.id)
+              if (!controller.gameOver) clickHandler(value.id)
             case None => println("No Button clicked") //TODO: insert log
           }
       }
@@ -199,12 +199,14 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     case _: FieldChanged =>
       refreshAll()
     case _: PlayerPhaseChanged => refreshAll()
-    case _: GamePhaseChanged =>
-      println("GamePhaseChanged!!!")
-      mainPanel.visible = false
-      mainPanel.enabled = false
-      statusPanel.visible = false
-      startPanel.visible = true
+    case _: GameOver =>
+      //mainPanel.visible = false
+      //mainPanel.enabled = false
+      //statusPanel.visible = false
+      //startPanel.visible = true
+      statusPanel.setMessage("")
+      statusPanel.setInfo(controller.getPlayerOnTurn + " lost the Game!")
+      Dialog.showMessage(contents.head, controller.getPlayerOnTurn + " lost the Game!" , title="Lost")
     case _: StartNewGame => startGame()
   }
   pack()

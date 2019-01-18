@@ -20,12 +20,13 @@ trait ControllerInterface extends Publisher{
   def getNeigh: mutable.MutableList[EdgeInterface]
   def getField(id: Int): Option[FieldInterface]
   def checkMill(field: Int): Boolean
+  def gameOver(): Boolean
   def endPlayersTurn(): Unit
   def caseOfMill(fieldtmp: Int): Error.Value
 }
 
 class FieldChanged extends Event
-class GamePhaseChanged extends Event
+class GameOver extends Event
 class PlayerPhaseChanged extends Event
 class CaseOfMill extends Event
 class StartNewGame extends Event
