@@ -2,32 +2,92 @@ package de.htwg.se.NineMensMorris.model.FileIOComponents
 
 import java.io.File
 
+import de.htwg.se.NineMensMorris.controller.controllerComponent.Error
+import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.gameboardComponent._
-import de.htwg.se.NineMensMorris.model.FileIOInterface
+import de.htwg.se.NineMensMorris.model.{FieldStatus, FileIOInterface, GameboardSize, PlayerGamePhase}
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Field, Gameboard}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
+import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 import scala.xml.PrettyPrinter
 
 class FileIOXML extends FileIOInterface {
 
 
-   /*override def load(): Option[(GameboardInterface, (PlayerInterface, PlayerInterface, PlayerInterface))] = {
-     var gameboardOption: Option[GameboardInterface] = None
-     val source = new File("mill.xml")
-     if (source.exists()) {
-       val file = scala.xml.XML.loadFile("mill.xml")
-       val player1name = (file \\ "player1 @name").text.trim
-       val player2name = (file \\ "player2 @name").text.trim
-
-       val player1: PlayerInterface
+  def load(): (GameboardInterface, (PlayerInterface, PlayerInterface, PlayerInterface)) = {
+    var gameboard = new Gameboard()
 
 
+    val file = scala.xml.XML.loadFile("mill.xml")
+    val player1name = (file \\ "player1" \\ "name").text.trim
+    val player2name = (file \\ "player2" \\ "name").text.trim
+    val playerOnTurnXML = (file \\ "playerOnTurn").text.trim
 
-     }
+    val player1phase = (file \\ "player1" \\ "phase").text.trim match {
+      case "Place" => PlayerGamePhase.Place
+      case "Move" => PlayerGamePhase.Move
+      case "Fly" => PlayerGamePhase.Fly
+    }
 
-     Some(gameboard, (player1, player1))
-   }*/
+    val player2phase = (file \\ "player2" \\ "phase").text.trim match {
+      case "Place" => PlayerGamePhase.Place
+      case "Move" => PlayerGamePhase.Move
+      case "Fly" => PlayerGamePhase.Fly
+    }
+
+    val player1PlacedMen = (file \\ "player1" \\ "placedMen").text.trim.toInt
+    val player2PlacedMen = (file \\ "player2" \\ "placedMen").text.trim.toInt
+
+    val player1LostMen = (file \\ "player1" \\ "lostMen").text.trim.toInt
+    val player2LostMen = (file \\ "player2" \\ "lostMen").text.trim.toInt
+
+
+    val player1 = Player(player1name, player1phase, player1PlacedMen, player1LostMen)
+    val player2 = Player(player2name, player2phase, player2PlacedMen, player2LostMen)
+    var currentPlayer: PlayerInterface = null
+    if (playerOnTurnXML.equals(player1.name)) {
+      currentPlayer = player1
+    } else {
+      currentPlayer = player2
+    }
+
+
+
+    val vertexXml = (file \\ "vertexList").text.trim
+    for (x <- 0 to vertexXml.length - 1) {
+      var status: FieldStatus = null
+      if (vertexXml.charAt(x) == 'O') {
+        status = FieldStatus.Empty
+      } else if (vertexXml.charAt(x) == 'W') {
+        status = FieldStatus.White
+      } else if (vertexXml.charAt(x) == 'B') {
+        status = FieldStatus.Black
+      } else {
+        println("WTF")
+      }
+      var tmpField = Field(x, status, mutable.MutableList.empty)
+      gameboard.addVertex(tmpField)
+
+    }
+
+
+    val gameboardtmp = gameboard.setNeigh()
+    gameboardtmp match {
+      case Some(gmb) => {
+        gameboard = gmb
+      }
+        Error.LoadError
+    }
+    if (vertexXml.length == 24) {
+      gameboard = gameboard.setEdgeList(GameboardSize.Nine, gameboard)
+    }
+    println("load complete")
+
+    (gameboard, (player1, player2, currentPlayer))
+  }
 
 
   override def save(gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit = {

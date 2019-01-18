@@ -9,4 +9,6 @@ trait FileIOInterface {
 
   def save(gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit
 
+  def load(): (GameboardInterface, (PlayerInterface,PlayerInterface,PlayerInterface))
+
 }
