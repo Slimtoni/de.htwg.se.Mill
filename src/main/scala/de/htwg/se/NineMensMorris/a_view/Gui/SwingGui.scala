@@ -18,10 +18,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
   resizable = false
-  val framesize = new Dimension(650, 750)
-  minimumSize = framesize
-  preferredSize = framesize
-  maximumSize = framesize
+  val startFramesize = new Dimension(300, 300)
+  val playFramesize = new Dimension(650, 750)
+  minimumSize = startFramesize
+  preferredSize = startFramesize
+  maximumSize = playFramesize
   val icon: Image = ImageIO.read(new File("res/GameIcon.png"))
   iconImage = icon
   val board = new Board(controller)
@@ -228,6 +229,8 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   }
 
   def startGame(): Unit = {
+    minimumSize = playFramesize
+    preferredSize = playFramesize
     foundMill = false
     refreshAll()
     mainPanel.visible = true
@@ -240,7 +243,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     add(statusPanel, BorderPanel.Position.South)
     add(startPanel, BorderPanel.Position.North)
   }
-
 
   reactions += {
     case _: FieldChanged => refreshAll()
