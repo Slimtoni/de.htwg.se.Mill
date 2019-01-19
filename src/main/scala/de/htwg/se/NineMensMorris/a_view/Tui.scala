@@ -36,7 +36,7 @@ class Tui(controller: ControllerMill) extends Reactor {
 
   def processPlayerTurn(): Unit = {
     val currentPlayer = controller.getPlayerOnTurn
-    controller.checkPlayer(currentPlayer)
+    //controller.checkPlayer(currentPlayer)
     controller.getPlayerOnTurnPhase match {
       case "Place" =>
         println("Please enter ID of the target Field to Place: ")

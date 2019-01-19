@@ -49,13 +49,13 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
   def checkPlayer(splayer: String): Unit = {
     val player: PlayerInterface = getPlayer(splayer)
-    println("White Player: " + playerWhite.numberPlacedMen + " -- " + playerWhite.numberLostMen)
-    println("Black Player: " + playerBlack.numberPlacedMen + " -- " + playerBlack.numberLostMen)
+    //println("White Player: " + playerWhite.numberPlacedMen + " -- " + playerWhite.numberLostMen)
+    //println("Black Player: " + playerBlack.numberPlacedMen + " -- " + playerBlack.numberLostMen)
     player.checkedPlacedMen() match {
       case Some(value) =>
         //println("Phase of Value:" + value.phase)
         playerOnTurn = value
-        publish(new PlayerPhaseChanged)
+        //publish(new PlayerPhaseChanged)
     }
   }
 
@@ -176,14 +176,19 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
   }
 
-
   def endPlayersTurn(): Unit = {
     changePlayerOnTurn()
     if (playerOnTurn.checkPlayerLost()) {
       gameOver = true
       publish(new GameOver)
+    } else {
+      println("White Player: " + playerWhite.numberPlacedMen + " -- " + playerWhite.numberLostMen)
+      println("Black Player: " + playerBlack.numberPlacedMen + " -- " + playerBlack.numberLostMen)
+      playerOnTurn.checkedPlacedMen() match {
+        case Some(value) => playerOnTurn = value
+      }
+      publish(new FieldChanged)
     }
-    publish(new FieldChanged)
   }
 
   override def changePlayerOnTurn(): Unit = {

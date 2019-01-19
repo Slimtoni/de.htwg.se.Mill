@@ -51,7 +51,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   def clickHandler(id: Int): Unit = {
     val dummyTargetId = 0
-    controller.checkPlayer(controller.getPlayerOnTurn)
     if (!foundMill) {
       if (controller.getPlayerOnTurnPhase == "Move" || controller.getPlayerOnTurnPhase == "Fly") {
         if (firstClick) {
