@@ -10,7 +10,7 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseIm
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
 
-class Tui(controller: ControllerMill) extends Reactor {
+class Tui(controller: ControllerInterface) extends Reactor {
   listenTo(controller)
   var gamestarted = false
 
@@ -39,13 +39,13 @@ class Tui(controller: ControllerMill) extends Reactor {
 
   def processPlayerTurn(): Unit = {
     val currentPlayer = controller.getPlayerOnTurn
-    controller.checkPlayer(currentPlayer)
     controller.getPlayerOnTurnPhase match {
       case "Place" =>
         println("Please enter ID of the target Field to Place: ")
         try {
+          val dummyField = 99
           val input = readLine().toInt
-          val error = controller.performTurn(input, 0)
+          val error = controller.performTurn(input, dummyField)
           if (error != controllerComponent.Error.NoError) {
             errorMessage(error)
             processPlayerTurn()
@@ -134,7 +134,9 @@ class Tui(controller: ControllerMill) extends Reactor {
       processInputLine("")
     case _: PlayerPhaseChanged =>
       println("Player: " + controller.playerOnTurn.name + " ------ Gamephase: " + controller.playerOnTurn.phase + " Man")
-    case _: GamePhaseChanged => println(controller.playerOnTurn + " lost the game!")
+    case _: GameOver =>
+      if (controller.playerOnTurn.equals(controller.playerWhite)) println("Black won the game!")
+      else if (controller.playerOnTurn.equals(controller.playerBlack)) println("White won the game!")
     case _: CaseOfMill =>
       println("Player " + controller.playerOnTurn + " got a mill. Please select a man to remove")
     case _: StartNewGame => {

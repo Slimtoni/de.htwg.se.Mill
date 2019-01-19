@@ -30,10 +30,15 @@ class PlayerSpec extends WordSpec with Matchers {
       player.numberLostMen = 6
       player.checkedPlacedMen() shouldEqual Some(Player("White", PlayerGamePhase.Fly, 9, 6))
     }
+    "be able to check the placed men and dont loose the game" in {
+      player.numberPlacedMen = 9
+      player.numberLostMen = 6
+      player.checkPlayerLost() shouldBe false
+    }
     "be able to check the placed men and loose the game" in {
       player.numberPlacedMen = 9
       player.numberLostMen = 7
-      player.checkedPlacedMen() shouldEqual None
+      player.checkPlayerLost() shouldBe true
     }
     "be able to change the GamePhase" in {
       player.changeGamePhase(PlayerGamePhase.Place) shouldEqual Player("White", PlayerGamePhase.Place, 9, 7)

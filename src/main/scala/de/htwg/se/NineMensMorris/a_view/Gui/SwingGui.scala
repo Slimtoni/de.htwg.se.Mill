@@ -3,9 +3,9 @@ package de.htwg.se.NineMensMorris.a_view.Gui
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
-import javax.imageio.ImageIO
-import javax.swing.{Icon, ImageIcon}
 import java.io.{File, PrintWriter}
+
+import javax.imageio.ImageIO
 
 import scala.collection.mutable
 import scala.swing._
@@ -16,11 +16,10 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
   resizable = false
-  val framesize = new Dimension(650, 730)
-  var foundMill = false
-  minimumSize = framesize
-  preferredSize = framesize
-  maximumSize = framesize
+  val frameSize = new Dimension(650, 730)
+  minimumSize = frameSize
+  preferredSize = frameSize
+  maximumSize = frameSize
   val icon: Image = ImageIO.read(new File("res/GameIcon.png"))
   iconImage = icon
   val board = new Board(controller)
@@ -28,7 +27,9 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   val chooseFileButton = new Button("Choose file")
   var fieldButs: mutable.MutableList[FieldButton] = mutable.MutableList.empty
-  val blackIcon: Icon = new ImageIcon("res/Black_50.png")
+  var foundMill = false
+
+
   for (i <- 0 to 23) {
     val fieldtmp = FieldButton(i)
     listenTo(fieldtmp)
@@ -45,13 +46,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
     None
   }
-
   var firstClick = true
   var clickOne = 0
 
   def clickHandler(id: Int): Unit = {
     val dummyTargetId = 0
-    controller.checkPlayer(controller.getPlayerOnTurn)
     if (!foundMill) {
       if (controller.getPlayerOnTurnPhase == "Move" || controller.getPlayerOnTurnPhase == "Fly") {
         if (firstClick) {
@@ -65,6 +64,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
               } else {
                 statusPanel.setInfo("Please select one of your own mens to " + controller.getPlayerOnTurnPhase)
               }
+            case None => statusPanel.setInfo("Field doesnt exist!")
           }
 
         } else {
@@ -108,7 +108,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         controller.endPlayersTurn()
       }
     }
-
   }
   def chooseFile(title: String = ""): Option[File] = {
     val chooser = new FileChooser(new File("."))
@@ -184,7 +183,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         case MousePressed(_, point, _, _, _) =>
           mouseClick(point.x, point.y, this.size) match {
             case Some(value) =>
-              clickHandler(value.id)
+              if (!controller.gameOver) clickHandler(value.id)
             case None => println("No Button clicked") //TODO: insert log
           }
       }
@@ -226,15 +225,19 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
 
   reactions += {
-    case _: FieldChanged =>
-      refreshAll()
+    case _: FieldChanged => refreshAll()
     case _: PlayerPhaseChanged => refreshAll()
-    case _: GamePhaseChanged =>
-      println("GamePhaseChanged!!!")
-      mainPanel.visible = false
-      mainPanel.enabled = false
-      statusPanel.visible = false
-      startPanel.visible = true
+    case _: GameOver =>
+      //mainPanel.visible = false
+      //mainPanel.enabled = false
+      //statusPanel.visible = false
+      //startPanel.visible = true
+      statusPanel.setMessage("")
+      var winString = ""
+      if (controller.playerOnTurn.equals(controller.playerWhite)) winString = "Black won the game!"
+      else if (controller.playerOnTurn.equals(controller.playerBlack)) winString = "White won the game!"
+      statusPanel.setInfo(winString)
+      Dialog.showMessage(contents.head, winString, title="Lost")
     case _: StartNewGame => startGame()
   }
   pack()
