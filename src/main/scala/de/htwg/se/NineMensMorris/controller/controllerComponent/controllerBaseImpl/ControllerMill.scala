@@ -11,12 +11,15 @@ import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Gameboard
+import de.htwg.se.NineMensMorris.util._
 
 import scala.collection.mutable
 
 
 class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterface {
 
+
+  private val undoManager = new UndoManager
   var gameboardFactory = new GameboardFactory
   var playerWhite: PlayerInterface = _
   var playerBlack: PlayerInterface = _
@@ -42,6 +45,11 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     publish(new FieldChanged)
   }
 
+  def undo: Unit = {
+    undoManager.undoStep
+    println("undo")
+  }
+
   override def startNewGame(): Unit = {
     createGameboard()
     publish(new StartNewGame)
@@ -64,9 +72,9 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     }
   }
 
-  // wenn ein Spieler eine Mühle schließt wechselt der Spieler nicht!!!
 
   override def performTurn(startFieldID: Int, targetFieldID: Int): Error.Value = {
+    undoManager.doStep(new TurnCommand(startFieldID, targetFieldID, this))
     var err = Error.NoError
     playerOnTurn.phase match {
       case PlayerGamePhase.Place => err = placeMan(startFieldID)
