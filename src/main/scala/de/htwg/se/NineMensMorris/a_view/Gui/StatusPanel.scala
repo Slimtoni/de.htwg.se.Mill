@@ -4,7 +4,7 @@ import java.awt.Color
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent.ControllerInterface
 
-import scala.swing.{Alignment, BorderPanel, FlowPanel, GridPanel, Label}
+import scala.swing.{Alignment, BorderPanel, BoxPanel, FlowPanel, GridPanel, Label}
 
 class StatusPanel(controller: ControllerInterface) extends BorderPanel {
   var message = new Label("Welcome to NineMensMill!")
@@ -14,7 +14,7 @@ class StatusPanel(controller: ControllerInterface) extends BorderPanel {
   val backgroundColor =  new Color(255, 222, 99)
 
 
-  val infoPanel: FlowPanel = new FlowPanel {
+  val infoPanel: GridPanel = new GridPanel(2,1) {
     contents += message
     contents += info
   }

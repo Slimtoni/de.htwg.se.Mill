@@ -18,7 +18,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
   resizable = false
-  val framesize = new Dimension(650, 739)
+  val framesize = new Dimension(650, 750)
   var foundMill = false
   minimumSize = framesize
   preferredSize = framesize
@@ -171,7 +171,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           mouseClick(point.x, point.y, this.size) match {
             case Some(value) =>
               clickHandler(value.id)
-            case None => println("No Button clicked") //TODO: insert log
+            case None => //TODO: insert log
           }
       }
     }
