@@ -1,6 +1,7 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent
 
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface}
+import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 
 import scala.collection.mutable
 import scala.swing.event.Event
@@ -8,10 +9,12 @@ import scala.swing.Publisher
 
 trait ControllerInterface extends Publisher{
 
+  def playerOnTurn: PlayerInterface
+  def playerWhite: PlayerInterface
+  def playerBlack: PlayerInterface
   def createGameboard(): Unit
   def startNewGame(): Unit
   def addPlayer(player1: String, player2: String): Unit
-  def checkPlayer(player: String): Unit
   def performTurn(startFieldId: Int, targetFieldId: Int): Error.Value
   def changePlayerOnTurn(): Unit
   def getPlayerOnTurnPhase: String
@@ -23,6 +26,7 @@ trait ControllerInterface extends Publisher{
   def gameOver(): Boolean
   def endPlayersTurn(): Unit
   def caseOfMill(fieldtmp: Int): Error.Value
+  def gameboardToString: String
 }
 
 class FieldChanged extends Event

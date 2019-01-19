@@ -4,7 +4,6 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 import javax.imageio.ImageIO
-import javax.swing.{Icon, ImageIcon}
 import java.io.File
 
 import scala.collection.mutable
@@ -195,8 +194,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
 
   reactions += {
-    case _: FieldChanged =>
-      refreshAll()
+    case _: FieldChanged => refreshAll()
     case _: PlayerPhaseChanged => refreshAll()
     case _: GameOver =>
       //mainPanel.visible = false
@@ -204,8 +202,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       //statusPanel.visible = false
       //startPanel.visible = true
       statusPanel.setMessage("")
-      statusPanel.setInfo(controller.getPlayerOnTurn + " lost the Game!")
-      Dialog.showMessage(contents.head, controller.getPlayerOnTurn + " lost the Game!" , title="Lost")
+      var winString = ""
+      if (controller.playerOnTurn.equals(controller.playerWhite)) winString = "Black won the game!"
+      else if (controller.playerOnTurn.equals(controller.playerBlack)) winString = "White won the game!"
+      statusPanel.setInfo(winString)
+      Dialog.showMessage(contents.head, winString, title="Lost")
     case _: StartNewGame => startGame()
   }
   pack()

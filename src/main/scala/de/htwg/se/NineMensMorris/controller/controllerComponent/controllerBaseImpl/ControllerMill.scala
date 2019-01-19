@@ -47,20 +47,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     players = (playerWhite, playerBlack)
   }
 
-  def checkPlayer(splayer: String): Unit = {
-    val player: PlayerInterface = getPlayer(splayer)
-    //println("White Player: " + playerWhite.numberPlacedMen + " -- " + playerWhite.numberLostMen)
-    //println("Black Player: " + playerBlack.numberPlacedMen + " -- " + playerBlack.numberLostMen)
-    player.checkedPlacedMen() match {
-      case Some(value) =>
-        //println("Phase of Value:" + value.phase)
-        playerOnTurn = value
-        //publish(new PlayerPhaseChanged)
-    }
-  }
-
-  // wenn ein Spieler eine Mühle schließt wechselt der Spieler nicht!!!
-
   override def performTurn(startFieldID: Int, targetFieldID: Int): Error.Value = {
     var err = Error.NoError
     playerOnTurn.phase match {
@@ -182,8 +168,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
       gameOver = true
       publish(new GameOver)
     } else {
-      println("White Player: " + playerWhite.numberPlacedMen + " -- " + playerWhite.numberLostMen)
-      println("Black Player: " + playerBlack.numberPlacedMen + " -- " + playerBlack.numberLostMen)
       playerOnTurn.checkedPlacedMen() match {
         case Some(value) => playerOnTurn = value
       }
