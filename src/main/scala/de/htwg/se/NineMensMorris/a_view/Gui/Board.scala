@@ -100,14 +100,14 @@ class Board(controller: ControllerInterface) extends Component {
           g.fillOval(i._2.x, i._2.y, 55, 55)
           g.setColor(Color.GRAY)
           g.drawOval(i._2.x, i._2.y, 55, 55)
-          g.drawOval(i._2.x + 12, i._2.y + 12, 25, 25)
+          g.drawOval(i._2.x + 15, i._2.y + 15, 25, 25)
           //g.drawImage(imageBlack, i._2.x, i._2.y, null)
         case FieldStatus.White =>
           g.setColor(new Color(255, 219, 56))
           g.fillOval(i._2.x, i._2.y, 55, 55)
           g.setColor(Color.GRAY)
           g.drawOval(i._2.x, i._2.y, 55, 55)
-          g.drawOval(i._2.x + 12, i._2.y + 12, 25, 25)
+          g.drawOval(i._2.x + 15, i._2.y + 15, 25, 25)
           //g.drawImage(imageWhite, i._2.x, i._2.y, null)
         case FieldStatus.Empty =>
       }
