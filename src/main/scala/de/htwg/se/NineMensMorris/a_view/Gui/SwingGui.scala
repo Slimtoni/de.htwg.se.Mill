@@ -5,7 +5,8 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 import javax.imageio.ImageIO
 import javax.swing.{Icon, ImageIcon}
-import java.io.File
+import java.io.{File, PrintWriter}
+
 
 import scala.collection.mutable
 import scala.swing._
@@ -60,7 +61,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
               if (value.fieldStatus.toString == controller.getPlayerOnTurn) {
                 clickOne = id
                 firstClick = false
-                statusPanel.setInfo("Field " + id +  " selected! Choose second Field to " +
+                statusPanel.setInfo("Field " + id + " selected! Choose second Field to " +
                   controller.getPlayerOnTurnPhase + "!")
               } else {
                 statusPanel.setInfo("Please select one of your own mens to " + controller.getPlayerOnTurnPhase)
@@ -71,7 +72,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           if (id == clickOne) {
             clickOne = 0
             firstClick = true
-            statusPanel.setInfo("Field " + id +  " diselected! Choose a Man to " +
+            statusPanel.setInfo("Field " + id + " diselected! Choose a Man to " +
               controller.getPlayerOnTurnPhase + "!")
           } else {
             val error = controller.performTurn(clickOne, id)
@@ -111,29 +112,66 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   }
 
+  def chooseFile(title: String = ""): Option[File] = {
+    val chooser = new FileChooser(new File("."))
+    chooser.title = title
+    val result = chooser.showOpenDialog(null)
+    if (result == FileChooser.Result.Approve) {
+      Dialog.showMessage(contents.head, "Successfully saved!", title = "Save Game")
+      Some(chooser.selectedFile)
+    } else if (result == FileChooser.Result.Cancel) {
+      None
+    } else {
+      Dialog.showMessage(contents.head, "Error while saving the game: " + result.toString, title = "Save Game")
+      None
+    }
+  }
+
 
   menuBar = new MenuBar {
     contents += new Menu("File") {
       mnemonic = Key.F
-      contents += new MenuItem(Action("New") { controller.startNewGame() })
-      contents += new MenuItem(Action("Random") {  })
-      contents += new MenuItem(Action("Quit") { System.exit(0) })
+      contents += new MenuItem(Action("New") {
+        controller.startNewGame()
+      })
+      contents += new MenuItem(Action("Save") {
+        chooseFile() match {
+          case Some(value) =>
+            controller.save(value.toString)
+          case None =>
+        }
+      })
+      contents += new MenuItem(Action("Load") {
+        chooseFile() match {
+          case Some(value) =>
+            val pw = new PrintWriter(new File(value.toString))
+            val valuetmp = value.toString.split('/').last
+            controller.load("mill.xml")
+            pw.close()
+
+
+          case None =>
+        }
+      })
+      contents += new MenuItem(Action("Quit") {
+        System.exit(0)
+      })
     }
     contents += new Menu("Edit") {
       mnemonic = Key.E
-      contents += new MenuItem(Action("Undo") {  })
-      contents += new MenuItem(Action("Redo") {  })
+      contents += new MenuItem(Action("Undo") {})
+      contents += new MenuItem(Action("Redo") {})
     }
     contents += new Menu("Solve") {
       mnemonic = Key.S
-      contents += new MenuItem(Action("Solve") {  })
+      contents += new MenuItem(Action("Solve") {})
     }
     contents += new Menu("Options") {
       mnemonic = Key.O
-      contents += new MenuItem(Action("Show all candidates") { })
-      contents += new MenuItem(Action("Size 1*1") {  })
-      contents += new MenuItem(Action("Size 4*4") {  })
-      contents += new MenuItem(Action("Size 9*9") {  })
+      contents += new MenuItem(Action("Show all candidates") {})
+      contents += new MenuItem(Action("Size 1*1") {})
+      contents += new MenuItem(Action("Size 4*4") {})
+      contents += new MenuItem(Action("Size 9*9") {})
 
     }
   }

@@ -1,13 +1,20 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
+import java.io.File
+
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Gameboard
+import de.htwg.se.NineMensMorris.model.FileIOComponents._
+
 import scala.collection.mutable
+
 
 class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterface {
 
@@ -17,9 +24,36 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   var playerOnTurn: PlayerInterface = _
   var players: (PlayerInterface, PlayerInterface) = _
   var gameStarted = false
+  val fileIo = new FileIOXML
 
 
   def gameboardToString: String = gameboard.toString
+
+
+
+  def save(fileS: String = "mill.xml"): Unit ={
+    fileIo.save(fileS, gameboard, (playerWhite,playerBlack,playerOnTurn))
+    println("Game saved")
+
+  }
+
+  def load(fileS:String = "mill.xml"): Unit = {
+    println("game loaded")
+    val tmp = fileIo.load(fileS)
+
+    tmp match {
+      case None => {}
+      case Some(game) =>
+        gameboard = game._1
+        playerWhite = game._2._1
+        playerBlack = game._2._2
+        playerOnTurn = game._2._3
+    }
+    publish(new FieldChanged)
+    publish(new StartNewGame)
+
+  }
+
 
   def createGameboard(): Unit = {
     gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)
@@ -200,9 +234,9 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     gameboard.vertexList
   }
 
-   def getNeigh: mutable.MutableList[EdgeInterface] = {
-     gameboard.neigh
-   }
+  def getNeigh: mutable.MutableList[EdgeInterface] = {
+    gameboard.neigh
+  }
 
   override def getField(id: Int): Option[FieldInterface] = {
     val field = gameboard.getField(id)

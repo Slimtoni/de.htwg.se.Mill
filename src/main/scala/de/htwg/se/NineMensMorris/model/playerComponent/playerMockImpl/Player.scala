@@ -11,6 +11,8 @@ class Player extends PlayerInterface {
 
   override def numberPlacedMen: Int = 0
 
+  override def numberLostMen: Int = 0
+
   override def checkedPlacedMen(): Option[PlayerInterface] = Some(this)
 
   override def changeGamePhase(newPhase: PlayerGamePhase): PlayerInterface = this

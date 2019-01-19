@@ -4,3 +4,5 @@ project/project/
 .directory
 target/
 sbt
+*.json
+*.xml

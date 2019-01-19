@@ -6,6 +6,7 @@ trait PlayerInterface {
   def name: String
   def phase: PlayerGamePhase
   def numberPlacedMen: Int
+  def numberLostMen: Int
 
   def checkedPlacedMen(): Option[PlayerInterface]
   def changeGamePhase(newPhase: PlayerGamePhase): PlayerInterface
