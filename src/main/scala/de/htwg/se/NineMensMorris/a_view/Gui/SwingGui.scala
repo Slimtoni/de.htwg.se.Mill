@@ -18,7 +18,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
   resizable = false
-  val startFramesize = new Dimension(300, 300)
+  val startFramesize = new Dimension(300, 100)
   val playFramesize = new Dimension(650, 750)
   minimumSize = startFramesize
   preferredSize = startFramesize
@@ -33,6 +33,8 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   val blackIcon: Icon = new ImageIcon("res/Black_50.png")
   var overlay = false
   var foundMill = false
+  var startButton = new Button("Start Game")
+  var loadButton = new Button("Load Game")
 
 
   for (i <- 0 to 23) {
@@ -158,10 +160,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       contents += new MenuItem(Action("Undo") {  })
       contents += new MenuItem(Action("Redo") {  })
     }
-    contents += new Menu("Solve") {
-      mnemonic = Key.S
-      contents += new MenuItem(Action("Solve") {  })
-    }
     contents += new Menu("Options") {
       val checkbox = new CheckMenuItem("Overlay")
       mnemonic = Key.O
@@ -182,6 +180,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   }
   def setOverlay(color: Color): Unit = {
       menuBar.background =  color
+      this.background = color
       statusPanel.setBackgroundColor(color)
   }
 
@@ -211,13 +210,15 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   val startPanel: FlowPanel = new FlowPanel() {
     visible = true
-    var startButton = new Button("Start Game")
     contents += startButton
+    contents += loadButton
     listenTo(startButton)
+    listenTo(loadButton)
     reactions += {
-      case ButtonClicked(_) =>
+      case ButtonClicked(startbutton) =>
         //Console.println("Start Game clicked")
         controller.startNewGame()
+      case ButtonClicked(loadButton) =>
     }
   }
 
