@@ -3,11 +3,13 @@ package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseI
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardFactory, GameboardInterface}
+import de.htwg.se.NineMensMorris.model.gameboardComponent.EdgeInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
+
 import scala.collection.mutable
+
 
 class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterface {
 
@@ -17,9 +19,10 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   var playerOnTurn: PlayerInterface = _
   var players: (PlayerInterface, PlayerInterface) = _
   var gameStarted = false
-
+  var gameOver = false
 
   def gameboardToString: String = gameboard.toString
+
 
   def createGameboard(): Unit = {
     gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)
@@ -37,6 +40,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
   override def startNewGame(): Unit = {
     createGameboard()
+    gameOver = false
     publish(new StartNewGame)
   }
 
@@ -45,19 +49,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     playerBlack = Player(sPlayerBlack, PlayerGamePhase.Place, 0, 0)
     players = (playerWhite, playerBlack)
   }
-
-  def checkPlayer(splayer: String): Unit = {
-    val player: PlayerInterface = getPlayer(splayer)
-    player.checkedPlacedMen() match {
-      case Some(value) =>
-        //println("Phase of Value:" + value.phase)
-        playerOnTurn = value
-        publish(new PlayerPhaseChanged)
-      case None => publish(new GamePhaseChanged)
-    }
-  }
-
-  // wenn ein Spieler eine Mühle schließt wechselt der Spieler nicht!!!
 
   override def performTurn(startFieldID: Int, targetFieldID: Int): Error.Value = {
     var err = Error.NoError
@@ -94,7 +85,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
         err
       } else Error.EdgeError
     } else Error.FieldError
-    //if (gameboard.containsEdge(startField, gameboard.getField(targetFieldId)))
   }
 
   def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
@@ -129,7 +119,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     val checkCol: FieldStatus = field.fieldStatus
-    if (field.millneigh(0)._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
+    if (field.millneigh.head._1.fieldStatus == checkCol && field.millneigh.head._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
       field.millneigh(1)._1.fieldStatus == checkCol && field.millneigh(1)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty) {
       true
     } else false
@@ -161,7 +151,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   }
 
   def killMan(fieldId: Int): Unit = {
-    val field: FieldInterface = gameboard.getField(fieldId)
     val error = changeFieldStatus(fieldId, "Empty")
     if (error == Error.NoError) {
       if (playerOnTurn.equals(playerWhite))
@@ -174,10 +163,17 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
   }
 
-
   def endPlayersTurn(): Unit = {
     changePlayerOnTurn()
-    publish(new FieldChanged)
+    if (playerOnTurn.checkPlayerLost()) {
+      gameOver = true
+      publish(new GameOver)
+    } else {
+      playerOnTurn.checkedPlacedMen() match {
+        case Some(value) => playerOnTurn = value
+      }
+      publish(new FieldChanged)
+    }
   }
 
   override def changePlayerOnTurn(): Unit = {
@@ -200,9 +196,9 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     gameboard.vertexList
   }
 
-   def getNeigh: mutable.MutableList[EdgeInterface] = {
-     gameboard.neigh
-   }
+  def getNeigh: mutable.MutableList[EdgeInterface] = {
+    gameboard.neigh
+  }
 
   override def getField(id: Int): Option[FieldInterface] = {
     val field = gameboard.getField(id)

@@ -7,7 +7,7 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 import javax.imageio.ImageIO
 import javax.swing.{Icon, ImageIcon}
-import java.io.File
+import java.io.{File, PrintWriter}
 
 import scala.collection.mutable
 import scala.swing._
@@ -19,7 +19,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   visible = true
   resizable = false
   val framesize = new Dimension(650, 750)
-  var foundMill = false
   minimumSize = framesize
   preferredSize = framesize
   maximumSize = framesize
@@ -32,6 +31,9 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   var fieldButs: mutable.MutableList[FieldButton] = mutable.MutableList.empty
   val blackIcon: Icon = new ImageIcon("res/Black_50.png")
   var overlay = false
+  var foundMill = false
+
+
   for (i <- 0 to 23) {
     val fieldtmp = FieldButton(i)
     listenTo(fieldtmp)
@@ -48,13 +50,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
     None
   }
-
   var firstClick = true
   var clickOne = 0
 
   def clickHandler(id: Int): Unit = {
     val dummyTargetId = 0
-    controller.checkPlayer(controller.getPlayerOnTurn)
     if (!foundMill) {
       if (controller.getPlayerOnTurnPhase == "Move" || controller.getPlayerOnTurnPhase == "Fly") {
         if (firstClick) {
@@ -68,6 +68,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
               } else {
                 statusPanel.setInfo("Please select one of your own mens to " + controller.getPlayerOnTurnPhase)
               }
+            case None => statusPanel.setInfo("Field doesnt exist!")
           }
 
         } else {
@@ -111,7 +112,20 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         controller.endPlayersTurn()
       }
     }
-
+  }
+  def chooseFile(title: String = ""): Option[File] = {
+    val chooser = new FileChooser(new File("."))
+    chooser.title = title
+    val result = chooser.showOpenDialog(null)
+    if (result == FileChooser.Result.Approve) {
+      Dialog.showMessage(contents.head, "Successfully saved!", title="Save Game")
+      Some(chooser.selectedFile)
+    } else if(result == FileChooser.Result.Cancel) {
+      None
+    } else {
+      Dialog.showMessage(contents.head, "Error while saving the game: " + result.toString, title="Save Game")
+      None
+    }
   }
 
 
@@ -119,7 +133,23 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     contents += new Menu("File") {
       mnemonic = Key.F
       contents += new MenuItem(Action("New") { controller.startNewGame() })
-      contents += new MenuItem(Action("Random") {  })
+      contents += new MenuItem(Action("Save") {
+        chooseFile() match {
+          case Some(value) =>
+            val pw = new PrintWriter(new File(value.toString))
+            pw.write("Hello, world") //TODO: call save function from Controller
+            pw.close()
+          case None =>
+        }
+      })
+      contents += new MenuItem(Action("Load") {
+        chooseFile() match {
+        case Some(value) =>
+          val pw = new PrintWriter(new File(value.toString))
+          pw.write("Hello, world") //TODO: call load function from Controller
+          pw.close()
+        case None =>
+      } })
       contents += new MenuItem(Action("Quit") { System.exit(0) })
     }
     contents += new Menu("Edit") {
@@ -171,7 +201,8 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           mouseClick(point.x, point.y, this.size) match {
             case Some(value) =>
               clickHandler(value.id)
-            case None => //TODO: insert log
+              if (!controller.gameOver) clickHandler(value.id)
+            case None => println("No Button clicked") //TODO: insert log
           }
       }
     }
@@ -212,15 +243,19 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
 
   reactions += {
-    case _: FieldChanged =>
-      refreshAll()
+    case _: FieldChanged => refreshAll()
     case _: PlayerPhaseChanged => refreshAll()
-    case _: GamePhaseChanged =>
-      println("GamePhaseChanged!!!")
-      mainPanel.visible = false
-      mainPanel.enabled = false
-      statusPanel.visible = false
-      startPanel.visible = true
+    case _: GameOver =>
+      //mainPanel.visible = false
+      //mainPanel.enabled = false
+      //statusPanel.visible = false
+      //startPanel.visible = true
+      statusPanel.setMessage("")
+      var winString = ""
+      if (controller.playerOnTurn.equals(controller.playerWhite)) winString = "Black won the game!"
+      else if (controller.playerOnTurn.equals(controller.playerBlack)) winString = "White won the game!"
+      statusPanel.setInfo(winString)
+      Dialog.showMessage(contents.head, winString, title="Lost")
     case _: StartNewGame => startGame()
   }
   pack()

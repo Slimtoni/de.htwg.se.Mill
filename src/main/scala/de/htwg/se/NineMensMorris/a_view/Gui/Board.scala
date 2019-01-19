@@ -101,7 +101,6 @@ class Board(controller: ControllerInterface, var overlayOn: Boolean = false) ext
     var lastVertex: (FieldInterface, Point) = null
     val vertexCords = getBoardList
     for (i <- vertexCords) {
-      //val counter = new Ellipse2D.Double(i._2.x,i._2.y, 50, 50)
       i._1.fieldStatus match {
         case FieldStatus.Black =>
           if (overlayOn) {

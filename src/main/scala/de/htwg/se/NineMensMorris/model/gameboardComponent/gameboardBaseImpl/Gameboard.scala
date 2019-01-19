@@ -1,6 +1,7 @@
 package de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl
 
-import de.htwg.se.NineMensMorris.model.FieldStatus
+import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize}
+import de.htwg.se.NineMensMorris.model.GameboardSize.GameboardSize
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
 
 import scala.collection.mutable
@@ -40,7 +41,6 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
     if (containsVertex(v) && containsVertex(w)) {
       val edge = Edge(v, w)
       for (i <- this.neigh) {
-        //print(i)
         if (edge.equals(i)) return true
       }
     }
@@ -78,6 +78,53 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
 
     Option(copy(v, neigh))
 
+  }
+
+  def setEdgeList(size: GameboardSize, gameboard: Gameboard): Gameboard = {
+    size match {
+      case GameboardSize.Six => {
+        //print("small")
+        //val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
+        gameboard
+      };
+      case GameboardSize.Nine => {
+        println("large")
+        //val gameboard = Gameboard(new mutable.MutableList[FieldInterface], new mutable.MutableList[EdgeInterface])
+        gameboard.addEdge(gameboard.getField(0), gameboard.getField(1))
+        gameboard.addEdge(gameboard.getField(1), gameboard.getField(2))
+        gameboard.addEdge(gameboard.getField(3), gameboard.getField(4))
+        gameboard.addEdge(gameboard.getField(4), gameboard.getField(5))
+        gameboard.addEdge(gameboard.getField(6), gameboard.getField(7))
+        gameboard.addEdge(gameboard.getField(7), gameboard.getField(8))
+        gameboard.addEdge(gameboard.getField(9), gameboard.getField(10))
+        gameboard.addEdge(gameboard.getField(10), gameboard.getField(11))
+        gameboard.addEdge(gameboard.getField(12), gameboard.getField(13))
+        gameboard.addEdge(gameboard.getField(13), gameboard.getField(14))
+        gameboard.addEdge(gameboard.getField(15), gameboard.getField(16))
+        gameboard.addEdge(gameboard.getField(16), gameboard.getField(17))
+        gameboard.addEdge(gameboard.getField(18), gameboard.getField(19))
+        gameboard.addEdge(gameboard.getField(19), gameboard.getField(20))
+        gameboard.addEdge(gameboard.getField(21), gameboard.getField(22))
+        gameboard.addEdge(gameboard.getField(22), gameboard.getField(23))
+        gameboard.addEdge(gameboard.getField(0), gameboard.getField(9))
+        gameboard.addEdge(gameboard.getField(9), gameboard.getField(21))
+        gameboard.addEdge(gameboard.getField(3), gameboard.getField(10))
+        gameboard.addEdge(gameboard.getField(10), gameboard.getField(18))
+        gameboard.addEdge(gameboard.getField(6), gameboard.getField(11))
+        gameboard.addEdge(gameboard.getField(0), gameboard.getField(15))
+        gameboard.addEdge(gameboard.getField(1), gameboard.getField(4))
+        gameboard.addEdge(gameboard.getField(4), gameboard.getField(7))
+        gameboard.addEdge(gameboard.getField(16), gameboard.getField(19))
+        gameboard.addEdge(gameboard.getField(19), gameboard.getField(22))
+        gameboard.addEdge(gameboard.getField(8), gameboard.getField(12))
+        gameboard.addEdge(gameboard.getField(12), gameboard.getField(17))
+        gameboard.addEdge(gameboard.getField(5), gameboard.getField(13))
+        gameboard.addEdge(gameboard.getField(13), gameboard.getField(20))
+        gameboard.addEdge(gameboard.getField(2), gameboard.getField(14))
+        gameboard.addEdge(gameboard.getField(14), gameboard.getField(23))
+        gameboard
+      }
+    }
   }
 
   def set(field: Int, fieldStatus: String): Option[Gameboard] = {
@@ -126,4 +173,6 @@ case class Gameboard(vertexList: mutable.MutableList[FieldInterface], neigh: mut
     }
     gameboardString
   }
+
 }
+
