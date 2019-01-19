@@ -19,6 +19,8 @@ object NineMensMorris {
       "--------------------------------\n" +
       "n - start new game\n" +
       "q - quit\n" +
+      "s - save the game\n" +
+      "l - load the game\n" +
       "g - go on to next move\n" +
       "--------------------------------")
     var input = ""

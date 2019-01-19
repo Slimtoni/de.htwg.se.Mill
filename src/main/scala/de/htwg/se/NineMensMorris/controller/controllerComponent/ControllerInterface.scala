@@ -22,6 +22,8 @@ trait ControllerInterface extends Publisher{
   def checkMill(field: Int): Boolean
   def endPlayersTurn(): Unit
   def caseOfMill(fieldtmp: Int): Error.Value
+  def save(fileS: String)
+  def load(fileS:String)
 }
 
 class FieldChanged extends Event

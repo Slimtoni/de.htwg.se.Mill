@@ -17,11 +17,11 @@ import scala.xml.PrettyPrinter
 class FileIOXML extends FileIOInterface {
 
 
-  def load(): (GameboardInterface, (PlayerInterface, PlayerInterface, PlayerInterface)) = {
+  def load(fileS:String): Option[(GameboardInterface, (PlayerInterface, PlayerInterface, PlayerInterface))] = {
     var gameboard = new Gameboard()
 
 
-    val file = scala.xml.XML.loadFile("mill.xml")
+    val file = scala.xml.XML.loadFile(fileS)
     val player1name = (file \\ "player1" \\ "name").text.trim
     val player2name = (file \\ "player2" \\ "name").text.trim
     val playerOnTurnXML = (file \\ "playerOnTurn").text.trim
@@ -55,7 +55,6 @@ class FileIOXML extends FileIOInterface {
     }
 
 
-
     val vertexXml = (file \\ "vertexList").text.trim
     for (x <- 0 to vertexXml.length - 1) {
       var status: FieldStatus = null
@@ -86,13 +85,13 @@ class FileIOXML extends FileIOInterface {
     }
     println("load complete")
 
-    (gameboard, (player1, player2, currentPlayer))
+    Option(gameboard, (player1, player2, currentPlayer))
   }
 
 
-  override def save(gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit = {
-    val file = new File("mill.xml")
-    scala.xml.XML.save("mill.xml", millToXML(gameboard, player))
+  override def save(fileS: String, gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit = {
+    val file = new File(fileS)
+    scala.xml.XML.save(fileS, millToXML(gameboard, player))
     println("saved file")
   }
 
@@ -127,6 +126,9 @@ class FileIOXML extends FileIOInterface {
         <placedMen>
           {player._1.numberPlacedMen}
         </placedMen>
+        <lostMen>
+          {player._1.numberLostMen}
+        </lostMen>
       </player1>
       <player2>
         <name>
@@ -138,6 +140,9 @@ class FileIOXML extends FileIOInterface {
         <placedMen>
           {player._2.numberPlacedMen}
         </placedMen>
+        <lostMen>
+          {player._2.numberLostMen}
+        </lostMen>
       </player2>
     </players>
 

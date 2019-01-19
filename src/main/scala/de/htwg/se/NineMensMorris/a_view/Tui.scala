@@ -20,7 +20,9 @@ class Tui(controller: ControllerMill) extends Reactor {
         controller.startNewGame()
         gamestarted = true
       case "q" => System.exit(0)
-      case "s" => println("trololo")
+      case "s" => controller.save()
+      case "l" => gamestarted =  true
+                  controller.load()
       case "g" =>
         if (gamestarted) processPlayerTurn()
         else println("Please start a new Game!")
