@@ -1,7 +1,6 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
 import java.awt.Color
-import java.awt.geom.{Ellipse2D, Line2D}
 import java.awt.image.BufferedImage
 import java.io.File
 
@@ -11,8 +10,7 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 import javax.imageio.ImageIO
 
 import scala.collection.mutable
-import scala.swing.Swing.LineBorder
-import scala.swing.{Component, Dimension, Graphics2D, GridPanel, Point}
+import scala.swing.{Component, Dimension, Graphics2D, Point}
 
 class Board(controller: ControllerInterface) extends Component {
 
@@ -93,7 +91,6 @@ class Board(controller: ControllerInterface) extends Component {
     var lastVertex: (FieldInterface, Point) = null
     val vertexCords = getBoardList
     for (i <- vertexCords) {
-      //val counter = new Ellipse2D.Double(i._2.x,i._2.y, 50, 50)
       i._1.fieldStatus match {
         case FieldStatus.Black =>
           g.setColor(Color.BLACK)

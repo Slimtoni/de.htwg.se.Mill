@@ -1,16 +1,12 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
-import java.io.File
-
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardFactory, GameboardInterface}
+import de.htwg.se.NineMensMorris.model.gameboardComponent.EdgeInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Gameboard
 
 import scala.collection.mutable
 
@@ -89,7 +85,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
         err
       } else Error.EdgeError
     } else Error.FieldError
-    //if (gameboard.containsEdge(startField, gameboard.getField(targetFieldId)))
   }
 
   def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
@@ -124,7 +119,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     val checkCol: FieldStatus = field.fieldStatus
-    if (field.millneigh(0)._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
+    if (field.millneigh.head._1.fieldStatus == checkCol && field.millneigh.head._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
       field.millneigh(1)._1.fieldStatus == checkCol && field.millneigh(1)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty) {
       true
     } else false
@@ -156,7 +151,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   }
 
   def killMan(fieldId: Int): Unit = {
-    val field: FieldInterface = gameboard.getField(fieldId)
     val error = changeFieldStatus(fieldId, "Empty")
     if (error == Error.NoError) {
       if (playerOnTurn.equals(playerWhite))
