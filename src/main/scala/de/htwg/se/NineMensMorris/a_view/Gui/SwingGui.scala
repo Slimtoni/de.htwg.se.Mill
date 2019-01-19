@@ -31,6 +31,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   val chooseFileButton = new Button("Choose file")
   var fieldButs: mutable.MutableList[FieldButton] = mutable.MutableList.empty
   val blackIcon: Icon = new ImageIcon("res/Black_50.png")
+  var overlay = false
   for (i <- 0 to 23) {
     val fieldtmp = FieldButton(i)
     listenTo(fieldtmp)
@@ -115,8 +116,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
 
   menuBar = new MenuBar {
-    background =  new Color(255, 222, 99)
-
     contents += new Menu("File") {
       mnemonic = Key.F
       contents += new MenuItem(Action("New") { controller.startNewGame() })
@@ -133,13 +132,26 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       contents += new MenuItem(Action("Solve") {  })
     }
     contents += new Menu("Options") {
+      val checkbox = new CheckMenuItem("Overlay")
       mnemonic = Key.O
-      contents += new MenuItem(Action("Show all candidates") { })
-      contents += new MenuItem(Action("Size 1*1") {  })
-      contents += new MenuItem(Action("Size 4*4") {  })
-      contents += new MenuItem(Action("Size 9*9") {  })
-
+      contents += checkbox
+      listenTo(checkbox)
+      reactions += {
+        case ButtonClicked(_) =>
+          if (checkbox.selected) {
+            board.setOverlay()
+            setOverlay(new Color(255, 222, 99))
+          }
+          else {
+            board.unsetOverlay()
+            setOverlay(Color.WHITE)
+          }
+      }
     }
+  }
+  def setOverlay(color: Color): Unit = {
+      menuBar.background =  color
+      statusPanel.setBackgroundColor(color)
   }
 
 

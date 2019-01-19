@@ -17,7 +17,6 @@ class StatusPanel(controller: ControllerInterface) extends BorderPanel {
   val infoPanel: FlowPanel = new FlowPanel {
     contents += message
     contents += info
-    background = backgroundColor
   }
 
   val statusPanel: GridPanel = new GridPanel(1,2) {
@@ -25,14 +24,18 @@ class StatusPanel(controller: ControllerInterface) extends BorderPanel {
     playerPhaseLabel.horizontalAlignment = Alignment.Right
     contents += currentPlayerLabel
     contents += playerPhaseLabel
-    background = backgroundColor
-  }
+ }
 
   def setMessage(msg: String): Unit = {
     message.text = msg
   }
   def setInfo(msg: String): Unit = {
     info.text = msg
+  }
+  def setBackgroundColor(color: Color) = {
+    background = color
+    infoPanel.background = color
+    statusPanel.background = color
   }
 
   def refresh(): Unit = {
