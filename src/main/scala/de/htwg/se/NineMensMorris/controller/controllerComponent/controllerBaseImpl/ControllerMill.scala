@@ -5,7 +5,8 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.NineMensMorris.NineMensMorrisModule
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
-import de.htwg.se.NineMensMorris.model.{FieldStatus, FileIOInterface, GameboardSize, PlayerGamePhase}
+import de.htwg.se.NineMensMorris.model.fileIOComponent.FileIOInterface
+import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.EdgeInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface

@@ -4,11 +4,12 @@ import java.io.File
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent.Error
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
+import de.htwg.se.NineMensMorris.model.fileIOComponent.FileIOInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Field, Gameboard}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
-import de.htwg.se.NineMensMorris.model.{FieldStatus, FileIOInterface, GameboardSize, PlayerGamePhase}
+import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
 
 import scala.collection.mutable
 import scala.xml.Elem
