@@ -35,8 +35,8 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   val blackIcon: Icon = new ImageIcon("res/Black_50.png")
   var overlay = false
   var foundMill = false
-  var startButton = new Button("Start Game")
-  var loadButton = new Button("Load Game")
+  val startButton = new Button("Start Game")
+  val loadButton = new Button("Load Game")
 
 
   for (i <- 0 to 23) {
@@ -122,45 +122,23 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
   }
 
-  def chooseFile(title: String = ""): Option[File] = {
-    val chooser = new FileChooser(new File("."))
-    chooser.title = title
-    val result = chooser.showOpenDialog(null)
-    if (result == FileChooser.Result.Approve) {
-      Dialog.showMessage(contents.head, "Successfully saved!", title = "Save Game")
-      Some(chooser.selectedFile)
-    } else if (result == FileChooser.Result.Cancel) {
-      None
-    } else {
-      Dialog.showMessage(contents.head, "Error while saving the game: " + result.toString, title = "Save Game")
-      None
-    }
-  }
-
-
   menuBar = new MenuBar {
+    visible = false
     contents += new Menu("File") {
       mnemonic = Key.F
       contents += new MenuItem(Action("New") {
         controller.startNewGame()
       })
       contents += new MenuItem(Action("Save") {
-
-        controller.save("mill.xml")
-
-
-      })
-      contents += new MenuItem(Action("Load") {
-
-        val err: Error.Value = controller.load("mill.xml")
-        err match {
-          case Error.NoError => println("Load successful")
-          case Error.LoadError => errorMessage(err)
-
+        var saveString = ""
+        val err: Error.Value = controller.save()
+         err match {
+          case Error.NoError => saveString = "Successfully saved the game!"
+          case Error.LoadError => saveString = errorMessage(err)
         }
-
-
+        Dialog.showMessage(mainPanel.contents.head, saveString, title = "Save Game")
       })
+      contents += new MenuItem(Action("Load") { loadGame() })
       contents += new MenuItem(Action("Quit") {
         System.exit(0)
       })
@@ -196,6 +174,16 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     statusPanel.setBackgroundColor(color)
   }
 
+  def loadGame(): Unit = {
+    var loadString = ""
+    val err: Error.Value = controller.load()
+    err match {
+      case Error.NoError => loadString = "Successfully loaded the game!"
+      case Error.LoadError => loadString = errorMessage(err)
+    }
+    Dialog.showMessage(mainPanel.contents.head, loadString, "Load Game")
+  }
+
 
   val statusPanel = new StatusPanel(controller)
   statusPanel.visible = false
@@ -223,13 +211,10 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     visible = true
     contents += startButton
     contents += loadButton
-    listenTo(startButton)
-    listenTo(loadButton)
+    listenTo(startButton, loadButton)
     reactions += {
-      case ButtonClicked(startbutton) =>
-        //Console.println("Start Game clicked")
-        controller.startNewGame()
-      case ButtonClicked(loadButton) =>
+      case ButtonClicked(`startButton`) => controller.startNewGame()
+      case ButtonClicked(`loadButton`) => loadGame()
     }
   }
 
@@ -243,13 +228,13 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   def startGame(): Unit = {
     minimumSize = playFramesize
     preferredSize = playFramesize
+    menuBar.visible = true
     foundMill = false
     refreshAll()
     mainPanel.visible = true
     statusPanel.visible = true
     startPanel.visible = false
   }
-
   contents = new BorderPanel {
     add(mainPanel, BorderPanel.Position.Center)
     add(statusPanel, BorderPanel.Position.South)
