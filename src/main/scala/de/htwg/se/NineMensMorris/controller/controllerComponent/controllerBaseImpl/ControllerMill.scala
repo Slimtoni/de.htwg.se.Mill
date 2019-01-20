@@ -171,46 +171,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     check
   }
 
-
-  /* override def allMenInMill(): Boolean = {
-     for (i <- getVertexList.iterator) {
-       if (playerOnTurn.equals(playerWhite)) {
-         if (i.fieldStatus == FieldStatus.Black) {
-           if (!checkMill(i.id)) {
-             false
-           }
-         } else {
-           true
-         }
-       } else {
-         if (i.fieldStatus == FieldStatus.White) {
-           if (!checkMill(i.id)) {
-
-             false
-           } else {
-             true
-           }
-         }
-       }
-
-     }
-     false
-   }*/
-
-  /* override def allMenInMill(): Boolean = {
-     for (i <- getVertexList.iterator) {
-       val field = gameboard.getField(i)
-       if (field.fieldStatus.toString != this.getPlayerOnTurn) {
-         if (!checkMill(i)) return false
-       }
-     }
-     true
-   }*/
-
-
-  override def caseOfMill(fieldtmp: Int): Error.Value
-
-  = {
+  override def caseOfMill(fieldtmp: Int): Error.Value = {
     if (!allMenInMill()) {
       val field: FieldInterface = gameboard.getField(fieldtmp)
       if (playerOnTurn.equals(playerWhite)) {
@@ -290,9 +251,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     gameboard.neigh
   }
 
-  override def getField(id: Int): Option[FieldInterface]
-
-  = {
+  override def getField(id: Int): Option[FieldInterface] = {
     val field = gameboard.getField(id)
     if (field.id != 99) Some(field)
     else None
