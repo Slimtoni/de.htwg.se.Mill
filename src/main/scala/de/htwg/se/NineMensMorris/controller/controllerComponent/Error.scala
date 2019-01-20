@@ -14,5 +14,5 @@ object Error extends Enumeration {
     SaveError -> "There was an error saving the file")
 
 
-  def errorMessage(error: Error): Unit = println(map(error))
+  def errorMessage(error: Error): String = map(error)
 }
