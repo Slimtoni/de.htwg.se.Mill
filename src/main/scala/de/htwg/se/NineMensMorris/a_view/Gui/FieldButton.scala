@@ -10,8 +10,6 @@ import scala.swing.{Button, Dimension, Graphics2D, Insets, Point}
 
 case class FieldButton(id: Int) extends Button{
   val fieldDimension = new Dimension(59,59)
-  val imageBlack: BufferedImage = ImageIO.read(new File("res/Black_50.png"))
-  val imageWhite: BufferedImage = ImageIO.read(new File("res/Black_50.png"))
   var currentImage: BufferedImage = _
   margin = new Insets(5,20,5, 400)
   borderPainted = false
@@ -23,6 +21,6 @@ case class FieldButton(id: Int) extends Button{
   override def publish(e: Event): Unit = super.publish(e)
 
   override def paintComponent(g: Graphics2D): Unit = {
-    g.drawImage(imageBlack, 10, 10, null)
+    //g.drawImage(imageBlack, 10, 10, null)
   }
 }
