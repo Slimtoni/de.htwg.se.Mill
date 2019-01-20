@@ -154,19 +154,12 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     } else false
   }
 
-  def checkMill(fieldtmp: Int, player: PlayerInterface): Boolean = {
-    val field: FieldInterface = gameboard.getField(fieldtmp)
-    val checkCol: FieldStatus = field.fieldStatus
-    if (field.millneigh.head._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
-      field.millneigh(1)._1.fieldStatus == checkCol && field.millneigh(1)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty) {
-      true
-    } else false
-  }
-
   override def allMenInMill(): Boolean = {
     for (i <- 0 to 23) {
       val field = gameboard.getField(i)
-      if (field.fieldStatus.toString != this.getPlayerOnTurn && !checkMill(i)) return false
+      if (field.fieldStatus.toString != this.getPlayerOnTurn) {
+        if (!checkMill(i)) return false
+      }
     }
     true
   }
