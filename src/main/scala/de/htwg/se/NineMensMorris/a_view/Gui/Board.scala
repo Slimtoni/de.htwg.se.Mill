@@ -18,8 +18,6 @@ class Board(controller: ControllerInterface, var overlayOn: Boolean = false) ext
   minimumSize = panelDimension
   preferredSize = panelDimension
   maximumSize = panelDimension
-  val imageBlack: BufferedImage = ImageIO.read(new File("res/BlackStone_45.jpg"))
-  val imageWhite: BufferedImage = ImageIO.read(new File("res/WhiteStone.jpg"))
   var currentImage: BufferedImage = _
   var backgroundImage: BufferedImage = ImageIO.read(new File("res/Board.png"))
   listenTo(controller)
@@ -118,7 +116,6 @@ class Board(controller: ControllerInterface, var overlayOn: Boolean = false) ext
             g.drawOval(i._2.x, i._2.y, 55, 55)
             g.drawOval(i._2.x + 15, i._2.y + 15, 25, 25)
           }
-          //g.drawImage(imageBlack, i._2.x, i._2.y, null)
         case FieldStatus.White =>
           if (overlayOn) {
             g.setColor(new Color(255, 219, 56))
@@ -135,7 +132,6 @@ class Board(controller: ControllerInterface, var overlayOn: Boolean = false) ext
             g.drawOval(i._2.x, i._2.y, 55, 55)
             g.drawOval(i._2.x + 15, i._2.y + 15, 25, 25)
           }
-        //g.drawImage(imageWhite, i._2.x, i._2.y, null)
         case FieldStatus.Empty =>
       }
     }
