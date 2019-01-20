@@ -20,14 +20,14 @@ class Tui(controller: ControllerInterface) extends Reactor {
         controller.startNewGame()
         gamestarted = true
       case "q" => System.exit(0)
-      case "s" => val err = controller.save("mill.xml")
+      case "s" => val err = controller.save()
         err match {
           case Error.NoError => LOG.info("Game saved successfully")
           case Error.SaveError => LOG.error(errorMessage(SaveError))
         }
       case "l" =>
 
-        val err = controller.load("mill.xml")
+        val err = controller.load()
         err match {
           case Error.NoError => gamestarted = true
           case Error.LoadError => LOG.error(errorMessage(err))
