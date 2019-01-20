@@ -12,17 +12,22 @@ import play.api.libs.json._
 
 import scala.collection.mutable
 import scala.io.Source
+import java.io._
 
 class FileIOJson extends FileIOInterface {
 
 
-  override def save(fileS: String, gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit = {
+  override def save(fileS: String, gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Error.Value = {
 
-    import java.io._
 
-    val pw = new PrintWriter(new File(fileS))
-    pw.write(Json.prettyPrint(millToJson(gameboard, player)))
-    pw.close()
+    try {
+      val pw = new PrintWriter(new File(fileS))
+      pw.write(Json.prettyPrint(millToJson(gameboard, player)))
+      pw.close()
+      Error.NoError
+    } catch {
+      case e: Exception => Error.SaveError
+    }
   }
 
 
