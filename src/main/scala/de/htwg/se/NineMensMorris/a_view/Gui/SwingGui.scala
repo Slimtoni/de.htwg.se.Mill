@@ -9,6 +9,8 @@ import javax.imageio.ImageIO
 import javax.swing.{Icon, ImageIcon}
 import java.io.{File, PrintWriter}
 
+import de.htwg.se.NineMensMorris.controller.controllerComponent.Error.errorMessage
+
 import scala.collection.mutable
 import scala.swing._
 import scala.swing.event.{ButtonClicked, Key, MousePressed}
@@ -53,6 +55,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
     None
   }
+
   var firstClick = true
   var clickOne = 0
 
@@ -118,17 +121,18 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       }
     }
   }
+
   def chooseFile(title: String = ""): Option[File] = {
     val chooser = new FileChooser(new File("."))
     chooser.title = title
     val result = chooser.showOpenDialog(null)
     if (result == FileChooser.Result.Approve) {
-      Dialog.showMessage(contents.head, "Successfully saved!", title="Save Game")
+      Dialog.showMessage(contents.head, "Successfully saved!", title = "Save Game")
       Some(chooser.selectedFile)
-    } else if(result == FileChooser.Result.Cancel) {
+    } else if (result == FileChooser.Result.Cancel) {
       None
     } else {
-      Dialog.showMessage(contents.head, "Error while saving the game: " + result.toString, title="Save Game")
+      Dialog.showMessage(contents.head, "Error while saving the game: " + result.toString, title = "Save Game")
       None
     }
   }
@@ -148,7 +152,12 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       })
       contents += new MenuItem(Action("Load") {
 
-        controller.load("mill.xml")
+        val err: Error.Value = controller.load("mill.xml")
+        err match {
+          case Error.NoError => println("Load successful")
+          case Error.LoadError => errorMessage(err)
+
+        }
 
 
       })
@@ -158,8 +167,8 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
     contents += new Menu("Edit") {
       mnemonic = Key.E
-      contents += new MenuItem(Action("Undo") {  })
-      contents += new MenuItem(Action("Redo") {  })
+      contents += new MenuItem(Action("Undo") {})
+      contents += new MenuItem(Action("Redo") {})
     }
     contents += new Menu("Options") {
       val checkbox = new CheckMenuItem("Overlay")
@@ -180,10 +189,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       }
     }
   }
+
   def setOverlay(color: Color): Unit = {
-      menuBar.background =  color
-      this.background = color
-      statusPanel.setBackgroundColor(color)
+    menuBar.background = color
+    this.background = color
+    statusPanel.setBackgroundColor(color)
   }
 
 
@@ -255,7 +265,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       if (controller.playerOnTurn.equals(controller.playerWhite)) winString = "Black won the game!"
       else if (controller.playerOnTurn.equals(controller.playerBlack)) winString = "White won the game!"
       statusPanel.setInfo(winString)
-      Dialog.showMessage(contents.head, winString, title="Lost")
+      Dialog.showMessage(contents.head, winString, title = "Lost")
     case _: StartNewGame => startGame()
   }
   pack()

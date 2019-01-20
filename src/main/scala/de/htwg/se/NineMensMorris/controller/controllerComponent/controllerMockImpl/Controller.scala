@@ -8,6 +8,7 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardMockImpl.Gameboard
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerMockImpl.Player
+import de.htwg.se.NineMensMorris.controller.controllerComponent.Error
 
 import scala.collection.mutable
 
@@ -42,9 +43,9 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
 
   override def caseOfMill(fieldtmp: Int): controllerComponent.Error.Value = controllerComponent.Error.NoError
 
-  override def save(fileS: String): Unit = ???
+  override def save(fileS: String): Error.Value = Error.NoError
 
-  override def load(fileS: String): Unit = ???
+  override def load(fileS: String): Error.Value = Error.NoError
 
   override def gameOver(): Boolean = false
 

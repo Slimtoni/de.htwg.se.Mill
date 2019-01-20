@@ -6,7 +6,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.NineMensMorris.NineMensMorrisModule
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
-import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
+import de.htwg.se.NineMensMorris.model.{FieldStatus, FileIOInterface, GameboardSize, PlayerGamePhase}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.EdgeInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
@@ -34,27 +34,32 @@ class ControllerMill @Inject() (var gameboard: GameboardInterface) extends Contr
   def gameboardToString: String = gameboard.toString
 
 
+  def save(fileS: String = "mill.xml"): Error.Value = {
 
-  def save(fileS: String = "mill.xml"): Unit ={
-    fileIo.save(fileS, gameboard, (playerWhite,playerBlack,playerOnTurn))
-    println("Game saved")
+
+    fileIo.save(fileS, gameboard, (playerWhite, playerBlack, playerOnTurn))
+
 
   }
 
-  def load(fileS:String = "mill.xml"): Unit = {
-    println("game loaded")
+  def load(fileS: String): Error.Value = {
+
     val tmp = fileIo.load(fileS)
 
     tmp match {
-      case None => {}
+      case None => Error.LoadError
+
       case Some(game) =>
         gameboard = game._1
         playerWhite = game._2._1
         playerBlack = game._2._2
         playerOnTurn = game._2._3
+        publish(new FieldChanged)
+        publish(new StartNewGame)
+        Error.NoError
+
     }
-    publish(new FieldChanged)
-    publish(new StartNewGame)
+
 
   }
 
