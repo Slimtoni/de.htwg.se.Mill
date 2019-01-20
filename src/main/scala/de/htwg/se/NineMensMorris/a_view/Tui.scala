@@ -134,7 +134,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
     try {
       val input = readInt()
       val error = controller.caseOfMill(input)
-      if (error != controllerComponent.Error.NoError) {
+      if (error == controllerComponent.Error.NoError) {
         errorMessage(error)
         processMill()
       }

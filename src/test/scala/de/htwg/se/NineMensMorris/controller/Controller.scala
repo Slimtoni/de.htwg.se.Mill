@@ -111,8 +111,8 @@ class Controller extends WordSpec with Matchers {
         controller.changePlayerOnTurn()
         controller.checkMill(21) should be(true)
 
-        controller.caseOfMill(9) should be (Error.NoError)
-        controller.caseOfMill(0) should be (Error.SelectError)
+        controller.caseOfMill(9) should be (Error.KillManError)
+        controller.caseOfMill(0) should be (Error.KillManError)
 
         controller.killMan(6)
         v(6).fieldStatus should be(FieldStatus.Empty)

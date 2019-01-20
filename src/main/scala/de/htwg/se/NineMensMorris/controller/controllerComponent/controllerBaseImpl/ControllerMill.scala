@@ -156,7 +156,7 @@ class ControllerMill @Inject() (var gameboard: GameboardInterface) extends Contr
   }
 
 
-  def checkMill(fieldtmp: Int): Boolean = {
+  override def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     val checkCol: FieldStatus = field.fieldStatus
     if (field.millneigh.head._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
@@ -165,29 +165,44 @@ class ControllerMill @Inject() (var gameboard: GameboardInterface) extends Contr
     } else false
   }
 
-
-  override def caseOfMill(fieldtmp: Int): Error.Value = {
-    val field: FieldInterface = gameboard.getField(fieldtmp)
-    if (playerOnTurn.equals(playerWhite)) {
-      if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {
-        return Error.SelectError
-      } else {
-        if (!checkMill(fieldtmp)) {
-          killMan(fieldtmp)
-          return Error.NoError
-        }
-      }
-    } else if (playerOnTurn.equals(playerBlack)) {
-      if (field.fieldStatus == FieldStatus.Black || field.fieldStatus == FieldStatus.Empty) {
-        return Error.SelectError
-      } else {
-        if (!checkMill(fieldtmp)) {
-          killMan(fieldtmp)
-          return Error.NoError
-        }
+  override def allMenInMill(): Boolean = {
+    var check = false
+    for (i <- getVertexList.iterator) {
+      if (playerOnTurn.equals(playerWhite) && i.fieldStatus == FieldStatus.Black) {
+        check = checkMill(i.id)
+      } else if (playerOnTurn.equals(playerBlack) && i.fieldStatus == FieldStatus.White) {
+        check = checkMill(i.id)
       }
     }
-    Error.SelectError
+    check
+  }
+
+  override def caseOfMill(fieldtmp: Int): Error.Value = {
+    if (!allMenInMill()) {
+      val field: FieldInterface = gameboard.getField(fieldtmp)
+      if (playerOnTurn.equals(playerWhite)) {
+        if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {
+          return Error.SelectError
+        } else {
+          if (!checkMill(fieldtmp)) {
+            killMan(fieldtmp)
+            return Error.NoError
+          }
+        }
+      } else if (playerOnTurn.equals(playerBlack)) {
+        if (field.fieldStatus == FieldStatus.Black || field.fieldStatus == FieldStatus.Empty) {
+          return Error.SelectError
+        } else {
+          if (!checkMill(fieldtmp)) {
+            killMan(fieldtmp)
+            return Error.NoError
+          }
+        }
+      }
+      Error.SelectError
+    } else {
+      Error.KillManError
+    }
   }
 
   def killMan(fieldId: Int): Unit = {
@@ -216,7 +231,9 @@ class ControllerMill @Inject() (var gameboard: GameboardInterface) extends Contr
     }
   }
 
-  override def changePlayerOnTurn(): Unit = {
+  override def changePlayerOnTurn(): Unit
+
+  = {
     if (playerOnTurn.equals(playerWhite)) {
       playerWhite = playerOnTurn
       playerOnTurn = playerBlack

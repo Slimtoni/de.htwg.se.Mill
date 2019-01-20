@@ -100,13 +100,17 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         }
       }
     } else {
-      val error = controller.caseOfMill(id)
-      if (error != controllerComponent.Error.NoError) {
-        statusPanel.setInfo(error.toString)
-      } else {
+      val error: Error.Value = controller.caseOfMill(id)
+      if (error == controllerComponent.Error.NoError) {
         foundMill = false
         statusPanel.setInfo("Succesfully removed a Man on the Field " + id)
         controller.endPlayersTurn()
+      } else if (error == controllerComponent.Error.KillManError) {
+        foundMill = false
+        statusPanel.setInfo(errorMessage(error))
+        controller.endPlayersTurn()
+      } else {
+        statusPanel.setInfo(errorMessage(error))
       }
     }
   }
