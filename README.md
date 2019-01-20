@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Slimtoni/de.htwg.se.Mill.svg?branch=master)](https://travis-ci.org/Slimtoni/de.htwg.se.Mill)
-[![Coverage Status](https://coveralls.io/repos/github/Slimtoni/de.htwg.se.Mill/badge.svg?branch=master)](https://coveralls.io/github/Slimtoni/de.htwg.se.Mill?branch=Mill13-ModelTests)
+[![Coverage Status](https://coveralls.io/repos/github/Slimtoni/de.htwg.se.Mill/badge.svg?branch=master)](https://coveralls.io/github/Slimtoni/de.htwg.se.Mill?branch=master)
 
 Mill in Scala
 =========================
