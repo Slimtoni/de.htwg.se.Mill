@@ -7,10 +7,12 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent._
 
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
+import org.apache.logging.log4j.{ LogManager, Logger }
 
-class Tui(controller: ControllerInterface) extends Reactor with LazyLogging {
+class Tui(controller: ControllerInterface) extends Reactor {
   listenTo(controller)
   var gamestarted = false
+  val LOG: Logger = LogManager.getLogger(this.getClass)
 
   def processInputLine(input: String): Unit = {
     input match {
@@ -20,15 +22,15 @@ class Tui(controller: ControllerInterface) extends Reactor with LazyLogging {
       case "q" => System.exit(0)
       case "s" => val err = controller.save("mill.xml")
         err match {
-          case Error.NoError => logger.info("Game saved successfully")
-          case Error.SaveError => logger.error(errorMessage(SaveError))
+          case Error.NoError => LOG.info("Game saved successfully")
+          case Error.SaveError => LOG.error(errorMessage(SaveError))
         }
       case "l" =>
 
         val err = controller.load("mill.xml")
         err match {
           case Error.NoError => gamestarted = true
-          case Error.LoadError => logger.error(errorMessage(err))
+          case Error.LoadError => LOG.error(errorMessage(err))
 
         }
 
@@ -59,7 +61,7 @@ class Tui(controller: ControllerInterface) extends Reactor with LazyLogging {
           val input = readLine().toInt
           val error = controller.performTurn(input, dummyField)
           if (error != controllerComponent.Error.NoError) {
-            logger.error(errorMessage(error))
+            LOG.error(errorMessage(error))
             processPlayerTurn()
           }
           else {
@@ -82,12 +84,12 @@ class Tui(controller: ControllerInterface) extends Reactor with LazyLogging {
         try {
           val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
           if (error != controllerComponent.Error.NoError) {
-            logger.error(errorMessage(error))
+            LOG.error(errorMessage(error))
             processPlayerTurn()
           }
           else {
             println("Succesfully moved Man from Field " + inputs(0) + " to Field " + inputs(1))
-            logger.info("Succesfully placed Man on the Field " + input)
+            LOG.info("Succesfully placed Man on the Field " + input)
             if (controller.checkMill(inputs(1).toInt)) {
               processMill()
             }
@@ -120,9 +122,9 @@ class Tui(controller: ControllerInterface) extends Reactor with LazyLogging {
 
         catch {
           case ioobe: IndexOutOfBoundsException => {
-            logger.error(errorMessage(InputError))
+            LOG.error(errorMessage(InputError))
           }
-          case nfe: NumberFormatException => logger.error(errorMessage(InputError))
+          case nfe: NumberFormatException => LOG.error(errorMessage(InputError))
         }
     }
   }

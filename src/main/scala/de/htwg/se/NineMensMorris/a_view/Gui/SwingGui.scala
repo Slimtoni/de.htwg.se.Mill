@@ -32,21 +32,10 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   val chooseFileButton = new Button("Choose file")
   var fieldButs: mutable.MutableList[FieldButton] = mutable.MutableList.empty
-  val blackIcon: Icon = new ImageIcon("res/Black_50.png")
   var overlay = false
   var foundMill = false
   var startButton = new Button("Start Game")
   var loadButton = new Button("Load Game")
-
-
-  for (i <- 0 to 23) {
-    val fieldtmp = FieldButton(i)
-    listenTo(fieldtmp)
-    if (fieldtmp != null) fieldButs.+=(fieldtmp)
-  }
-  val dummyBut: FieldButton = new FieldButton(100) {
-    visible = false
-  }
 
   def mouseClick(xCor: Int, yCor: Int, boardDim: Dimension): Option[FieldInterface] = {
     for (i <- vertexList) {
