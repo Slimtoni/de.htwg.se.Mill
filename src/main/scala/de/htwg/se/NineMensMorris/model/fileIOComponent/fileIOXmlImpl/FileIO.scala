@@ -1,18 +1,18 @@
-package de.htwg.se.NineMensMorris.model.FileIOComponents
+package de.htwg.se.NineMensMorris.model.fileIOComponent.fileIOXmlImpl
 
 import java.io.File
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent.Error
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.gameboardComponent._
-import de.htwg.se.NineMensMorris.model.{FieldStatus, FileIOInterface, GameboardSize, PlayerGamePhase}
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Field, Gameboard}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.NineMensMorris.model.{FieldStatus, FileIOInterface, GameboardSize, PlayerGamePhase}
 
 import scala.collection.mutable
 
-class FileIOXML extends FileIOInterface {
+class FileIO extends FileIOInterface {
 
 
   def load(fileS: String): Option[(GameboardInterface, (PlayerInterface, PlayerInterface, PlayerInterface))] = {
