@@ -10,9 +10,7 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Fie
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 
-import scala.collection.JavaConverters._
 import scala.collection.mutable
-import scala.xml.PrettyPrinter
 
 class FileIOXML extends FileIOInterface {
 

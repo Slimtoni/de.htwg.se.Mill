@@ -8,6 +8,7 @@ trait PlayerInterface {
   def numberPlacedMen: Int
   def numberLostMen: Int
 
+  def checkPlayerLost(): Boolean
   def checkedPlacedMen(): Option[PlayerInterface]
   def changeGamePhase(newPhase: PlayerGamePhase): PlayerInterface
   def incrementPlacedMen(): PlayerInterface

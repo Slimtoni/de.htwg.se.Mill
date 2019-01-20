@@ -7,7 +7,6 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Field, Gameboard}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
-import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardFactory
 import play.api.libs.json._
 
 
@@ -67,7 +66,7 @@ class FileIOJson extends FileIOInterface {
     var vertexJson = (json \ "gameboard" \ "vertexList").get.toString().drop(1).dropRight(1).trim
     vertexJson = vertexJson.substring(12, vertexJson.length - 1)
     vertexJson = vertexJson.replaceAll(", ", "");
-    for (x <- 0 to vertexJson.length - 1) {
+    for (x <- 0 until vertexJson.length) {
       var status: FieldStatus = null
       if (vertexJson.charAt(x) == 'O') {
         status = FieldStatus.Empty

@@ -22,4 +22,6 @@ class Player extends PlayerInterface {
   override def incrementLostMen(): PlayerInterface = this
 
   override def equals(p: PlayerInterface): Boolean = true
+
+  override def checkPlayerLost(): Boolean = false
 }

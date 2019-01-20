@@ -1,7 +1,6 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
 import java.awt.Color
-import java.awt.geom.{Ellipse2D, Line2D}
 import java.awt.image.BufferedImage
 import java.io.File
 
@@ -11,20 +10,31 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 import javax.imageio.ImageIO
 
 import scala.collection.mutable
-import scala.swing.Swing.LineBorder
-import scala.swing.{Component, Dimension, Graphics2D, GridPanel, Point}
+import scala.swing.{Component, Dimension, Graphics2D, Point}
 
-class Board(controller: ControllerInterface) extends Component {
+class Board(controller: ControllerInterface, var overlayOn: Boolean = false) extends Component {
 
   val panelDimension = new Dimension(650, 650)
   minimumSize = panelDimension
   preferredSize = panelDimension
   maximumSize = panelDimension
-  val imageBlack: BufferedImage = ImageIO.read(new File("res/Black_50.png"))
-  val imageWhite: BufferedImage = ImageIO.read(new File("res/Black_50.png"))
+  val imageBlack: BufferedImage = ImageIO.read(new File("res/BlackStone_45.jpg"))
+  val imageWhite: BufferedImage = ImageIO.read(new File("res/WhiteStone.jpg"))
   var currentImage: BufferedImage = _
+  var backgroundImage: BufferedImage = ImageIO.read(new File("res/Board.png"))
   listenTo(controller)
   controller.createGameboard()
+
+  def setOverlay(): Unit = {
+    backgroundImage = ImageIO.read(new File("res/BoardSkin.jpg"))
+    overlayOn = true
+    repaint()
+  }
+  def unsetOverlay(): Unit = {
+    backgroundImage = ImageIO.read(new File("res/Board.png"))
+    overlayOn = false
+    repaint()
+  }
 
   def getBoardList: mutable.MutableList[(FieldInterface, Point)] = {
     val vertexCords: mutable.MutableList[(FieldInterface, Point)] = new mutable.MutableList[(FieldInterface, Point)]
@@ -86,27 +96,46 @@ class Board(controller: ControllerInterface) extends Component {
   }
 
   override def paintComponent(g: Graphics2D): Unit = {
-    val image = ImageIO.read(new File("res/Board.png"))
-
-    g.drawImage(image, 0, 0, null)
+    g.drawImage(backgroundImage, 0, 0, null)
 
     var lastVertex: (FieldInterface, Point) = null
     val vertexCords = getBoardList
     for (i <- vertexCords) {
-      //val counter = new Ellipse2D.Double(i._2.x,i._2.y, 50, 50)
       i._1.fieldStatus match {
         case FieldStatus.Black =>
-          g.setColor(Color.BLACK)
-          g.fillOval(i._2.x, i._2.y, 50, 50)
-          g.setColor(Color.GRAY)
-          g.drawOval(i._2.x, i._2.y, 50, 50)
-          g.drawOval(i._2.x + 12, i._2.y + 12, 25, 25)
+          if (overlayOn) {
+            g.setColor(new Color(41, 163, 163))
+            g.fillRect(i._2.x, i._2.y, 55, 55)
+            g.setColor(Color.BLACK)
+            g.drawRect(i._2.x,i._2.y, 55, 55)
+            g.drawLine(i._2.x,i._2.y,i._2.x + 55,i._2.y + 55)
+            g.drawLine(i._2.x + 55, i._2.y ,i._2.x ,i._2.y + 55)
+          }
+          else {
+            g.setColor(Color.BLACK)
+            g.fillOval(i._2.x, i._2.y, 55, 55)
+            g.setColor(Color.GRAY)
+            g.drawOval(i._2.x, i._2.y, 55, 55)
+            g.drawOval(i._2.x + 15, i._2.y + 15, 25, 25)
+          }
+          //g.drawImage(imageBlack, i._2.x, i._2.y, null)
         case FieldStatus.White =>
-          g.setColor(Color.WHITE)
-          g.fillOval(i._2.x, i._2.y, 50, 50)
-          g.setColor(Color.GRAY)
-          g.drawOval(i._2.x, i._2.y, 50, 50)
-          g.drawOval(i._2.x + 12, i._2.y + 12, 25, 25)
+          if (overlayOn) {
+            g.setColor(new Color(255, 219, 56))
+            g.fillRect(i._2.x, i._2.y, 55, 55)
+            g.setColor(Color.BLACK)
+            g.drawRect(i._2.x,i._2.y, 55, 55)
+            g.drawLine(i._2.x,i._2.y,i._2.x + 55,i._2.y + 55)
+            g.drawLine(i._2.x + 55, i._2.y ,i._2.x ,i._2.y + 55)
+          }
+          else {
+            g.setColor(Color.WHITE)
+            g.fillOval(i._2.x, i._2.y, 55, 55)
+            g.setColor(Color.GRAY)
+            g.drawOval(i._2.x, i._2.y, 55, 55)
+            g.drawOval(i._2.x + 15, i._2.y + 15, 25, 25)
+          }
+        //g.drawImage(imageWhite, i._2.x, i._2.y, null)
         case FieldStatus.Empty =>
       }
     }

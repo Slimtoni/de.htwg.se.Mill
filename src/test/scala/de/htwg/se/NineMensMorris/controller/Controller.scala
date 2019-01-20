@@ -62,11 +62,6 @@ class Controller extends WordSpec with Matchers {
 
   "A Controller" when {
     "running" should {
-      "checkPlayers" in {
-        controller.checkPlayer("White") should be(())
-
-      }
-
       "perform Turns" in {
 
         controller.placeMan(8)
