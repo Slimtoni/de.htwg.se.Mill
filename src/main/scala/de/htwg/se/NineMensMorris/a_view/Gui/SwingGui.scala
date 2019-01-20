@@ -136,11 +136,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         System.exit(0)
       })
     }
-    contents += new Menu("Edit") {
-      mnemonic = Key.E
-      contents += new MenuItem(Action("Undo") {})
-      contents += new MenuItem(Action("Redo") {})
-    }
     contents += new Menu("Options") {
       val checkbox = new CheckMenuItem("Overlay")
       mnemonic = Key.O
