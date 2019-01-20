@@ -176,20 +176,20 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
       if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {
         return Error.SelectError
       } else {
-        if (!checkMill(fieldtmp)) {
-          if (!allMenInMill()) {
-            killMan(fieldtmp)
-          }
+        if (!allMenInMill()) {
+          killMan(fieldtmp)
           return Error.NoError
-        }
+        } else return Error.KillManError
       }
     } else if (playerOnTurn.equals(playerBlack)) {
       if (field.fieldStatus == FieldStatus.Black || field.fieldStatus == FieldStatus.Empty) {
         return Error.SelectError
       } else {
-        if (!checkMill(fieldtmp) && !allMenInMill()) {
-          killMan(fieldtmp)
-          return Error.NoError
+        if (!checkMill(fieldtmp)) {
+          if (!allMenInMill()) {
+            killMan(fieldtmp)
+            return Error.NoError
+          } else return Error.KillManError
         }
       }
     }
