@@ -16,19 +16,19 @@ import scala.io.Source
 class FileIOJson extends FileIOInterface {
 
 
-  override def save(gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit = {
+  override def save(fileS: String, gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit = {
 
     import java.io._
 
-    val pw = new PrintWriter(new File("Mill.json"))
+    val pw = new PrintWriter(new File(fileS))
     pw.write(Json.prettyPrint(millToJson(gameboard, player)))
     pw.close()
   }
 
 
-  def load(): (GameboardInterface, (PlayerInterface, PlayerInterface, PlayerInterface)) = {
+  def load(fileS: String): Option[(GameboardInterface, (PlayerInterface, PlayerInterface, PlayerInterface))] = {
     var gameboard = new Gameboard()
-    val file: String = Source.fromFile("mill.json").getLines().mkString
+    val file: String = Source.fromFile(fileS).getLines().mkString
     val json: JsValue = Json.parse(file)
 
 
@@ -94,7 +94,7 @@ class FileIOJson extends FileIOInterface {
       gameboard = gameboard.setEdgeList(GameboardSize.Nine, gameboard)
     }
 
-    (gameboard, (player1, player2, currentPlayer))
+    Option(gameboard, (player1, player2, currentPlayer))
   }
 
 

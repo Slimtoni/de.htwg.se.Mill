@@ -7,6 +7,8 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.EdgeInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Gameboard
+import de.htwg.se.NineMensMorris.model.FileIOComponents._
 
 import scala.collection.mutable
 
@@ -19,9 +21,36 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   var playerOnTurn: PlayerInterface = _
   var players: (PlayerInterface, PlayerInterface) = _
   var gameStarted = false
+  val fileIo = new FileIOXML
+
   var gameOver = false
 
   def gameboardToString: String = gameboard.toString
+
+
+
+  def save(fileS: String = "mill.xml"): Unit ={
+    fileIo.save(fileS, gameboard, (playerWhite,playerBlack,playerOnTurn))
+    println("Game saved")
+
+  }
+
+  def load(fileS:String = "mill.xml"): Unit = {
+    println("game loaded")
+    val tmp = fileIo.load(fileS)
+
+    tmp match {
+      case None => {}
+      case Some(game) =>
+        gameboard = game._1
+        playerWhite = game._2._1
+        playerBlack = game._2._2
+        playerOnTurn = game._2._3
+    }
+    publish(new FieldChanged)
+    publish(new StartNewGame)
+
+  }
 
 
   def createGameboard(): Unit = {
@@ -119,7 +148,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     val checkCol: FieldStatus = field.fieldStatus
-    if (field.millneigh.head._1.fieldStatus == checkCol && field.millneigh.head._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
+    if (field.millneigh.head._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
       field.millneigh(1)._1.fieldStatus == checkCol && field.millneigh(1)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty) {
       true
     } else false

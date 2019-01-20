@@ -66,7 +66,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
               if (value.fieldStatus.toString == controller.getPlayerOnTurn) {
                 clickOne = id
                 firstClick = false
-                statusPanel.setInfo("Field " + id +  " selected! Choose second Field to " +
+                statusPanel.setInfo("Field " + id + " selected! Choose second Field to " +
                   controller.getPlayerOnTurnPhase + "!")
               } else {
                 statusPanel.setInfo("Please select one of your own mens to " + controller.getPlayerOnTurnPhase)
@@ -78,7 +78,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           if (id == clickOne) {
             clickOne = 0
             firstClick = true
-            statusPanel.setInfo("Field " + id +  " diselected! Choose a Man to " +
+            statusPanel.setInfo("Field " + id + " diselected! Choose a Man to " +
               controller.getPlayerOnTurnPhase + "!")
           } else {
             val error = controller.performTurn(clickOne, id)
@@ -135,25 +135,24 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   menuBar = new MenuBar {
     contents += new Menu("File") {
       mnemonic = Key.F
-      contents += new MenuItem(Action("New") { controller.startNewGame() })
+      contents += new MenuItem(Action("New") {
+        controller.startNewGame()
+      })
       contents += new MenuItem(Action("Save") {
-        chooseFile() match {
-          case Some(value) =>
-            val pw = new PrintWriter(new File(value.toString))
-            pw.write("Hello, world") //TODO: call save function from Controller
-            pw.close()
-          case None =>
-        }
+
+        controller.save("mill.xml")
+
+
       })
       contents += new MenuItem(Action("Load") {
-        chooseFile() match {
-        case Some(value) =>
-          val pw = new PrintWriter(new File(value.toString))
-          pw.write("Hello, world") //TODO: call load function from Controller
-          pw.close()
-        case None =>
-      } })
-      contents += new MenuItem(Action("Quit") { System.exit(0) })
+
+        controller.load("mill.xml")
+
+
+      })
+      contents += new MenuItem(Action("Quit") {
+        System.exit(0)
+      })
     }
     contents += new Menu("Edit") {
       mnemonic = Key.E
@@ -163,6 +162,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     contents += new Menu("Options") {
       val checkbox = new CheckMenuItem("Overlay")
       mnemonic = Key.O
+
       contents += checkbox
       listenTo(checkbox)
       reactions += {

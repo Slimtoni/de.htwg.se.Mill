@@ -7,8 +7,8 @@ trait FileIOInterface {
 
   //def load(): Option[GameboardInterface]
 
-  def save(gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit
+  def save(fileS: String, gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit
 
-  def load(): (GameboardInterface, (PlayerInterface,PlayerInterface,PlayerInterface))
+  def load(fileS:String): Option[(GameboardInterface, (PlayerInterface,PlayerInterface,PlayerInterface))]
 
 }

@@ -26,6 +26,8 @@ trait ControllerInterface extends Publisher{
   def gameOver(): Boolean
   def endPlayersTurn(): Unit
   def caseOfMill(fieldtmp: Int): Error.Value
+  def save(fileS: String)
+  def load(fileS:String)
   def gameboardToString: String
 }
 

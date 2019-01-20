@@ -42,6 +42,10 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
 
   override def caseOfMill(fieldtmp: Int): controllerComponent.Error.Value = controllerComponent.Error.NoError
 
+  override def save(fileS: String): Unit = ???
+
+  override def load(fileS: String): Unit = ???
+
   override def gameOver(): Boolean = false
 
   override def playerOnTurn: PlayerInterface = playerWhite
