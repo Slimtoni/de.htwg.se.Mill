@@ -34,7 +34,7 @@ class ControllerMill @Inject() (var gameboard: GameboardInterface) extends Contr
   def gameboardToString: String = gameboard.toString
 
 
-  def save(fileS: String = "mill.xml"): Error.Value = {
+  def save(fileS: String): Error.Value = {
 
 
     fileIo.save(fileS, gameboard, (playerWhite, playerBlack, playerOnTurn))
