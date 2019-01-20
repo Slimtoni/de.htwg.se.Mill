@@ -1,19 +1,19 @@
-package de.htwg.se.NineMensMorris.model.FileIOComponents
+package de.htwg.se.NineMensMorris.model.fileIOComponent.fileIOJsonImpl
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent.Error
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
-import de.htwg.se.NineMensMorris.model.{FieldStatus, FileIOInterface, GameboardSize, PlayerGamePhase}
+import de.htwg.se.NineMensMorris.model.fileIOComponent.FileIOInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Field, Gameboard}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
+import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
 import play.api.libs.json._
-
 
 import scala.collection.mutable
 import scala.io.Source
 
-class FileIOJson extends FileIOInterface {
+class FileIO extends FileIOInterface {
 
 
   override def save(fileS: String, gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Unit = {

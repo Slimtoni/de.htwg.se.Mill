@@ -1,5 +1,9 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
+import com.google.inject.name.Names
+import com.google.inject.{Guice, Inject}
+import net.codingwell.scalaguice.InjectorExtensions._
+import de.htwg.se.NineMensMorris.NineMensMorrisModule
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
@@ -8,12 +12,13 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, Gameb
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Gameboard
-import de.htwg.se.NineMensMorris.model.FileIOComponents._
+import de.htwg.se.NineMensMorris.model.fileIOComponent._
+import de.htwg.se.NineMensMorris.model.fileIOComponent.fileIOXmlImpl.FileIO
 
 import scala.collection.mutable
 
 
-class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterface {
+class ControllerMill @Inject() (var gameboard: GameboardInterface) extends ControllerInterface {
 
   var gameboardFactory = new GameboardFactory
   var playerWhite: PlayerInterface = _
@@ -21,7 +26,8 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   var playerOnTurn: PlayerInterface = _
   var players: (PlayerInterface, PlayerInterface) = _
   var gameStarted = false
-  val fileIo = new FileIOXML
+  val injector = Guice.createInjector(new NineMensMorrisModule)
+  val fileIo = injector.instance[FileIOInterface]
 
   var gameOver = false
 

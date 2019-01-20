@@ -1,7 +1,7 @@
-package de.htwg.se.NineMensMorris.model
+package de.htwg.se.NineMensMorris.model.fileIOComponent
 
-import de.htwg.se.NineMensMorris.model.gameboardComponent._
-import de.htwg.se.NineMensMorris.model.playerComponent._
+import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardInterface
+import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 
 trait FileIOInterface {
 
