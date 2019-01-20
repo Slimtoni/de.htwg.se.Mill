@@ -1,11 +1,13 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
+import java.awt.Color
+
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
-import java.io.{File, PrintWriter}
-
 import javax.imageio.ImageIO
+import javax.swing.{Icon, ImageIcon}
+import java.io.{File, PrintWriter}
 
 import scala.collection.mutable
 import scala.swing._
@@ -16,10 +18,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
   resizable = false
-  val frameSize = new Dimension(650, 730)
-  minimumSize = frameSize
-  preferredSize = frameSize
-  maximumSize = frameSize
+  val startFramesize = new Dimension(300, 100)
+  val playFramesize = new Dimension(650, 750)
+  minimumSize = startFramesize
+  preferredSize = startFramesize
+  maximumSize = playFramesize
   val icon: Image = ImageIO.read(new File("res/GameIcon.png"))
   iconImage = icon
   val board = new Board(controller)
@@ -27,7 +30,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   val chooseFileButton = new Button("Choose file")
   var fieldButs: mutable.MutableList[FieldButton] = mutable.MutableList.empty
+  val blackIcon: Icon = new ImageIcon("res/Black_50.png")
+  var overlay = false
   var foundMill = false
+  var startButton = new Button("Start Game")
+  var loadButton = new Button("Load Game")
 
 
   for (i <- 0 to 23) {
@@ -153,18 +160,28 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       contents += new MenuItem(Action("Undo") {  })
       contents += new MenuItem(Action("Redo") {  })
     }
-    contents += new Menu("Solve") {
-      mnemonic = Key.S
-      contents += new MenuItem(Action("Solve") {  })
-    }
     contents += new Menu("Options") {
+      val checkbox = new CheckMenuItem("Overlay")
       mnemonic = Key.O
-      contents += new MenuItem(Action("Show all candidates") { })
-      contents += new MenuItem(Action("Size 1*1") {  })
-      contents += new MenuItem(Action("Size 4*4") {  })
-      contents += new MenuItem(Action("Size 9*9") {  })
-
+      contents += checkbox
+      listenTo(checkbox)
+      reactions += {
+        case ButtonClicked(_) =>
+          if (checkbox.selected) {
+            board.setOverlay()
+            setOverlay(new Color(255, 222, 99))
+          }
+          else {
+            board.unsetOverlay()
+            setOverlay(Color.WHITE)
+          }
+      }
     }
+  }
+  def setOverlay(color: Color): Unit = {
+      menuBar.background =  color
+      this.background = color
+      statusPanel.setBackgroundColor(color)
   }
 
 
@@ -192,13 +209,15 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   val startPanel: FlowPanel = new FlowPanel() {
     visible = true
-    var startButton = new Button("Start Game")
     contents += startButton
+    contents += loadButton
     listenTo(startButton)
+    listenTo(loadButton)
     reactions += {
-      case ButtonClicked(_) =>
+      case ButtonClicked(startbutton) =>
         //Console.println("Start Game clicked")
         controller.startNewGame()
+      case ButtonClicked(loadButton) =>
     }
   }
 
@@ -210,6 +229,8 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   }
 
   def startGame(): Unit = {
+    minimumSize = playFramesize
+    preferredSize = playFramesize
     foundMill = false
     refreshAll()
     mainPanel.visible = true
@@ -223,15 +244,10 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     add(startPanel, BorderPanel.Position.North)
   }
 
-
   reactions += {
     case _: FieldChanged => refreshAll()
     case _: PlayerPhaseChanged => refreshAll()
     case _: GameOver =>
-      //mainPanel.visible = false
-      //mainPanel.enabled = false
-      //statusPanel.visible = false
-      //startPanel.visible = true
       statusPanel.setMessage("")
       var winString = ""
       if (controller.playerOnTurn.equals(controller.playerWhite)) winString = "Black won the game!"
