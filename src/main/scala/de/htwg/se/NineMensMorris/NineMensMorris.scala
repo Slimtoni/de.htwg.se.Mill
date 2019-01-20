@@ -13,7 +13,7 @@ object NineMensMorris {
 
 
   def main(args: Array[String]): Unit = {
-    val gui = new SwingGui(controller)
+    val _ = new SwingGui(controller)
     val tui = new Tui(controller)
     println("Nine mens morris by Toni & Matze\n" +
       "--------------------------------\n" +

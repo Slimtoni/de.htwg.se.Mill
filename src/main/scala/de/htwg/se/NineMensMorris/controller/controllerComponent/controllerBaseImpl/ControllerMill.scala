@@ -1,6 +1,5 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
-import com.google.inject.name.Names
 import com.google.inject.{Guice, Inject}
 import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.NineMensMorris.NineMensMorrisModule
@@ -11,9 +10,7 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.EdgeInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Gameboard
-import de.htwg.se.NineMensMorris.model.fileIOComponent._
-import de.htwg.se.NineMensMorris.model.fileIOComponent.fileIOXmlImpl.FileIO
+
 
 import scala.collection.mutable
 
@@ -159,7 +156,7 @@ class ControllerMill @Inject() (var gameboard: GameboardInterface) extends Contr
   override def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     val checkCol: FieldStatus = field.fieldStatus
-    if (field.millneigh.head._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
+    if (field.millneigh.head._1.fieldStatus == checkCol && field.millneigh.head._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
       field.millneigh(1)._1.fieldStatus == checkCol && field.millneigh(1)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty) {
       true
     } else false

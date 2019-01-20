@@ -1,6 +1,6 @@
 package de.htwg.se.NineMensMorris.a_view
 
-import com.typesafe.scalalogging.LazyLogging
+
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent.Error._
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
@@ -52,7 +52,6 @@ class Tui(controller: ControllerInterface) extends Reactor {
   }
 
   def processPlayerTurn(): Unit = {
-    val currentPlayer = controller.getPlayerOnTurn
     controller.getPlayerOnTurnPhase match {
       case "Place" =>
         println("Please enter ID of the target Field to Place: ")
@@ -73,7 +72,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
           }
         }
         catch {
-          case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
+          case _: IndexOutOfBoundsException => errorMessage(InputError)
           case nfe: NumberFormatException => errorMessage(InputError)
         }
 
@@ -121,9 +120,9 @@ class Tui(controller: ControllerInterface) extends Reactor {
         }
 
         catch {
-          case ioobe: IndexOutOfBoundsException => {
+          case ioobe: IndexOutOfBoundsException =>
+
             LOG.error(errorMessage(InputError))
-          }
           case nfe: NumberFormatException => LOG.error(errorMessage(InputError))
         }
     }
@@ -155,9 +154,8 @@ class Tui(controller: ControllerInterface) extends Reactor {
       else if (controller.playerOnTurn.equals(controller.playerBlack)) println("White won the game!")
     case _: CaseOfMill =>
       println("Player " + controller.playerOnTurn + " got a mill. Please select a man to remove")
-    case _: StartNewGame => {
+    case _: StartNewGame =>
       gamestarted = true
       processInputLine("")
-    }
   }
 }
