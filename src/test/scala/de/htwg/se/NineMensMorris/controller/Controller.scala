@@ -142,7 +142,7 @@ class Controller extends WordSpec with Matchers {
 
         controller.getVertexList should be(controller.gameboard.vertexList)
         controller.getNeigh should be (controller.gameboard.neigh)
-        controller.getField(0) should be (Option(controller.gameboard.vertexList(0)))
+        controller.getField(0) should be (Some(controller.gameboard.vertexList(0)))
 
       }
     }
