@@ -56,5 +56,5 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
 
   override def gameboardToString: String = ""
 
-  override def checkGameboardMills(): Boolean = false
+  override def allMenInMill(): Boolean = false
 }
