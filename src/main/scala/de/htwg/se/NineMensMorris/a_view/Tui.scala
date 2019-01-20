@@ -1,15 +1,14 @@
 package de.htwg.se.NineMensMorris.a_view
 
+import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent.Error._
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
-import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
-
 
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
 
-class Tui(controller: ControllerInterface) extends Reactor {
+class Tui(controller: ControllerInterface) extends Reactor with LazyLogging {
   listenTo(controller)
   var gamestarted = false
 
@@ -21,15 +20,15 @@ class Tui(controller: ControllerInterface) extends Reactor {
       case "q" => System.exit(0)
       case "s" => val err = controller.save("mill.xml")
         err match {
-          case Error.NoError => println("Game saved successfully")
-          case Error.SaveError => errorMessage(SaveError)
+          case Error.NoError => logger.info("Game saved successfully")
+          case Error.SaveError => logger.error(errorMessage(SaveError))
         }
       case "l" =>
 
         val err = controller.load("mill.xml")
         err match {
           case Error.NoError => gamestarted = true
-          case Error.LoadError => errorMessage(err)
+          case Error.LoadError => logger.error(errorMessage(err))
 
         }
 
@@ -60,7 +59,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
           val input = readLine().toInt
           val error = controller.performTurn(input, dummyField)
           if (error != controllerComponent.Error.NoError) {
-            errorMessage(error)
+            logger.error(errorMessage(error))
             processPlayerTurn()
           }
           else {
@@ -83,12 +82,12 @@ class Tui(controller: ControllerInterface) extends Reactor {
         try {
           val error = controller.performTurn(inputs(0).toInt, inputs(1).toInt)
           if (error != controllerComponent.Error.NoError) {
-            errorMessage(error)
+            logger.error(errorMessage(error))
             processPlayerTurn()
           }
           else {
             println("Succesfully moved Man from Field " + inputs(0) + " to Field " + inputs(1))
-            println("Succesfully placed Man on the Field " + input)
+            logger.info("Succesfully placed Man on the Field " + input)
             if (controller.checkMill(inputs(1).toInt)) {
               processMill()
             }
@@ -120,8 +119,10 @@ class Tui(controller: ControllerInterface) extends Reactor {
         }
 
         catch {
-          case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
-          case nfe: NumberFormatException => errorMessage(InputError)
+          case ioobe: IndexOutOfBoundsException => {
+            logger.error(errorMessage(InputError))
+          }
+          case nfe: NumberFormatException => logger.error(errorMessage(InputError))
         }
     }
   }
