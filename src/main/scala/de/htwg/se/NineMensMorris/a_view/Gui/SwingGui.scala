@@ -88,6 +88,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
               if (controller.checkMill(id)) {
                 statusPanel.setMessage("Player " + controller.getPlayerOnTurn + " got a Mill. Please select a man to remove")
                 foundMill = true
+                board.repaint()
               } else controller.endPlayersTurn()
               firstClick = true
             }
@@ -102,6 +103,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           if (controller.checkMill(id)) {
             statusPanel.setMessage("Player " + controller.getPlayerOnTurn + " got a Mill. Please select a man to remove")
             foundMill = true
+            board.repaint()
           } else controller.endPlayersTurn()
         }
       }
