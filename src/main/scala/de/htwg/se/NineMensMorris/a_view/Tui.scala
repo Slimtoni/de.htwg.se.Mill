@@ -6,7 +6,6 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
 
 
-
 import scala.io.StdIn.{readInt, readLine}
 import scala.swing.Reactor
 
@@ -20,9 +19,21 @@ class Tui(controller: ControllerInterface) extends Reactor {
         controller.startNewGame()
         gamestarted = true
       case "q" => System.exit(0)
-      case "s" => controller.save("mill.xml")
-      case "l" => gamestarted =  true
-                  controller.load("mill.xml")
+      case "s" => val err = controller.save("mill.xml")
+        err match {
+          case Error.NoError => println("Game saved successfully")
+          case Error.SaveError => errorMessage(SaveError)
+        }
+      case "l" =>
+
+        val err = controller.load("mill.xml")
+        err match {
+          case Error.NoError => gamestarted = true
+          case Error.LoadError => errorMessage(err)
+
+        }
+
+
       case "g" =>
         if (gamestarted) processPlayerTurn()
         else println("Please start a new Game!")
