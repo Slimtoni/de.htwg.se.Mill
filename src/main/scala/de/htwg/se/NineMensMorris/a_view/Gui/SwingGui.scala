@@ -6,8 +6,7 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 import javax.imageio.ImageIO
-import javax.swing.{Icon, ImageIcon}
-import java.io.{File, PrintWriter}
+import java.io.File
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent.Error.errorMessage
 
@@ -189,7 +188,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           mouseClick(point.x, point.y, this.size) match {
             case Some(value) =>
               if (!controller.gameOver) clickHandler(value.id)
-            case None => println("No Button clicked") //TODO: insert log
+            case None => println("No Button clicked")
           }
       }
     }

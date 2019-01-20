@@ -4,7 +4,7 @@ object Error extends Enumeration {
   type Error = Value
   val NoError, FieldError, EdgeError, SelectError, InputError, LoadError, SaveError, KillManError = Value
 
-  val map = Map[Error, String](
+  val map: Map[Error, String] = Map[Error, String](
     NoError -> "No Error: No Error occured!",
     FieldError -> "Error: Please select a valid field!",
     EdgeError -> "Error: Please select two connected Fields!",

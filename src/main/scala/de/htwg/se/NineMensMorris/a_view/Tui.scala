@@ -73,7 +73,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
         }
         catch {
           case _: IndexOutOfBoundsException => errorMessage(InputError)
-          case nfe: NumberFormatException => errorMessage(InputError)
+          case _: NumberFormatException => errorMessage(InputError)
         }
 
       case "Move" =>
@@ -97,8 +97,8 @@ class Tui(controller: ControllerInterface) extends Reactor {
         }
 
         catch {
-          case ioobe: IndexOutOfBoundsException => errorMessage(InputError)
-          case nfe: NumberFormatException => errorMessage(InputError)
+          case _: IndexOutOfBoundsException => errorMessage(InputError)
+          case _: NumberFormatException => errorMessage(InputError)
         }
 
       case "Fly" =>
@@ -120,10 +120,10 @@ class Tui(controller: ControllerInterface) extends Reactor {
         }
 
         catch {
-          case ioobe: IndexOutOfBoundsException =>
+          case _: IndexOutOfBoundsException =>
 
             LOG.error(errorMessage(InputError))
-          case nfe: NumberFormatException => LOG.error(errorMessage(InputError))
+          case _: NumberFormatException => LOG.error(errorMessage(InputError))
         }
     }
   }
@@ -138,7 +138,7 @@ class Tui(controller: ControllerInterface) extends Reactor {
         processMill()
       }
     } catch {
-      case nfe: NumberFormatException => errorMessage(InputError)
+      case _: NumberFormatException => errorMessage(InputError)
     }
 
   }

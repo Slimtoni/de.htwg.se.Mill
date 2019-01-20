@@ -11,6 +11,7 @@ import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
 import de.htwg.se.NineMensMorris.model.{FieldStatus, FileIOInterface, GameboardSize, PlayerGamePhase}
 
 import scala.collection.mutable
+import scala.xml.Elem
 
 class FileIO extends FileIOInterface {
 
@@ -65,7 +66,7 @@ class FileIO extends FileIOInterface {
         } else if (vertexXml.charAt(x) == 'B') {
           status = FieldStatus.Black
         }
-        var tmpField = Field(x, status, mutable.MutableList.empty)
+        val tmpField = Field(x, status, mutable.MutableList.empty)
         gameboard.addVertex(tmpField)
 
       }
@@ -85,7 +86,7 @@ class FileIO extends FileIOInterface {
 
       Some(gameboard, (player1, player2, currentPlayer))
     } catch {
-      case e: Exception => Error.LoadError
+      case _: Exception => Error.LoadError
         None
     }
 
@@ -94,23 +95,22 @@ class FileIO extends FileIOInterface {
 
   override def save(fileS: String, gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Error.Value = {
     try {
-      val file = new File(fileS)
       scala.xml.XML.save(fileS, millToXML(gameboard, player))
       Error.NoError
     } catch {
-      case e:Exception => Error.SaveError
+      case _:Exception => Error.SaveError
     }
 
   }
 
-  def millToXML(gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)) = {
+  def millToXML(gameboard: GameboardInterface, player: (PlayerInterface, PlayerInterface, PlayerInterface)): Elem = {
     <NineMensMorris>
       {gameboardToXML(gameboard)}{playerToXML(player)}
     </NineMensMorris>
   }
 
 
-  def gameboardToXML(gameboard: GameboardInterface) = {
+  def gameboardToXML(gameboard: GameboardInterface): Elem = {
     <gameboard>
       <vertexList>
         {gameboard.vertexList}
@@ -119,7 +119,7 @@ class FileIO extends FileIOInterface {
   }
 
 
-  def playerToXML(player: (PlayerInterface, PlayerInterface, PlayerInterface)) = {
+  def playerToXML(player: (PlayerInterface, PlayerInterface, PlayerInterface)): Elem = {
     <players>
       <playerOnTurn>
         {player._3}

@@ -1,6 +1,6 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
-import com.google.inject.{Guice, Inject}
+import com.google.inject.{Guice, Inject, Injector}
 import net.codingwell.scalaguice.InjectorExtensions._
 import de.htwg.se.NineMensMorris.NineMensMorrisModule
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
@@ -10,7 +10,6 @@ import de.htwg.se.NineMensMorris.model.gameboardComponent.EdgeInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
-
 
 import scala.collection.mutable
 
@@ -23,8 +22,8 @@ class ControllerMill @Inject() (var gameboard: GameboardInterface) extends Contr
   var playerOnTurn: PlayerInterface = _
   var players: (PlayerInterface, PlayerInterface) = _
   var gameStarted = false
-  val injector = Guice.createInjector(new NineMensMorrisModule)
-  val fileIo = injector.instance[FileIOInterface]
+  val injector: Injector = Guice.createInjector(new NineMensMorrisModule)
+  val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
   var gameOver = false
 
@@ -32,11 +31,7 @@ class ControllerMill @Inject() (var gameboard: GameboardInterface) extends Contr
 
 
   def save(fileS: String): Error.Value = {
-
-
     fileIo.save(fileS, gameboard, (playerWhite, playerBlack, playerOnTurn))
-
-
   }
 
   def load(fileS: String): Error.Value = {

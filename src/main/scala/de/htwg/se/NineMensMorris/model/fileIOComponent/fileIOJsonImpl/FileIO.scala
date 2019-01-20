@@ -2,7 +2,6 @@ package de.htwg.se.NineMensMorris.model.fileIOComponent.fileIOJsonImpl
 
 import de.htwg.se.NineMensMorris.controller.controllerComponent.Error
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
-import de.htwg.se.NineMensMorris.model.fileIOComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.{Field, Gameboard}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
@@ -26,7 +25,7 @@ class FileIO extends FileIOInterface {
       pw.close()
       Error.NoError
     } catch {
-      case e: Exception => Error.SaveError
+      case _: Exception => Error.SaveError
     }
   }
 
@@ -69,7 +68,7 @@ class FileIO extends FileIOInterface {
 
       var vertexJson = (json \ "gameboard" \ "vertexList").get.toString().drop(1).dropRight(1).trim
       vertexJson = vertexJson.substring(12, vertexJson.length - 1)
-      vertexJson = vertexJson.replaceAll(", ", "");
+      vertexJson = vertexJson.replaceAll(", ", "")
       for (x <- 0 until vertexJson.length) {
         var status: FieldStatus = null
         if (vertexJson.charAt(x) == 'O') {
@@ -81,7 +80,7 @@ class FileIO extends FileIOInterface {
         } else {
           println("WTF")
         }
-        var tmpField = Field(x, status, mutable.MutableList.empty)
+        val tmpField = Field(x, status, mutable.MutableList.empty)
         gameboard.addVertex(tmpField)
       }
       val gameboardtmp = gameboard.setNeigh()
@@ -91,13 +90,11 @@ class FileIO extends FileIOInterface {
         }
           Error.LoadError
       }
-      if (vertexJson.length == 24) {
-        gameboard = gameboard.setEdgeList(GameboardSize.Nine, gameboard)
-      }
+      if (vertexJson.length == 24) gameboard = gameboard.setEdgeList(GameboardSize.Nine, gameboard)
       Option(gameboard, (player1, player2, currentPlayer))
 
     } catch {
-      case e: Exception => None
+      case _: Exception => None
     }
   }
 

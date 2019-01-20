@@ -96,7 +96,6 @@ class Board(controller: ControllerInterface, var overlayOn: Boolean = false) ext
   override def paintComponent(g: Graphics2D): Unit = {
     g.drawImage(backgroundImage, 0, 0, null)
 
-    var lastVertex: (FieldInterface, Point) = null
     val vertexCords = getBoardList
     for (i <- vertexCords) {
       i._1.fieldStatus match {

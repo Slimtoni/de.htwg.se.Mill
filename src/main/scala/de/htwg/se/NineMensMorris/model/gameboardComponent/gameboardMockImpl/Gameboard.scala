@@ -4,7 +4,6 @@ import de.htwg.se.NineMensMorris.model.FieldStatus
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardInterface}
 
-import scala.annotation.meta.field
 import scala.collection.mutable
 
 class Gameboard() extends GameboardInterface {

@@ -7,3 +7,4 @@ sbt
 *.json
 *.xml
 logs/
+*.jar

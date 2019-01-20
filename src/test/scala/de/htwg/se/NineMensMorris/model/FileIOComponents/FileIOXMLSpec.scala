@@ -12,16 +12,16 @@ import de.htwg.se.NineMensMorris.controller.controllerComponent.Error
 class FileIOXMLSpec extends WordSpec with Matchers {
 
   var file = new FileIO
-  var playerWhite: PlayerInterface = new Player("playerWhite", PlayerGamePhase.Place, 0, 0)
-  var playerBlack: PlayerInterface = new Player("playerBlack", PlayerGamePhase.Move, 0, 0)
+  var playerWhite: PlayerInterface = Player("playerWhite", PlayerGamePhase.Place, 0, 0)
+  var playerBlack: PlayerInterface = Player("playerBlack", PlayerGamePhase.Move, 0, 0)
   var playerOnTurn: PlayerInterface = _
   var gameboardFactory = new GameboardFactory
-  var gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)
+  var gameboard: GameboardInterface = gameboardFactory.createGameboard(GameboardSize.Nine)
   var players: (PlayerInterface, PlayerInterface) = _
   var controller = new ControllerMill(gameboardFactory.createGameboard(GameboardSize.Nine))
   gameboard.getField(7).changeFieldStatus(FieldStatus.Black)
 
-  controller.createGameboard
+  controller.createGameboard()
 
 
   "A FileIO" when {
@@ -40,10 +40,10 @@ class FileIOXMLSpec extends WordSpec with Matchers {
           case None => Error.LoadError
 
           case Some(game) =>
-            gameboard should be (gameboard)
-            playerWhite should be (game._2._1)
-            playerBlack should be (game._2._2)
-            playerOnTurn should be (null)
+            gameboard should be(gameboard)
+            playerWhite should be(game._2._1)
+            playerBlack should be(game._2._2)
+            playerOnTurn should be(null)
 
         }
 
