@@ -1,5 +1,7 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
+import java.lang.StackWalker.Option
+
 import org.scalatest.{Matchers, WordSpec}
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
@@ -55,6 +57,12 @@ class Controller extends WordSpec with Matchers {
         controller.getPlayerOnTurnPhase should be(PlayerGamePhase.Place.toString)
 
 
+      }
+
+      "start new games" in {
+        controller.gameOver = true
+        controller.startNewGame()
+        controller.gameOver should be (false)
       }
 
     }
@@ -120,6 +128,21 @@ class Controller extends WordSpec with Matchers {
         controller.caseOfMill(7) should be (Error.NoError)
 
 
+
+      }
+
+      "save and load games" in {
+        val tmp = playerOnTurn
+        controller.save("mill.xml")
+        controller.load("mill.xml")
+        playerOnTurn should be (tmp)
+      }
+
+      "get stuff" in {
+
+        controller.getVertexList should be(controller.gameboard.vertexList)
+        controller.getNeigh should be (controller.gameboard.neigh)
+        controller.getField(0) should be (Option(controller.gameboard.vertexList(0)))
 
       }
     }

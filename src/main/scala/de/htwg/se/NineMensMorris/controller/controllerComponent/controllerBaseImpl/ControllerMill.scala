@@ -216,10 +216,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     }
   }
 
-  def getPlayer(name: String): PlayerInterface = {
-    if (players._1.name == name) players._1
-    else players._2
-  }
+
 
   def getVertexList: mutable.MutableList[FieldInterface] = {
     gameboard.vertexList
