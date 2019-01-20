@@ -55,4 +55,6 @@ class Controller(var gameboard: GameboardInterface) extends ControllerInterface 
   override def playerBlack: PlayerInterface = new Player()
 
   override def gameboardToString: String = ""
+
+  override def checkGameboardMills(): Boolean = false
 }

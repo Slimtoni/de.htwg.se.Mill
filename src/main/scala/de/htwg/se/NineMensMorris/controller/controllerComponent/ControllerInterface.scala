@@ -23,6 +23,7 @@ trait ControllerInterface extends Publisher{
   def getNeigh: mutable.MutableList[EdgeInterface]
   def getField(id: Int): Option[FieldInterface]
   def checkMill(field: Int): Boolean
+  def checkGameboardMills(): Boolean
   def gameOver(): Boolean
   def endPlayersTurn(): Unit
   def caseOfMill(fieldtmp: Int): Error.Value
