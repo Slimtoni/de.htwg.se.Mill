@@ -22,9 +22,9 @@ coverageExcludedPackages := "de\\.htwg\\.se\\.NineMensMorris\\.a_view.*;" +
   "de\\.htwg\\.se\\.NineMensMorris\\.model\\.gameboardComponent\\.gameboardMockImpl.*;" +
   "de\\.htwg\\.se\\.NineMensMorris\\.model\\.playerComponent\\.playerMockImpl.*;" +
   "de\\.htwg\\.se\\.NineMensMorris\\.controller\\.controllerComponent\\.controllerMockImpl.*;" +
-  "de\\.htwg\\.se\\.NineMensMorris\\.a_view.*;"
+  "de\\.htwg\\.se\\.NineMensMorris\\.a_view.*;"+
   "de\\.htwg\\.se\\.NineMensMorris\\.model\\.gameboardComponent\\.gameboardMockImpl.*;"
 
 test in assembly := {}
 assemblyJarName in assembly := "NineMensMorris.jar"
-mainClass in assembly := Some("src/main/scala/de/htwg/se/NineMensMorris/NineMensMorris.main")
+mainClass in assembly := Some("NineMensMorris/NineMensMorris.")
