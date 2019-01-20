@@ -20,4 +20,6 @@ coverageExcludedPackages := "de\\.htwg\\.se\\.NineMensMorris\\.a_view.*;" +
   "de\\.htwg\\.se\\.NineMensMorris\\.model\\.Enumerations.*;" +
   "de\\.htwg\\.se\\.NineMensMorris\\.model\\.gameboardComponent\\.gameboardBaseImpl\\.Gameboard.toString;" +
   "de\\.htwg\\.se\\.NineMensMorris\\.model\\.gameboardComponent\\.gameboardMockImpl.*;" +
+  "de\\.htwg\\.se\\.NineMensMorris\\.model\\.playerComponent\\.playerMockImpl.*;" +
+  "de\\.htwg\\.se\\.NineMensMorris\\.controller\\.controllerComponent\\.controllerMockImpl.*;" +
   "de\\.htwg\\.se\\.NineMensMorris\\.a_view.*;"
