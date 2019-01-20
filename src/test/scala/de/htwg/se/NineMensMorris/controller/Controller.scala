@@ -1,6 +1,6 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
-import java.lang.StackWalker.Option
+
 
 import org.scalatest.{Matchers, WordSpec}
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
@@ -9,6 +9,7 @@ import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePh
 import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardFactory
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
+
 
 
 class Controller extends WordSpec with Matchers {
