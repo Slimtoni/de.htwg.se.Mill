@@ -112,22 +112,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   }
 
-  def chooseFile(title: String = ""): Option[File] = {
-    val chooser = new FileChooser(new File("."))
-    chooser.title = title
-    val result = chooser.showOpenDialog(null)
-    if (result == FileChooser.Result.Approve) {
-      Dialog.showMessage(contents.head, "Successfully saved!", title = "Save Game")
-      Some(chooser.selectedFile)
-    } else if (result == FileChooser.Result.Cancel) {
-      None
-    } else {
-      Dialog.showMessage(contents.head, "Error while saving the game: " + result.toString, title = "Save Game")
-      None
-    }
-  }
-
-
   menuBar = new MenuBar {
     contents += new Menu("File") {
       mnemonic = Key.F
@@ -135,23 +119,16 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         controller.startNewGame()
       })
       contents += new MenuItem(Action("Save") {
-        chooseFile() match {
-          case Some(value) =>
-            controller.save(value.toString)
-          case None =>
-        }
+
+        controller.save("mill.xml")
+
+
       })
       contents += new MenuItem(Action("Load") {
-        chooseFile() match {
-          case Some(value) =>
-            val pw = new PrintWriter(new File(value.toString))
-            val valuetmp = value.toString.split('/').last
-            controller.load("mill.xml")
-            pw.close()
+
+        controller.load("mill.xml")
 
 
-          case None =>
-        }
       })
       contents += new MenuItem(Action("Quit") {
         System.exit(0)
