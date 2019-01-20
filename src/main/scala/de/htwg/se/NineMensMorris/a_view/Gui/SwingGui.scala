@@ -200,7 +200,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         case MousePressed(_, point, _, _, _) =>
           mouseClick(point.x, point.y, this.size) match {
             case Some(value) =>
-              clickHandler(value.id)
               if (!controller.gameOver) clickHandler(value.id)
             case None => println("No Button clicked") //TODO: insert log
           }
@@ -249,10 +248,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     case _: FieldChanged => refreshAll()
     case _: PlayerPhaseChanged => refreshAll()
     case _: GameOver =>
-      //mainPanel.visible = false
-      //mainPanel.enabled = false
-      //statusPanel.visible = false
-      //startPanel.visible = true
       statusPanel.setMessage("")
       var winString = ""
       if (controller.playerOnTurn.equals(controller.playerWhite)) winString = "Black won the game!"
