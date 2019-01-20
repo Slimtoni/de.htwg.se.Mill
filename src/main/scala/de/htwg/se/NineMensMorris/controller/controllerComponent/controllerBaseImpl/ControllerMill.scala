@@ -1,22 +1,21 @@
 package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
 
-import java.io.File
-
+import com.google.inject.{Guice, Inject, Injector}
+import net.codingwell.scalaguice.InjectorExtensions._
+import de.htwg.se.NineMensMorris.NineMensMorrisModule
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.FieldStatus.FieldStatus
+import de.htwg.se.NineMensMorris.model.fileIOComponent.FileIOInterface
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardFactory, GameboardInterface}
+import de.htwg.se.NineMensMorris.model.gameboardComponent.EdgeInterface
 import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Field
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Gameboard
-import de.htwg.se.NineMensMorris.model.FileIOComponents._
 
 import scala.collection.mutable
 
 
-class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterface {
+class ControllerMill @Inject() (var gameboard: GameboardInterface) extends ControllerInterface {
 
   var gameboardFactory = new GameboardFactory
   var playerWhite: PlayerInterface = _
@@ -24,33 +23,36 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   var playerOnTurn: PlayerInterface = _
   var players: (PlayerInterface, PlayerInterface) = _
   var gameStarted = false
-  val fileIo = new FileIOXML
+  val injector: Injector = Guice.createInjector(new NineMensMorrisModule)
+  val fileIo: FileIOInterface = injector.instance[FileIOInterface]
 
+  var gameOver = false
 
   def gameboardToString: String = gameboard.toString
 
 
-
-  def save(fileS: String = "mill.xml"): Unit ={
-    fileIo.save(fileS, gameboard, (playerWhite,playerBlack,playerOnTurn))
-    println("Game saved")
-
+  def save(fileS: String): Error.Value = {
+    fileIo.save(fileS, gameboard, (playerWhite, playerBlack, playerOnTurn))
   }
 
-  def load(fileS:String = "mill.xml"): Unit = {
-    println("game loaded")
+  def load(fileS: String): Error.Value = {
+
     val tmp = fileIo.load(fileS)
 
     tmp match {
-      case None => {}
+      case None => Error.LoadError
+
       case Some(game) =>
         gameboard = game._1
         playerWhite = game._2._1
         playerBlack = game._2._2
         playerOnTurn = game._2._3
+        publish(new FieldChanged)
+        publish(new StartNewGame)
+        Error.NoError
+
     }
-    publish(new FieldChanged)
-    publish(new StartNewGame)
+
 
   }
 
@@ -71,6 +73,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
   override def startNewGame(): Unit = {
     createGameboard()
+    gameOver = false
     publish(new StartNewGame)
   }
 
@@ -79,19 +82,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     playerBlack = Player(sPlayerBlack, PlayerGamePhase.Place, 0, 0)
     players = (playerWhite, playerBlack)
   }
-
-  def checkPlayer(splayer: String): Unit = {
-    val player: PlayerInterface = getPlayer(splayer)
-    player.checkedPlacedMen() match {
-      case Some(value) =>
-        //println("Phase of Value:" + value.phase)
-        playerOnTurn = value
-        publish(new PlayerPhaseChanged)
-      case None => publish(new GamePhaseChanged)
-    }
-  }
-
-  // wenn ein Spieler eine Mühle schließt wechselt der Spieler nicht!!!
 
   override def performTurn(startFieldID: Int, targetFieldID: Int): Error.Value = {
     var err = Error.NoError
@@ -128,7 +118,6 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
         err
       } else Error.EdgeError
     } else Error.FieldError
-    //if (gameboard.containsEdge(startField, gameboard.getField(targetFieldId)))
   }
 
   def flyMan(startFieldId: Int, targetFieldId: Int): Error.Value = {
@@ -160,42 +149,56 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
   }
 
 
-  def checkMill(fieldtmp: Int): Boolean = {
+  override def checkMill(fieldtmp: Int): Boolean = {
     val field: FieldInterface = gameboard.getField(fieldtmp)
     val checkCol: FieldStatus = field.fieldStatus
-    if (field.millneigh(0)._1.fieldStatus == checkCol && field.millneigh(0)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
+    if (field.millneigh.head._1.fieldStatus == checkCol && field.millneigh.head._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty ||
       field.millneigh(1)._1.fieldStatus == checkCol && field.millneigh(1)._2.fieldStatus == checkCol && checkCol != FieldStatus.Empty) {
       true
     } else false
   }
 
-
-  override def caseOfMill(fieldtmp: Int): Error.Value = {
-    val field: FieldInterface = gameboard.getField(fieldtmp)
-    if (playerOnTurn.equals(playerWhite)) {
-      if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {
-        return Error.SelectError
-      } else {
-        if (!checkMill(fieldtmp)) {
-          killMan(fieldtmp)
-          return Error.NoError
-        }
-      }
-    } else if (playerOnTurn.equals(playerBlack)) {
-      if (field.fieldStatus == FieldStatus.Black || field.fieldStatus == FieldStatus.Empty) {
-        return Error.SelectError
-      } else {
-        if (!checkMill(fieldtmp)) {
-          killMan(fieldtmp)
-          return Error.NoError
-        }
+  override def allMenInMill(): Boolean = {
+    var check = false
+    for (i <- getVertexList.iterator) {
+      if (playerOnTurn.equals(playerWhite) && i.fieldStatus == FieldStatus.Black) {
+        check = checkMill(i.id)
+      } else if (playerOnTurn.equals(playerBlack) && i.fieldStatus == FieldStatus.White) {
+        check = checkMill(i.id)
       }
     }
-    Error.SelectError
+    check
+  }
+
+  override def caseOfMill(fieldtmp: Int): Error.Value = {
+    if (!allMenInMill()) {
+      val field: FieldInterface = gameboard.getField(fieldtmp)
+      if (playerOnTurn.equals(playerWhite)) {
+        if (field.fieldStatus == FieldStatus.White || field.fieldStatus == FieldStatus.Empty) {
+          return Error.SelectError
+        } else {
+          if (!checkMill(fieldtmp)) {
+            killMan(fieldtmp)
+            return Error.NoError
+          }
+        }
+      } else if (playerOnTurn.equals(playerBlack)) {
+        if (field.fieldStatus == FieldStatus.Black || field.fieldStatus == FieldStatus.Empty) {
+          return Error.SelectError
+        } else {
+          if (!checkMill(fieldtmp)) {
+            killMan(fieldtmp)
+            return Error.NoError
+          }
+        }
+      }
+      Error.SelectError
+    } else {
+      Error.KillManError
+    }
   }
 
   def killMan(fieldId: Int): Unit = {
-    val field: FieldInterface = gameboard.getField(fieldId)
     val error = changeFieldStatus(fieldId, "Empty")
     if (error == Error.NoError) {
       if (playerOnTurn.equals(playerWhite))
@@ -208,13 +211,22 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
 
   }
 
-
   def endPlayersTurn(): Unit = {
     changePlayerOnTurn()
-    publish(new FieldChanged)
+    if (playerOnTurn.checkPlayerLost()) {
+      gameOver = true
+      publish(new GameOver)
+    } else {
+      playerOnTurn.checkedPlacedMen() match {
+        case Some(value) => playerOnTurn = value
+      }
+      publish(new FieldChanged)
+    }
   }
 
-  override def changePlayerOnTurn(): Unit = {
+  override def changePlayerOnTurn(): Unit
+
+  = {
     if (playerOnTurn.equals(playerWhite)) {
       playerWhite = playerOnTurn
       playerOnTurn = playerBlack
@@ -225,10 +237,7 @@ class ControllerMill(var gameboard: GameboardInterface) extends ControllerInterf
     }
   }
 
-  def getPlayer(name: String): PlayerInterface = {
-    if (players._1.name == name) players._1
-    else players._2
-  }
+
 
   def getVertexList: mutable.MutableList[FieldInterface] = {
     gameboard.vertexList

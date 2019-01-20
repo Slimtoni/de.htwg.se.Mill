@@ -1,10 +1,7 @@
 package de.htwg.se.NineMensMorris.model
 
-import de.htwg.se.NineMensMorris.model.gameboardComponent.{EdgeInterface, FieldInterface, GameboardFactory}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.gameboardBaseImpl.Gameboard
+import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardFactory
 import org.scalatest.{Matchers, WordSpec}
-
-import scala.collection.mutable
 
 class GameboardFactorySpec extends WordSpec with Matchers {
   "A GameboardFactory" when {

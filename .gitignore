@@ -6,3 +6,5 @@ target/
 sbt
 *.json
 *.xml
+logs/
+*.jar

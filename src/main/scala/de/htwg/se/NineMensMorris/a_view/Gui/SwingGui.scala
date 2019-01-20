@@ -1,12 +1,14 @@
 package de.htwg.se.NineMensMorris.a_view.Gui
 
+import java.awt.Color
+
 import de.htwg.se.NineMensMorris.controller.controllerComponent
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.model.gameboardComponent.FieldInterface
 import javax.imageio.ImageIO
-import javax.swing.{Icon, ImageIcon}
-import java.io.{File, PrintWriter}
+import java.io.File
 
+import de.htwg.se.NineMensMorris.controller.controllerComponent.Error.errorMessage
 
 import scala.collection.mutable
 import scala.swing._
@@ -17,11 +19,11 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   title = "NineMensMorris"
   visible = true
   resizable = false
-  val framesize = new Dimension(650, 730)
-  var foundMill = false
-  minimumSize = framesize
-  preferredSize = framesize
-  maximumSize = framesize
+  val startFramesize = new Dimension(300, 100)
+  val playFramesize = new Dimension(650, 750)
+  minimumSize = startFramesize
+  preferredSize = startFramesize
+  maximumSize = playFramesize
   val icon: Image = ImageIO.read(new File("res/GameIcon.png"))
   iconImage = icon
   val board = new Board(controller)
@@ -29,15 +31,10 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   val chooseFileButton = new Button("Choose file")
   var fieldButs: mutable.MutableList[FieldButton] = mutable.MutableList.empty
-  val blackIcon: Icon = new ImageIcon("res/Black_50.png")
-  for (i <- 0 to 23) {
-    val fieldtmp = FieldButton(i)
-    listenTo(fieldtmp)
-    if (fieldtmp != null) fieldButs.+=(fieldtmp)
-  }
-  val dummyBut: FieldButton = new FieldButton(100) {
-    visible = false
-  }
+  var overlay = false
+  var foundMill = false
+  val startButton = new Button("Start Game")
+  val loadButton = new Button("Load Game")
 
   def mouseClick(xCor: Int, yCor: Int, boardDim: Dimension): Option[FieldInterface] = {
     for (i <- vertexList) {
@@ -52,7 +49,6 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   def clickHandler(id: Int): Unit = {
     val dummyTargetId = 0
-    controller.checkPlayer(controller.getPlayerOnTurn)
     if (!foundMill) {
       if (controller.getPlayerOnTurnPhase == "Move" || controller.getPlayerOnTurnPhase == "Fly") {
         if (firstClick) {
@@ -66,6 +62,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
               } else {
                 statusPanel.setInfo("Please select one of your own mens to " + controller.getPlayerOnTurnPhase)
               }
+            case None => statusPanel.setInfo("Field doesnt exist!")
           }
 
         } else {
@@ -82,6 +79,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
               if (controller.checkMill(id)) {
                 statusPanel.setMessage("Player " + controller.getPlayerOnTurn + " got a Mill. Please select a man to remove")
                 foundMill = true
+                board.repaint()
               } else controller.endPlayersTurn()
               firstClick = true
             }
@@ -96,84 +94,81 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           if (controller.checkMill(id)) {
             statusPanel.setMessage("Player " + controller.getPlayerOnTurn + " got a Mill. Please select a man to remove")
             foundMill = true
+            board.repaint()
           } else controller.endPlayersTurn()
         }
       }
     } else {
-      val error = controller.caseOfMill(id)
-      if (error != controllerComponent.Error.NoError) {
-        statusPanel.setInfo(error.toString)
-      } else {
+      val error: Error.Value = controller.caseOfMill(id)
+      if (error == controllerComponent.Error.NoError) {
         foundMill = false
         statusPanel.setInfo("Succesfully removed a Man on the Field " + id)
         controller.endPlayersTurn()
+      } else if (error == controllerComponent.Error.KillManError) {
+        foundMill = false
+        statusPanel.setInfo(errorMessage(error))
+        controller.endPlayersTurn()
+      } else {
+        statusPanel.setInfo(errorMessage(error))
       }
     }
-
   }
-
-  def chooseFile(title: String = ""): Option[File] = {
-    val chooser = new FileChooser(new File("."))
-    chooser.title = title
-    val result = chooser.showOpenDialog(null)
-    if (result == FileChooser.Result.Approve) {
-      Dialog.showMessage(contents.head, "Successfully saved!", title = "Save Game")
-      Some(chooser.selectedFile)
-    } else if (result == FileChooser.Result.Cancel) {
-      None
-    } else {
-      Dialog.showMessage(contents.head, "Error while saving the game: " + result.toString, title = "Save Game")
-      None
-    }
-  }
-
 
   menuBar = new MenuBar {
+    visible = false
     contents += new Menu("File") {
       mnemonic = Key.F
       contents += new MenuItem(Action("New") {
         controller.startNewGame()
       })
       contents += new MenuItem(Action("Save") {
-        chooseFile() match {
-          case Some(value) =>
-            controller.save(value.toString)
-          case None =>
+        var saveString = ""
+        val err: Error.Value = controller.save()
+         err match {
+          case Error.NoError => saveString = "Successfully saved the game!"
+          case Error.LoadError => saveString = errorMessage(err)
         }
+        Dialog.showMessage(mainPanel.contents.head, saveString, title = "Save Game")
       })
-      contents += new MenuItem(Action("Load") {
-        chooseFile() match {
-          case Some(value) =>
-            val pw = new PrintWriter(new File(value.toString))
-            val valuetmp = value.toString.split('/').last
-            controller.load("mill.xml")
-            pw.close()
-
-
-          case None =>
-        }
-      })
+      contents += new MenuItem(Action("Load") { loadGame() })
       contents += new MenuItem(Action("Quit") {
         System.exit(0)
       })
     }
-    contents += new Menu("Edit") {
-      mnemonic = Key.E
-      contents += new MenuItem(Action("Undo") {})
-      contents += new MenuItem(Action("Redo") {})
-    }
-    contents += new Menu("Solve") {
-      mnemonic = Key.S
-      contents += new MenuItem(Action("Solve") {})
-    }
     contents += new Menu("Options") {
+      val checkbox = new CheckMenuItem("Overlay")
       mnemonic = Key.O
-      contents += new MenuItem(Action("Show all candidates") {})
-      contents += new MenuItem(Action("Size 1*1") {})
-      contents += new MenuItem(Action("Size 4*4") {})
-      contents += new MenuItem(Action("Size 9*9") {})
 
+      contents += checkbox
+      listenTo(checkbox)
+      reactions += {
+        case ButtonClicked(_) =>
+          if (checkbox.selected) {
+            board.setOverlay()
+            setOverlay(new Color(255, 222, 99))
+          }
+          else {
+            board.unsetOverlay()
+            setOverlay(Color.WHITE)
+          }
+      }
     }
+  }
+
+  def setOverlay(color: Color): Unit = {
+    menuBar.background = color
+    this.background = color
+    statusPanel.setBackgroundColor(color)
+  }
+
+  def loadGame(): Unit = {
+    var loadString = ""
+    val err: Error.Value = controller.load()
+    err match {
+      case Error.NoError => loadString = "Successfully loaded the game!"
+      case Error.LoadError => loadString = errorMessage(err)
+    }
+    Dialog.showMessage(mainPanel.contents.head, loadString, "Load Game")
   }
 
 
@@ -192,8 +187,8 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         case MousePressed(_, point, _, _, _) =>
           mouseClick(point.x, point.y, this.size) match {
             case Some(value) =>
-              clickHandler(value.id)
-            case None => println("No Button clicked") //TODO: insert log
+              if (!controller.gameOver) clickHandler(value.id)
+            case None => println("No Button clicked")
           }
       }
     }
@@ -201,13 +196,12 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   val startPanel: FlowPanel = new FlowPanel() {
     visible = true
-    var startButton = new Button("Start Game")
     contents += startButton
-    listenTo(startButton)
+    contents += loadButton
+    listenTo(startButton, loadButton)
     reactions += {
-      case ButtonClicked(_) =>
-        //Console.println("Start Game clicked")
-        controller.startNewGame()
+      case ButtonClicked(`startButton`) => controller.startNewGame()
+      case ButtonClicked(`loadButton`) => loadGame()
     }
   }
 
@@ -219,30 +213,31 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   }
 
   def startGame(): Unit = {
+    minimumSize = playFramesize
+    preferredSize = playFramesize
+    menuBar.visible = true
     foundMill = false
     refreshAll()
     mainPanel.visible = true
     statusPanel.visible = true
     startPanel.visible = false
   }
-
   contents = new BorderPanel {
     add(mainPanel, BorderPanel.Position.Center)
     add(statusPanel, BorderPanel.Position.South)
     add(startPanel, BorderPanel.Position.North)
   }
 
-
   reactions += {
-    case _: FieldChanged =>
-      refreshAll()
+    case _: FieldChanged => refreshAll()
     case _: PlayerPhaseChanged => refreshAll()
-    case _: GamePhaseChanged =>
-      println("GamePhaseChanged!!!")
-      mainPanel.visible = false
-      mainPanel.enabled = false
-      statusPanel.visible = false
-      startPanel.visible = true
+    case _: GameOver =>
+      statusPanel.setMessage("")
+      var winString = ""
+      if (controller.playerOnTurn.equals(controller.playerWhite)) winString = "Black won the game!"
+      else if (controller.playerOnTurn.equals(controller.playerBlack)) winString = "White won the game!"
+      statusPanel.setInfo(winString)
+      Dialog.showMessage(contents.head, winString, title = "Lost")
     case _: StartNewGame => startGame()
   }
   pack()

@@ -1,27 +1,29 @@
-package de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl
+package de.htwg.se.NineMensMorris.controller
 
 import org.scalatest.{Matchers, WordSpec}
 import de.htwg.se.NineMensMorris.controller.controllerComponent._
 import de.htwg.se.NineMensMorris.controller.controllerComponent.controllerBaseImpl.ControllerMill
 import de.htwg.se.NineMensMorris.model.{FieldStatus, GameboardSize, PlayerGamePhase}
-import de.htwg.se.NineMensMorris.model.gameboardComponent.GameboardFactory
+import de.htwg.se.NineMensMorris.model.gameboardComponent.{FieldInterface, GameboardFactory, GameboardInterface}
 import de.htwg.se.NineMensMorris.model.playerComponent.PlayerInterface
 import de.htwg.se.NineMensMorris.model.playerComponent.playerBaseImpl.Player
+
+import scala.collection.mutable
 
 
 class Controller extends WordSpec with Matchers {
   var playerWhite: PlayerInterface = _
   var playerBlack: PlayerInterface = _
-  var playerTest: PlayerInterface = new Player("White", PlayerGamePhase.Place, 0, 0)
+  var playerTest: PlayerInterface = Player("White", PlayerGamePhase.Place, 0, 0)
   var playerOnTurn: PlayerInterface = _
   var gameboardFactory = new GameboardFactory
-  var gameboard = gameboardFactory.createGameboard(GameboardSize.Nine)
+  var gameboard: GameboardInterface = gameboardFactory.createGameboard(GameboardSize.Nine)
   var players: (PlayerInterface, PlayerInterface) = _
   var controller = new ControllerMill(gameboardFactory.createGameboard(GameboardSize.Nine))
   gameboard.getField(7).changeFieldStatus(FieldStatus.Black)
 
   controller.createGameboard()
-  val v = controller.gameboard.vertexList
+  val v: mutable.MutableList[FieldInterface] = controller.gameboard.vertexList
 
 
   "A Controller" when {
@@ -57,16 +59,17 @@ class Controller extends WordSpec with Matchers {
 
       }
 
+      "start new games" in {
+        controller.gameOver = true
+        controller.startNewGame()
+        controller.gameOver should be(false)
+      }
+
     }
   }
 
   "A Controller" when {
     "running" should {
-      "checkPlayers" in {
-        controller.checkPlayer("White") should be(())
-
-      }
-
       "perform Turns" in {
 
         controller.placeMan(8)
@@ -116,15 +119,29 @@ class Controller extends WordSpec with Matchers {
         controller.changePlayerOnTurn()
         controller.checkMill(21) should be(true)
 
-        controller.caseOfMill(9) should be (Error.NoError)
-        controller.caseOfMill(0) should be (Error.SelectError)
+        controller.caseOfMill(9) should be(Error.KillManError)
+        controller.caseOfMill(0) should be(Error.KillManError)
 
         controller.killMan(6)
         v(6).fieldStatus should be(FieldStatus.Empty)
         controller.changePlayerOnTurn()
-        controller.caseOfMill(7) should be (Error.NoError)
+        controller.caseOfMill(7) should be(Error.NoError)
 
 
+      }
+
+      "save and load games" in {
+        val tmp = playerOnTurn
+        controller.save("mill.xml")
+        controller.load("mill.xml")
+        playerOnTurn should be(tmp)
+      }
+
+      "get stuff" in {
+
+        controller.getVertexList should be(controller.gameboard.vertexList)
+        controller.getNeigh should be(controller.gameboard.neigh)
+        controller.getField(0) should be(Some(controller.gameboard.vertexList.head))
 
       }
     }
