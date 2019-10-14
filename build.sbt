@@ -3,6 +3,7 @@ organization := "de.htwg.se"
 version := "0.2.0"
 scalaVersion := "2.12.7"
 coverageEnabled := true
+resourceDirectory in Compile := baseDirectory.value / "resources"
 
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"

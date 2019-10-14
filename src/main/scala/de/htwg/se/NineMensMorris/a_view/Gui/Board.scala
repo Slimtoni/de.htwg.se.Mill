@@ -19,17 +19,18 @@ class Board(controller: ControllerInterface, var overlayOn: Boolean = false) ext
   preferredSize = panelDimension
   maximumSize = panelDimension
   var currentImage: BufferedImage = _
-  var backgroundImage: BufferedImage = ImageIO.read(new File("res/Board.png"))
+  var backgroundImage: BufferedImage = _
+  backgroundImage = ImageIO.read(getClass.getResource("/Board.png"))
   listenTo(controller)
   controller.createGameboard()
 
   def setOverlay(): Unit = {
-    backgroundImage = ImageIO.read(new File("res/BoardSkin.jpg"))
+    backgroundImage = ImageIO.read(getClass.getResource("/BoardSkin.png"))
     overlayOn = true
     repaint()
   }
   def unsetOverlay(): Unit = {
-    backgroundImage = ImageIO.read(new File("res/Board.png"))
+    backgroundImage = ImageIO.read(getClass.getResource("/Board.png"))
     overlayOn = false
     repaint()
   }

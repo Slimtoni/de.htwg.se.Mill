@@ -24,7 +24,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   minimumSize = startFramesize
   preferredSize = startFramesize
   maximumSize = playFramesize
-  val icon: Image = ImageIO.read(new File("res/GameIcon.png"))
+  val icon: Image = ImageIO.read(getClass.getResource("/GameIcon.png"))
   iconImage = icon
   val board = new Board(controller)
   val vertexList: mutable.MutableList[(FieldInterface, Point)] = board.getBoardList
